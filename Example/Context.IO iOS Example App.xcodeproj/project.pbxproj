@@ -1,0 +1,534 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EB974E6016B1E42F00717730 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E5F16B1E42F00717730 /* CIOAPIClient.m */; };
+		EB974E7516B1E45600717730 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6316B1E45600717730 /* AFHTTPClient.m */; };
+		EB974E7616B1E45600717730 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6516B1E45600717730 /* AFHTTPRequestOperation.m */; };
+		EB974E7716B1E45600717730 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6716B1E45600717730 /* AFImageRequestOperation.m */; };
+		EB974E7816B1E45600717730 /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6916B1E45600717730 /* AFJSONRequestOperation.m */; };
+		EB974E7916B1E45600717730 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6B16B1E45600717730 /* AFNetworkActivityIndicatorManager.m */; };
+		EB974E7A16B1E45600717730 /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6E16B1E45600717730 /* AFPropertyListRequestOperation.m */; };
+		EB974E7B16B1E45600717730 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7016B1E45600717730 /* AFURLConnectionOperation.m */; };
+		EB974E7C16B1E45600717730 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */; };
+		EB974E7D16B1E45600717730 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */; };
+		EB974E9816B1E48C00717730 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E8616B1E48C00717730 /* SSKeychain.m */; };
+		EB974EB516B1EC9700717730 /* bg-default.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAB16B1EC9700717730 /* bg-default.png */; };
+		EB974EB616B1EC9700717730 /* bg-default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAC16B1EC9700717730 /* bg-default@2x.png */; };
+		EB974EB716B1EC9700717730 /* button-provider-aol.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAD16B1EC9700717730 /* button-provider-aol.png */; };
+		EB974EB816B1EC9700717730 /* button-provider-aol@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAE16B1EC9700717730 /* button-provider-aol@2x.png */; };
+		EB974EB916B1EC9700717730 /* button-provider-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAF16B1EC9700717730 /* button-provider-bg.png */; };
+		EB974EBA16B1EC9700717730 /* button-provider-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB016B1EC9700717730 /* button-provider-bg@2x.png */; };
+		EB974EBB16B1EC9700717730 /* button-provider-gmail.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB116B1EC9700717730 /* button-provider-gmail.png */; };
+		EB974EBC16B1EC9700717730 /* button-provider-gmail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB216B1EC9700717730 /* button-provider-gmail@2x.png */; };
+		EB974EBD16B1EC9700717730 /* button-provider-yahoo.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB316B1EC9700717730 /* button-provider-yahoo.png */; };
+		EB974EBE16B1EC9700717730 /* button-provider-yahoo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB416B1EC9700717730 /* button-provider-yahoo@2x.png */; };
+		EB974F1D16B1F6C400717730 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1016B1F6C400717730 /* Base64Transcoder.c */; };
+		EB974F1E16B1F6C400717730 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1216B1F6C400717730 /* hmac.c */; };
+		EB974F1F16B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */; };
+		EB974F2016B1F6C400717730 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1716B1F6C400717730 /* sha1.c */; };
+		EB974F2116B1F6C400717730 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1A16B1F6C400717730 /* NSString+URLEncoding.m */; };
+		EB974F2216B1F6C400717730 /* OAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1C16B1F6C400717730 /* OAuth.m */; };
+		EB974F2516B1FA9B00717730 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB974F2316B1FA9B00717730 /* MobileCoreServices.framework */; };
+		EB974F2616B1FA9B00717730 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB974F2416B1FA9B00717730 /* SystemConfiguration.framework */; };
+		EBB452DD16A5E9F500397319 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB452DC16A5E9F500397319 /* UIKit.framework */; };
+		EBB452DF16A5E9F500397319 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB452DE16A5E9F500397319 /* Foundation.framework */; };
+		EBB452E116A5E9F500397319 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB452E016A5E9F500397319 /* CoreGraphics.framework */; };
+		EBB454A716A8ACEA00397319 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB454A616A8ACEA00397319 /* Security.framework */; };
+		EBB454DA16B1CB8E00397319 /* CIOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D216B1CB8E00397319 /* CIOAuthViewController.m */; };
+		EBB454DB16B1CB8E00397319 /* CIOContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D416B1CB8E00397319 /* CIOContactsViewController.m */; };
+		EBB454DC16B1CB8E00397319 /* CIOMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D616B1CB8E00397319 /* CIOMessagesViewController.m */; };
+		EBB454DD16B1CB8E00397319 /* CIOExampleAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D916B1CB8E00397319 /* CIOExampleAPIClient.m */; };
+		EBB454E516B1CBB500397319 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB454DE16B1CBB500397319 /* InfoPlist.strings */; };
+		EBB454E716B1CBB500397319 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454E116B1CBB500397319 /* main.m */; };
+		EBB454E816B1CBB500397319 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB454E216B1CBB500397319 /* Default-568h@2x.png */; };
+		EBB454E916B1CBB500397319 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB454E316B1CBB500397319 /* Default.png */; };
+		EBB454EA16B1CBB500397319 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB454E416B1CBB500397319 /* Default@2x.png */; };
+		EBB454ED16B1CBD900397319 /* CIOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454EB16B1CBD900397319 /* CIOAppDelegate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EB974E5E16B1E42F00717730 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
+		EB974E5F16B1E42F00717730 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAPIClient.m; sourceTree = "<group>"; };
+		EB974E6216B1E45600717730 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
+		EB974E6316B1E45600717730 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
+		EB974E6416B1E45600717730 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		EB974E6516B1E45600717730 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		EB974E6616B1E45600717730 /* AFImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; };
+		EB974E6716B1E45600717730 /* AFImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; };
+		EB974E6816B1E45600717730 /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; };
+		EB974E6916B1E45600717730 /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; };
+		EB974E6A16B1E45600717730 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		EB974E6B16B1E45600717730 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
+		EB974E6C16B1E45600717730 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
+		EB974E6D16B1E45600717730 /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; };
+		EB974E6E16B1E45600717730 /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; };
+		EB974E6F16B1E45600717730 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		EB974E7016B1E45600717730 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		EB974E7116B1E45600717730 /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; };
+		EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
+		EB974E7316B1E45600717730 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
+		EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		EB974E8516B1E48C00717730 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
+		EB974E8616B1E48C00717730 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
+		EB974EAB16B1EC9700717730 /* bg-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-default.png"; sourceTree = "<group>"; };
+		EB974EAC16B1EC9700717730 /* bg-default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-default@2x.png"; sourceTree = "<group>"; };
+		EB974EAD16B1EC9700717730 /* button-provider-aol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-aol.png"; sourceTree = "<group>"; };
+		EB974EAE16B1EC9700717730 /* button-provider-aol@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-aol@2x.png"; sourceTree = "<group>"; };
+		EB974EAF16B1EC9700717730 /* button-provider-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-bg.png"; sourceTree = "<group>"; };
+		EB974EB016B1EC9700717730 /* button-provider-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-bg@2x.png"; sourceTree = "<group>"; };
+		EB974EB116B1EC9700717730 /* button-provider-gmail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail.png"; sourceTree = "<group>"; };
+		EB974EB216B1EC9700717730 /* button-provider-gmail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail@2x.png"; sourceTree = "<group>"; };
+		EB974EB316B1EC9700717730 /* button-provider-yahoo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo.png"; sourceTree = "<group>"; };
+		EB974EB416B1EC9700717730 /* button-provider-yahoo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo@2x.png"; sourceTree = "<group>"; };
+		EB974F1016B1F6C400717730 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
+		EB974F1116B1F6C400717730 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
+		EB974F1216B1F6C400717730 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
+		EB974F1316B1F6C400717730 /* hmac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
+		EB974F1416B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
+		EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
+		EB974F1616B1F6C400717730 /* OASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OASignatureProviding.h; sourceTree = "<group>"; };
+		EB974F1716B1F6C400717730 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
+		EB974F1816B1F6C400717730 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		EB974F1916B1F6C400717730 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
+		EB974F1A16B1F6C400717730 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
+		EB974F1B16B1F6C400717730 /* OAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuth.h; sourceTree = "<group>"; };
+		EB974F1C16B1F6C400717730 /* OAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAuth.m; sourceTree = "<group>"; };
+		EB974F2316B1FA9B00717730 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		EB974F2416B1FA9B00717730 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		EBB452D816A5E9F500397319 /* Context.IO iOS Example App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Context.IO iOS Example App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBB452DC16A5E9F500397319 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EBB452DE16A5E9F500397319 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EBB452E016A5E9F500397319 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EBB452FA16A5E9F600397319 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		EBB454A616A8ACEA00397319 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		EBB454D116B1CB8E00397319 /* CIOAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAuthViewController.h; sourceTree = "<group>"; };
+		EBB454D216B1CB8E00397319 /* CIOAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAuthViewController.m; sourceTree = "<group>"; };
+		EBB454D316B1CB8E00397319 /* CIOContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOContactsViewController.h; sourceTree = "<group>"; };
+		EBB454D416B1CB8E00397319 /* CIOContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOContactsViewController.m; sourceTree = "<group>"; };
+		EBB454D516B1CB8E00397319 /* CIOMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOMessagesViewController.h; sourceTree = "<group>"; };
+		EBB454D616B1CB8E00397319 /* CIOMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOMessagesViewController.m; sourceTree = "<group>"; };
+		EBB454D816B1CB8E00397319 /* CIOExampleAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOExampleAPIClient.h; sourceTree = "<group>"; };
+		EBB454D916B1CB8E00397319 /* CIOExampleAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOExampleAPIClient.m; sourceTree = "<group>"; };
+		EBB454DE16B1CBB500397319 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		EBB454DF16B1CBB500397319 /* Context.IO iOS Example App-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Context.IO iOS Example App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		EBB454E016B1CBB500397319 /* Context.IO iOS Example App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Context.IO iOS Example App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		EBB454E116B1CBB500397319 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
+		EBB454E216B1CBB500397319 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		EBB454E316B1CBB500397319 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = SOURCE_ROOT; };
+		EBB454E416B1CBB500397319 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		EBB454EB16B1CBD900397319 /* CIOAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAppDelegate.m; sourceTree = "<group>"; };
+		EBB454EC16B1CBD900397319 /* CIOAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAppDelegate.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EBB452D516A5E9F500397319 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB974F2516B1FA9B00717730 /* MobileCoreServices.framework in Frameworks */,
+				EB974F2616B1FA9B00717730 /* SystemConfiguration.framework in Frameworks */,
+				EBB454A716A8ACEA00397319 /* Security.framework in Frameworks */,
+				EBB452DD16A5E9F500397319 /* UIKit.framework in Frameworks */,
+				EBB452DF16A5E9F500397319 /* Foundation.framework in Frameworks */,
+				EBB452E116A5E9F500397319 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EB974E5D16B1E42F00717730 /* ContextIO */ = {
+			isa = PBXGroup;
+			children = (
+				EB974F0E16B1F6C400717730 /* OAuth */,
+				EB974E5E16B1E42F00717730 /* CIOAPIClient.h */,
+				EB974E5F16B1E42F00717730 /* CIOAPIClient.m */,
+			);
+			name = ContextIO;
+			path = ../ContextIO;
+			sourceTree = "<group>";
+		};
+		EB974E6116B1E45600717730 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				EB974E6216B1E45600717730 /* AFHTTPClient.h */,
+				EB974E6316B1E45600717730 /* AFHTTPClient.m */,
+				EB974E6416B1E45600717730 /* AFHTTPRequestOperation.h */,
+				EB974E6516B1E45600717730 /* AFHTTPRequestOperation.m */,
+				EB974E6616B1E45600717730 /* AFImageRequestOperation.h */,
+				EB974E6716B1E45600717730 /* AFImageRequestOperation.m */,
+				EB974E6816B1E45600717730 /* AFJSONRequestOperation.h */,
+				EB974E6916B1E45600717730 /* AFJSONRequestOperation.m */,
+				EB974E6A16B1E45600717730 /* AFNetworkActivityIndicatorManager.h */,
+				EB974E6B16B1E45600717730 /* AFNetworkActivityIndicatorManager.m */,
+				EB974E6C16B1E45600717730 /* AFNetworking.h */,
+				EB974E6D16B1E45600717730 /* AFPropertyListRequestOperation.h */,
+				EB974E6E16B1E45600717730 /* AFPropertyListRequestOperation.m */,
+				EB974E6F16B1E45600717730 /* AFURLConnectionOperation.h */,
+				EB974E7016B1E45600717730 /* AFURLConnectionOperation.m */,
+				EB974E7116B1E45600717730 /* AFXMLRequestOperation.h */,
+				EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */,
+				EB974E7316B1E45600717730 /* UIImageView+AFNetworking.h */,
+				EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */,
+			);
+			name = AFNetworking;
+			path = ../External/AFNetworking/AFNetworking;
+			sourceTree = "<group>";
+		};
+		EB974E7F16B1E48C00717730 /* sskeychain */ = {
+			isa = PBXGroup;
+			children = (
+				EB974E8516B1E48C00717730 /* SSKeychain.h */,
+				EB974E8616B1E48C00717730 /* SSKeychain.m */,
+			);
+			name = sskeychain;
+			path = ../External/sskeychain;
+			sourceTree = "<group>";
+		};
+		EB974EAA16B1EC9700717730 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EB974EAB16B1EC9700717730 /* bg-default.png */,
+				EB974EAC16B1EC9700717730 /* bg-default@2x.png */,
+				EB974EAD16B1EC9700717730 /* button-provider-aol.png */,
+				EB974EAE16B1EC9700717730 /* button-provider-aol@2x.png */,
+				EB974EAF16B1EC9700717730 /* button-provider-bg.png */,
+				EB974EB016B1EC9700717730 /* button-provider-bg@2x.png */,
+				EB974EB116B1EC9700717730 /* button-provider-gmail.png */,
+				EB974EB216B1EC9700717730 /* button-provider-gmail@2x.png */,
+				EB974EB316B1EC9700717730 /* button-provider-yahoo.png */,
+				EB974EB416B1EC9700717730 /* button-provider-yahoo@2x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EB974F0E16B1F6C400717730 /* OAuth */ = {
+			isa = PBXGroup;
+			children = (
+				EB974F0F16B1F6C400717730 /* Crypto */,
+				EB974F1916B1F6C400717730 /* NSString+URLEncoding.h */,
+				EB974F1A16B1F6C400717730 /* NSString+URLEncoding.m */,
+				EB974F1B16B1F6C400717730 /* OAuth.h */,
+				EB974F1C16B1F6C400717730 /* OAuth.m */,
+			);
+			path = OAuth;
+			sourceTree = "<group>";
+		};
+		EB974F0F16B1F6C400717730 /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				EB974F1016B1F6C400717730 /* Base64Transcoder.c */,
+				EB974F1116B1F6C400717730 /* Base64Transcoder.h */,
+				EB974F1216B1F6C400717730 /* hmac.c */,
+				EB974F1316B1F6C400717730 /* hmac.h */,
+				EB974F1416B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.h */,
+				EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */,
+				EB974F1616B1F6C400717730 /* OASignatureProviding.h */,
+				EB974F1716B1F6C400717730 /* sha1.c */,
+				EB974F1816B1F6C400717730 /* sha1.h */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
+		EBB452CD16A5E9F500397319 = {
+			isa = PBXGroup;
+			children = (
+				EBB454CF16B1CB8E00397319 /* Classes */,
+				EB974EAA16B1EC9700717730 /* Resources */,
+				EBB4569A16B1CE6000397319 /* Vendor */,
+				EBB452E316A5E9F500397319 /* Supporting Files */,
+				EBB452DB16A5E9F500397319 /* Frameworks */,
+				EBB452D916A5E9F500397319 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EBB452D916A5E9F500397319 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EBB452D816A5E9F500397319 /* Context.IO iOS Example App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EBB452DB16A5E9F500397319 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EBB452E016A5E9F500397319 /* CoreGraphics.framework */,
+				EBB452DE16A5E9F500397319 /* Foundation.framework */,
+				EB974F2316B1FA9B00717730 /* MobileCoreServices.framework */,
+				EBB454A616A8ACEA00397319 /* Security.framework */,
+				EBB452FA16A5E9F600397319 /* SenTestingKit.framework */,
+				EB974F2416B1FA9B00717730 /* SystemConfiguration.framework */,
+				EBB452DC16A5E9F500397319 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EBB452E316A5E9F500397319 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EBB454DE16B1CBB500397319 /* InfoPlist.strings */,
+				EBB454DF16B1CBB500397319 /* Context.IO iOS Example App-Info.plist */,
+				EBB454E016B1CBB500397319 /* Context.IO iOS Example App-Prefix.pch */,
+				EBB454E116B1CBB500397319 /* main.m */,
+				EBB454E216B1CBB500397319 /* Default-568h@2x.png */,
+				EBB454E316B1CBB500397319 /* Default.png */,
+				EBB454E416B1CBB500397319 /* Default@2x.png */,
+			);
+			name = "Supporting Files";
+			path = "Context.IO iOS Example App";
+			sourceTree = "<group>";
+		};
+		EBB454CF16B1CB8E00397319 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				EBB454D016B1CB8E00397319 /* Controllers */,
+				EBB454D716B1CB8E00397319 /* Other Sources */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		EBB454D016B1CB8E00397319 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EBB454D116B1CB8E00397319 /* CIOAuthViewController.h */,
+				EBB454D216B1CB8E00397319 /* CIOAuthViewController.m */,
+				EBB454D316B1CB8E00397319 /* CIOContactsViewController.h */,
+				EBB454D416B1CB8E00397319 /* CIOContactsViewController.m */,
+				EBB454D516B1CB8E00397319 /* CIOMessagesViewController.h */,
+				EBB454D616B1CB8E00397319 /* CIOMessagesViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		EBB454D716B1CB8E00397319 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				EBB454EC16B1CBD900397319 /* CIOAppDelegate.h */,
+				EBB454EB16B1CBD900397319 /* CIOAppDelegate.m */,
+				EBB454D816B1CB8E00397319 /* CIOExampleAPIClient.h */,
+				EBB454D916B1CB8E00397319 /* CIOExampleAPIClient.m */,
+			);
+			path = "Other Sources";
+			sourceTree = "<group>";
+		};
+		EBB4569A16B1CE6000397319 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				EB974E7F16B1E48C00717730 /* sskeychain */,
+				EB974E6116B1E45600717730 /* AFNetworking */,
+				EB974E5D16B1E42F00717730 /* ContextIO */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EBB452D716A5E9F500397319 /* Context.IO iOS Example App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EBB4530B16A5E9F600397319 /* Build configuration list for PBXNativeTarget "Context.IO iOS Example App" */;
+			buildPhases = (
+				EBB452D416A5E9F500397319 /* Sources */,
+				EBB452D516A5E9F500397319 /* Frameworks */,
+				EBB452D616A5E9F500397319 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Context.IO iOS Example App";
+			productName = "Context.IO iOS Example App";
+			productReference = EBB452D816A5E9F500397319 /* Context.IO iOS Example App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EBB452CF16A5E9F500397319 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = CIO;
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = Context.IO;
+			};
+			buildConfigurationList = EBB452D216A5E9F500397319 /* Build configuration list for PBXProject "Context.IO iOS Example App" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EBB452CD16A5E9F500397319;
+			productRefGroup = EBB452D916A5E9F500397319 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EBB452D716A5E9F500397319 /* Context.IO iOS Example App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EBB452D616A5E9F500397319 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB454E516B1CBB500397319 /* InfoPlist.strings in Resources */,
+				EBB454E816B1CBB500397319 /* Default-568h@2x.png in Resources */,
+				EBB454E916B1CBB500397319 /* Default.png in Resources */,
+				EBB454EA16B1CBB500397319 /* Default@2x.png in Resources */,
+				EB974EB516B1EC9700717730 /* bg-default.png in Resources */,
+				EB974EB616B1EC9700717730 /* bg-default@2x.png in Resources */,
+				EB974EB716B1EC9700717730 /* button-provider-aol.png in Resources */,
+				EB974EB816B1EC9700717730 /* button-provider-aol@2x.png in Resources */,
+				EB974EB916B1EC9700717730 /* button-provider-bg.png in Resources */,
+				EB974EBA16B1EC9700717730 /* button-provider-bg@2x.png in Resources */,
+				EB974EBB16B1EC9700717730 /* button-provider-gmail.png in Resources */,
+				EB974EBC16B1EC9700717730 /* button-provider-gmail@2x.png in Resources */,
+				EB974EBD16B1EC9700717730 /* button-provider-yahoo.png in Resources */,
+				EB974EBE16B1EC9700717730 /* button-provider-yahoo@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EBB452D416A5E9F500397319 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBB454DA16B1CB8E00397319 /* CIOAuthViewController.m in Sources */,
+				EBB454DB16B1CB8E00397319 /* CIOContactsViewController.m in Sources */,
+				EBB454DC16B1CB8E00397319 /* CIOMessagesViewController.m in Sources */,
+				EBB454DD16B1CB8E00397319 /* CIOExampleAPIClient.m in Sources */,
+				EBB454E716B1CBB500397319 /* main.m in Sources */,
+				EBB454ED16B1CBD900397319 /* CIOAppDelegate.m in Sources */,
+				EB974E6016B1E42F00717730 /* CIOAPIClient.m in Sources */,
+				EB974E7516B1E45600717730 /* AFHTTPClient.m in Sources */,
+				EB974E7616B1E45600717730 /* AFHTTPRequestOperation.m in Sources */,
+				EB974E7716B1E45600717730 /* AFImageRequestOperation.m in Sources */,
+				EB974E7816B1E45600717730 /* AFJSONRequestOperation.m in Sources */,
+				EB974E7916B1E45600717730 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				EB974E7A16B1E45600717730 /* AFPropertyListRequestOperation.m in Sources */,
+				EB974E7B16B1E45600717730 /* AFURLConnectionOperation.m in Sources */,
+				EB974E7C16B1E45600717730 /* AFXMLRequestOperation.m in Sources */,
+				EB974E7D16B1E45600717730 /* UIImageView+AFNetworking.m in Sources */,
+				EB974E9816B1E48C00717730 /* SSKeychain.m in Sources */,
+				EB974F1D16B1F6C400717730 /* Base64Transcoder.c in Sources */,
+				EB974F1E16B1F6C400717730 /* hmac.c in Sources */,
+				EB974F1F16B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
+				EB974F2016B1F6C400717730 /* sha1.c in Sources */,
+				EB974F2116B1F6C400717730 /* NSString+URLEncoding.m in Sources */,
+				EB974F2216B1F6C400717730 /* OAuth.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EBB4530916A5E9F600397319 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EBB4530A16A5E9F600397319 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EBB4530C16A5E9F600397319 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Context.IO iOS Example App-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/Context.IO iOS Example App-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		EBB4530D16A5E9F600397319 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Context.IO iOS Example App-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/Context.IO iOS Example App-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EBB452D216A5E9F500397319 /* Build configuration list for PBXProject "Context.IO iOS Example App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBB4530916A5E9F600397319 /* Debug */,
+				EBB4530A16A5E9F600397319 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EBB4530B16A5E9F600397319 /* Build configuration list for PBXNativeTarget "Context.IO iOS Example App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBB4530C16A5E9F600397319 /* Debug */,
+				EBB4530D16A5E9F600397319 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EBB452CF16A5E9F500397319 /* Project object */;
+}
