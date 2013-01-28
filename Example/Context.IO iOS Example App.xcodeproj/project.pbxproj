@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB3533EC16B742E200968488 /* bg-default.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E016B742E200968488 /* bg-default.png */; };
+		EB3533ED16B742E200968488 /* bg-default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E116B742E200968488 /* bg-default@2x.png */; };
+		EB3533EE16B742E200968488 /* button-provider-aol.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E216B742E200968488 /* button-provider-aol.png */; };
+		EB3533EF16B742E200968488 /* button-provider-aol@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E316B742E200968488 /* button-provider-aol@2x.png */; };
+		EB3533F016B742E200968488 /* button-provider-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E416B742E200968488 /* button-provider-bg.png */; };
+		EB3533F116B742E200968488 /* button-provider-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E516B742E200968488 /* button-provider-bg@2x.png */; };
+		EB3533F216B742E200968488 /* button-provider-gmail.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E616B742E200968488 /* button-provider-gmail.png */; };
+		EB3533F316B742E200968488 /* button-provider-gmail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E716B742E200968488 /* button-provider-gmail@2x.png */; };
+		EB3533F416B742E200968488 /* button-provider-yahoo.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E816B742E200968488 /* button-provider-yahoo.png */; };
+		EB3533F516B742E200968488 /* button-provider-yahoo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E916B742E200968488 /* button-provider-yahoo@2x.png */; };
+		EB3533F616B742E200968488 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533EA16B742E200968488 /* Icon.png */; };
+		EB3533F716B742E200968488 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533EB16B742E200968488 /* Icon@2x.png */; };
 		EB974E6016B1E42F00717730 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E5F16B1E42F00717730 /* CIOAPIClient.m */; };
 		EB974E7516B1E45600717730 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6316B1E45600717730 /* AFHTTPClient.m */; };
 		EB974E7616B1E45600717730 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6516B1E45600717730 /* AFHTTPRequestOperation.m */; };
@@ -18,16 +30,6 @@
 		EB974E7C16B1E45600717730 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */; };
 		EB974E7D16B1E45600717730 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */; };
 		EB974E9816B1E48C00717730 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E8616B1E48C00717730 /* SSKeychain.m */; };
-		EB974EB516B1EC9700717730 /* bg-default.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAB16B1EC9700717730 /* bg-default.png */; };
-		EB974EB616B1EC9700717730 /* bg-default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAC16B1EC9700717730 /* bg-default@2x.png */; };
-		EB974EB716B1EC9700717730 /* button-provider-aol.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAD16B1EC9700717730 /* button-provider-aol.png */; };
-		EB974EB816B1EC9700717730 /* button-provider-aol@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAE16B1EC9700717730 /* button-provider-aol@2x.png */; };
-		EB974EB916B1EC9700717730 /* button-provider-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EAF16B1EC9700717730 /* button-provider-bg.png */; };
-		EB974EBA16B1EC9700717730 /* button-provider-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB016B1EC9700717730 /* button-provider-bg@2x.png */; };
-		EB974EBB16B1EC9700717730 /* button-provider-gmail.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB116B1EC9700717730 /* button-provider-gmail.png */; };
-		EB974EBC16B1EC9700717730 /* button-provider-gmail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB216B1EC9700717730 /* button-provider-gmail@2x.png */; };
-		EB974EBD16B1EC9700717730 /* button-provider-yahoo.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB316B1EC9700717730 /* button-provider-yahoo.png */; };
-		EB974EBE16B1EC9700717730 /* button-provider-yahoo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB974EB416B1EC9700717730 /* button-provider-yahoo@2x.png */; };
 		EB974F1D16B1F6C400717730 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1016B1F6C400717730 /* Base64Transcoder.c */; };
 		EB974F1E16B1F6C400717730 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1216B1F6C400717730 /* hmac.c */; };
 		EB974F1F16B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */; };
@@ -53,6 +55,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EB3533E016B742E200968488 /* bg-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-default.png"; path = "Images/bg-default.png"; sourceTree = "<group>"; };
+		EB3533E116B742E200968488 /* bg-default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-default@2x.png"; path = "Images/bg-default@2x.png"; sourceTree = "<group>"; };
+		EB3533E216B742E200968488 /* button-provider-aol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-aol.png"; path = "Images/button-provider-aol.png"; sourceTree = "<group>"; };
+		EB3533E316B742E200968488 /* button-provider-aol@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-aol@2x.png"; path = "Images/button-provider-aol@2x.png"; sourceTree = "<group>"; };
+		EB3533E416B742E200968488 /* button-provider-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-bg.png"; path = "Images/button-provider-bg.png"; sourceTree = "<group>"; };
+		EB3533E516B742E200968488 /* button-provider-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-bg@2x.png"; path = "Images/button-provider-bg@2x.png"; sourceTree = "<group>"; };
+		EB3533E616B742E200968488 /* button-provider-gmail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-gmail.png"; path = "Images/button-provider-gmail.png"; sourceTree = "<group>"; };
+		EB3533E716B742E200968488 /* button-provider-gmail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-gmail@2x.png"; path = "Images/button-provider-gmail@2x.png"; sourceTree = "<group>"; };
+		EB3533E816B742E200968488 /* button-provider-yahoo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-yahoo.png"; path = "Images/button-provider-yahoo.png"; sourceTree = "<group>"; };
+		EB3533E916B742E200968488 /* button-provider-yahoo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-yahoo@2x.png"; path = "Images/button-provider-yahoo@2x.png"; sourceTree = "<group>"; };
+		EB3533EA16B742E200968488 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Images/Icon.png; sourceTree = "<group>"; };
+		EB3533EB16B742E200968488 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images/Icon@2x.png"; sourceTree = "<group>"; };
 		EB974E5E16B1E42F00717730 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
 		EB974E5F16B1E42F00717730 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAPIClient.m; sourceTree = "<group>"; };
 		EB974E6216B1E45600717730 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
@@ -76,16 +90,6 @@
 		EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		EB974E8516B1E48C00717730 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
 		EB974E8616B1E48C00717730 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
-		EB974EAB16B1EC9700717730 /* bg-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-default.png"; sourceTree = "<group>"; };
-		EB974EAC16B1EC9700717730 /* bg-default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-default@2x.png"; sourceTree = "<group>"; };
-		EB974EAD16B1EC9700717730 /* button-provider-aol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-aol.png"; sourceTree = "<group>"; };
-		EB974EAE16B1EC9700717730 /* button-provider-aol@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-aol@2x.png"; sourceTree = "<group>"; };
-		EB974EAF16B1EC9700717730 /* button-provider-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-bg.png"; sourceTree = "<group>"; };
-		EB974EB016B1EC9700717730 /* button-provider-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-bg@2x.png"; sourceTree = "<group>"; };
-		EB974EB116B1EC9700717730 /* button-provider-gmail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail.png"; sourceTree = "<group>"; };
-		EB974EB216B1EC9700717730 /* button-provider-gmail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail@2x.png"; sourceTree = "<group>"; };
-		EB974EB316B1EC9700717730 /* button-provider-yahoo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo.png"; sourceTree = "<group>"; };
-		EB974EB416B1EC9700717730 /* button-provider-yahoo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo@2x.png"; sourceTree = "<group>"; };
 		EB974F1016B1F6C400717730 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
 		EB974F1116B1F6C400717730 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		EB974F1216B1F6C400717730 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
@@ -143,6 +147,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EB3533DE16B742D500968488 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				EB3533E016B742E200968488 /* bg-default.png */,
+				EB3533E116B742E200968488 /* bg-default@2x.png */,
+				EB3533E216B742E200968488 /* button-provider-aol.png */,
+				EB3533E316B742E200968488 /* button-provider-aol@2x.png */,
+				EB3533E416B742E200968488 /* button-provider-bg.png */,
+				EB3533E516B742E200968488 /* button-provider-bg@2x.png */,
+				EB3533E616B742E200968488 /* button-provider-gmail.png */,
+				EB3533E716B742E200968488 /* button-provider-gmail@2x.png */,
+				EB3533E816B742E200968488 /* button-provider-yahoo.png */,
+				EB3533E916B742E200968488 /* button-provider-yahoo@2x.png */,
+				EB3533EA16B742E200968488 /* Icon.png */,
+				EB3533EB16B742E200968488 /* Icon@2x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		EB974E5D16B1E42F00717730 /* ContextIO */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,16 +217,7 @@
 		EB974EAA16B1EC9700717730 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EB974EAB16B1EC9700717730 /* bg-default.png */,
-				EB974EAC16B1EC9700717730 /* bg-default@2x.png */,
-				EB974EAD16B1EC9700717730 /* button-provider-aol.png */,
-				EB974EAE16B1EC9700717730 /* button-provider-aol@2x.png */,
-				EB974EAF16B1EC9700717730 /* button-provider-bg.png */,
-				EB974EB016B1EC9700717730 /* button-provider-bg@2x.png */,
-				EB974EB116B1EC9700717730 /* button-provider-gmail.png */,
-				EB974EB216B1EC9700717730 /* button-provider-gmail@2x.png */,
-				EB974EB316B1EC9700717730 /* button-provider-yahoo.png */,
-				EB974EB416B1EC9700717730 /* button-provider-yahoo@2x.png */,
+				EB3533DE16B742D500968488 /* Images */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -384,16 +398,18 @@
 				EBB454E816B1CBB500397319 /* Default-568h@2x.png in Resources */,
 				EBB454E916B1CBB500397319 /* Default.png in Resources */,
 				EBB454EA16B1CBB500397319 /* Default@2x.png in Resources */,
-				EB974EB516B1EC9700717730 /* bg-default.png in Resources */,
-				EB974EB616B1EC9700717730 /* bg-default@2x.png in Resources */,
-				EB974EB716B1EC9700717730 /* button-provider-aol.png in Resources */,
-				EB974EB816B1EC9700717730 /* button-provider-aol@2x.png in Resources */,
-				EB974EB916B1EC9700717730 /* button-provider-bg.png in Resources */,
-				EB974EBA16B1EC9700717730 /* button-provider-bg@2x.png in Resources */,
-				EB974EBB16B1EC9700717730 /* button-provider-gmail.png in Resources */,
-				EB974EBC16B1EC9700717730 /* button-provider-gmail@2x.png in Resources */,
-				EB974EBD16B1EC9700717730 /* button-provider-yahoo.png in Resources */,
-				EB974EBE16B1EC9700717730 /* button-provider-yahoo@2x.png in Resources */,
+				EB3533EC16B742E200968488 /* bg-default.png in Resources */,
+				EB3533ED16B742E200968488 /* bg-default@2x.png in Resources */,
+				EB3533EE16B742E200968488 /* button-provider-aol.png in Resources */,
+				EB3533EF16B742E200968488 /* button-provider-aol@2x.png in Resources */,
+				EB3533F016B742E200968488 /* button-provider-bg.png in Resources */,
+				EB3533F116B742E200968488 /* button-provider-bg@2x.png in Resources */,
+				EB3533F216B742E200968488 /* button-provider-gmail.png in Resources */,
+				EB3533F316B742E200968488 /* button-provider-gmail@2x.png in Resources */,
+				EB3533F416B742E200968488 /* button-provider-yahoo.png in Resources */,
+				EB3533F516B742E200968488 /* button-provider-yahoo@2x.png in Resources */,
+				EB3533F616B742E200968488 /* Icon.png in Resources */,
+				EB3533F716B742E200968488 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
