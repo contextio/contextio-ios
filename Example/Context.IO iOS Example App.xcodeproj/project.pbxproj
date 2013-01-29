@@ -20,7 +20,13 @@
 		EB3533F616B742E200968488 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533EA16B742E200968488 /* Icon.png */; };
 		EB3533F716B742E200968488 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533EB16B742E200968488 /* Icon@2x.png */; };
 		EB3533FA16B834AA00968488 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3533F916B834AA00968488 /* SSKeychain.m */; };
-		EB974E6016B1E42F00717730 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E5F16B1E42F00717730 /* CIOAPIClient.m */; };
+		EB35341216B84AAA00968488 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB35340216B84AAA00968488 /* CIOAPIClient.m */; };
+		EB35341316B84AAA00968488 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = EB35340516B84AAA00968488 /* Base64Transcoder.c */; };
+		EB35341416B84AAA00968488 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = EB35340716B84AAA00968488 /* hmac.c */; };
+		EB35341516B84AAA00968488 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EB35340A16B84AAA00968488 /* OAHMAC_SHA1SignatureProvider.m */; };
+		EB35341616B84AAA00968488 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = EB35340C16B84AAA00968488 /* sha1.c */; };
+		EB35341716B84AAA00968488 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EB35340F16B84AAA00968488 /* NSString+URLEncoding.m */; };
+		EB35341816B84AAA00968488 /* OAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = EB35341116B84AAA00968488 /* OAuth.m */; };
 		EB974E7516B1E45600717730 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6316B1E45600717730 /* AFHTTPClient.m */; };
 		EB974E7616B1E45600717730 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6516B1E45600717730 /* AFHTTPRequestOperation.m */; };
 		EB974E7716B1E45600717730 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6716B1E45600717730 /* AFImageRequestOperation.m */; };
@@ -30,12 +36,6 @@
 		EB974E7B16B1E45600717730 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7016B1E45600717730 /* AFURLConnectionOperation.m */; };
 		EB974E7C16B1E45600717730 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */; };
 		EB974E7D16B1E45600717730 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */; };
-		EB974F1D16B1F6C400717730 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1016B1F6C400717730 /* Base64Transcoder.c */; };
-		EB974F1E16B1F6C400717730 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1216B1F6C400717730 /* hmac.c */; };
-		EB974F1F16B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */; };
-		EB974F2016B1F6C400717730 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1716B1F6C400717730 /* sha1.c */; };
-		EB974F2116B1F6C400717730 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1A16B1F6C400717730 /* NSString+URLEncoding.m */; };
-		EB974F2216B1F6C400717730 /* OAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1C16B1F6C400717730 /* OAuth.m */; };
 		EB974F2516B1FA9B00717730 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB974F2316B1FA9B00717730 /* MobileCoreServices.framework */; };
 		EB974F2616B1FA9B00717730 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB974F2416B1FA9B00717730 /* SystemConfiguration.framework */; };
 		EBB452DD16A5E9F500397319 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB452DC16A5E9F500397319 /* UIKit.framework */; };
@@ -69,8 +69,21 @@
 		EB3533EB16B742E200968488 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images/Icon@2x.png"; sourceTree = "<group>"; };
 		EB3533F816B834AA00968488 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = SSKeychain/SSKeychain.h; sourceTree = "<group>"; };
 		EB3533F916B834AA00968488 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychain.m; path = SSKeychain/SSKeychain.m; sourceTree = "<group>"; };
-		EB974E5E16B1E42F00717730 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
-		EB974E5F16B1E42F00717730 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAPIClient.m; sourceTree = "<group>"; };
+		EB35340116B84AAA00968488 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
+		EB35340216B84AAA00968488 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAPIClient.m; sourceTree = "<group>"; };
+		EB35340516B84AAA00968488 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
+		EB35340616B84AAA00968488 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
+		EB35340716B84AAA00968488 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
+		EB35340816B84AAA00968488 /* hmac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
+		EB35340916B84AAA00968488 /* OAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
+		EB35340A16B84AAA00968488 /* OAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
+		EB35340B16B84AAA00968488 /* OASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OASignatureProviding.h; sourceTree = "<group>"; };
+		EB35340C16B84AAA00968488 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
+		EB35340D16B84AAA00968488 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		EB35340E16B84AAA00968488 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
+		EB35340F16B84AAA00968488 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
+		EB35341016B84AAA00968488 /* OAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuth.h; sourceTree = "<group>"; };
+		EB35341116B84AAA00968488 /* OAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAuth.m; sourceTree = "<group>"; };
 		EB974E6216B1E45600717730 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
 		EB974E6316B1E45600717730 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		EB974E6416B1E45600717730 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -90,19 +103,6 @@
 		EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		EB974E7316B1E45600717730 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
-		EB974F1016B1F6C400717730 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
-		EB974F1116B1F6C400717730 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
-		EB974F1216B1F6C400717730 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
-		EB974F1316B1F6C400717730 /* hmac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
-		EB974F1416B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
-		EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
-		EB974F1616B1F6C400717730 /* OASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OASignatureProviding.h; sourceTree = "<group>"; };
-		EB974F1716B1F6C400717730 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
-		EB974F1816B1F6C400717730 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
-		EB974F1916B1F6C400717730 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
-		EB974F1A16B1F6C400717730 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
-		EB974F1B16B1F6C400717730 /* OAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuth.h; sourceTree = "<group>"; };
-		EB974F1C16B1F6C400717730 /* OAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAuth.m; sourceTree = "<group>"; };
 		EB974F2316B1FA9B00717730 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		EB974F2416B1FA9B00717730 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		EBB452D816A5E9F500397319 /* Context.IO iOS Example App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Context.IO iOS Example App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,15 +166,43 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
-		EB974E5D16B1E42F00717730 /* ContextIO */ = {
+		EB35340016B84AAA00968488 /* CIOAPIClient */ = {
 			isa = PBXGroup;
 			children = (
-				EB974F0E16B1F6C400717730 /* OAuth */,
-				EB974E5E16B1E42F00717730 /* CIOAPIClient.h */,
-				EB974E5F16B1E42F00717730 /* CIOAPIClient.m */,
+				EB35340116B84AAA00968488 /* CIOAPIClient.h */,
+				EB35340216B84AAA00968488 /* CIOAPIClient.m */,
+				EB35340316B84AAA00968488 /* OAuth */,
 			);
-			name = ContextIO;
-			path = ../ContextIO;
+			name = CIOAPIClient;
+			path = ../CIOAPIClient;
+			sourceTree = "<group>";
+		};
+		EB35340316B84AAA00968488 /* OAuth */ = {
+			isa = PBXGroup;
+			children = (
+				EB35340416B84AAA00968488 /* Crypto */,
+				EB35340E16B84AAA00968488 /* NSString+URLEncoding.h */,
+				EB35340F16B84AAA00968488 /* NSString+URLEncoding.m */,
+				EB35341016B84AAA00968488 /* OAuth.h */,
+				EB35341116B84AAA00968488 /* OAuth.m */,
+			);
+			path = OAuth;
+			sourceTree = "<group>";
+		};
+		EB35340416B84AAA00968488 /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				EB35340516B84AAA00968488 /* Base64Transcoder.c */,
+				EB35340616B84AAA00968488 /* Base64Transcoder.h */,
+				EB35340716B84AAA00968488 /* hmac.c */,
+				EB35340816B84AAA00968488 /* hmac.h */,
+				EB35340916B84AAA00968488 /* OAHMAC_SHA1SignatureProvider.h */,
+				EB35340A16B84AAA00968488 /* OAHMAC_SHA1SignatureProvider.m */,
+				EB35340B16B84AAA00968488 /* OASignatureProviding.h */,
+				EB35340C16B84AAA00968488 /* sha1.c */,
+				EB35340D16B84AAA00968488 /* sha1.h */,
+			);
+			path = Crypto;
 			sourceTree = "<group>";
 		};
 		EB974E6116B1E45600717730 /* AFNetworking */ = {
@@ -220,34 +248,6 @@
 				EB3533DE16B742D500968488 /* Images */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		EB974F0E16B1F6C400717730 /* OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				EB974F0F16B1F6C400717730 /* Crypto */,
-				EB974F1916B1F6C400717730 /* NSString+URLEncoding.h */,
-				EB974F1A16B1F6C400717730 /* NSString+URLEncoding.m */,
-				EB974F1B16B1F6C400717730 /* OAuth.h */,
-				EB974F1C16B1F6C400717730 /* OAuth.m */,
-			);
-			path = OAuth;
-			sourceTree = "<group>";
-		};
-		EB974F0F16B1F6C400717730 /* Crypto */ = {
-			isa = PBXGroup;
-			children = (
-				EB974F1016B1F6C400717730 /* Base64Transcoder.c */,
-				EB974F1116B1F6C400717730 /* Base64Transcoder.h */,
-				EB974F1216B1F6C400717730 /* hmac.c */,
-				EB974F1316B1F6C400717730 /* hmac.h */,
-				EB974F1416B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.h */,
-				EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */,
-				EB974F1616B1F6C400717730 /* OASignatureProviding.h */,
-				EB974F1716B1F6C400717730 /* sha1.c */,
-				EB974F1816B1F6C400717730 /* sha1.h */,
-			);
-			path = Crypto;
 			sourceTree = "<group>";
 		};
 		EBB452CD16A5E9F500397319 = {
@@ -335,9 +335,9 @@
 		EBB4569A16B1CE6000397319 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
-				EB974E7F16B1E48C00717730 /* sskeychain */,
 				EB974E6116B1E45600717730 /* AFNetworking */,
-				EB974E5D16B1E42F00717730 /* ContextIO */,
+				EB35340016B84AAA00968488 /* CIOAPIClient */,
+				EB974E7F16B1E48C00717730 /* sskeychain */,
 			);
 			name = Vendor;
 			sourceTree = "<group>";
@@ -426,7 +426,6 @@
 				EBB454DD16B1CB8E00397319 /* CIOExampleAPIClient.m in Sources */,
 				EBB454E716B1CBB500397319 /* main.m in Sources */,
 				EBB454ED16B1CBD900397319 /* CIOAppDelegate.m in Sources */,
-				EB974E6016B1E42F00717730 /* CIOAPIClient.m in Sources */,
 				EB974E7516B1E45600717730 /* AFHTTPClient.m in Sources */,
 				EB974E7616B1E45600717730 /* AFHTTPRequestOperation.m in Sources */,
 				EB974E7716B1E45600717730 /* AFImageRequestOperation.m in Sources */,
@@ -436,13 +435,14 @@
 				EB974E7B16B1E45600717730 /* AFURLConnectionOperation.m in Sources */,
 				EB974E7C16B1E45600717730 /* AFXMLRequestOperation.m in Sources */,
 				EB974E7D16B1E45600717730 /* UIImageView+AFNetworking.m in Sources */,
-				EB974F1D16B1F6C400717730 /* Base64Transcoder.c in Sources */,
-				EB974F1E16B1F6C400717730 /* hmac.c in Sources */,
-				EB974F1F16B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
-				EB974F2016B1F6C400717730 /* sha1.c in Sources */,
-				EB974F2116B1F6C400717730 /* NSString+URLEncoding.m in Sources */,
-				EB974F2216B1F6C400717730 /* OAuth.m in Sources */,
 				EB3533FA16B834AA00968488 /* SSKeychain.m in Sources */,
+				EB35341216B84AAA00968488 /* CIOAPIClient.m in Sources */,
+				EB35341316B84AAA00968488 /* Base64Transcoder.c in Sources */,
+				EB35341416B84AAA00968488 /* hmac.c in Sources */,
+				EB35341516B84AAA00968488 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
+				EB35341616B84AAA00968488 /* sha1.c in Sources */,
+				EB35341716B84AAA00968488 /* NSString+URLEncoding.m in Sources */,
+				EB35341816B84AAA00968488 /* OAuth.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
