@@ -19,6 +19,7 @@
 		EB3533F516B742E200968488 /* button-provider-yahoo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533E916B742E200968488 /* button-provider-yahoo@2x.png */; };
 		EB3533F616B742E200968488 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533EA16B742E200968488 /* Icon.png */; };
 		EB3533F716B742E200968488 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3533EB16B742E200968488 /* Icon@2x.png */; };
+		EB3533FA16B834AA00968488 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3533F916B834AA00968488 /* SSKeychain.m */; };
 		EB974E6016B1E42F00717730 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E5F16B1E42F00717730 /* CIOAPIClient.m */; };
 		EB974E7516B1E45600717730 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6316B1E45600717730 /* AFHTTPClient.m */; };
 		EB974E7616B1E45600717730 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E6516B1E45600717730 /* AFHTTPRequestOperation.m */; };
@@ -29,7 +30,6 @@
 		EB974E7B16B1E45600717730 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7016B1E45600717730 /* AFURLConnectionOperation.m */; };
 		EB974E7C16B1E45600717730 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */; };
 		EB974E7D16B1E45600717730 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */; };
-		EB974E9816B1E48C00717730 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974E8616B1E48C00717730 /* SSKeychain.m */; };
 		EB974F1D16B1F6C400717730 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1016B1F6C400717730 /* Base64Transcoder.c */; };
 		EB974F1E16B1F6C400717730 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1216B1F6C400717730 /* hmac.c */; };
 		EB974F1F16B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EB974F1516B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m */; };
@@ -67,6 +67,8 @@
 		EB3533E916B742E200968488 /* button-provider-yahoo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-provider-yahoo@2x.png"; path = "Images/button-provider-yahoo@2x.png"; sourceTree = "<group>"; };
 		EB3533EA16B742E200968488 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Images/Icon.png; sourceTree = "<group>"; };
 		EB3533EB16B742E200968488 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images/Icon@2x.png"; sourceTree = "<group>"; };
+		EB3533F816B834AA00968488 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = SSKeychain/SSKeychain.h; sourceTree = "<group>"; };
+		EB3533F916B834AA00968488 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychain.m; path = SSKeychain/SSKeychain.m; sourceTree = "<group>"; };
 		EB974E5E16B1E42F00717730 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
 		EB974E5F16B1E42F00717730 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAPIClient.m; sourceTree = "<group>"; };
 		EB974E6216B1E45600717730 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
@@ -88,8 +90,6 @@
 		EB974E7216B1E45600717730 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		EB974E7316B1E45600717730 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		EB974E7416B1E45600717730 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
-		EB974E8516B1E48C00717730 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
-		EB974E8616B1E48C00717730 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		EB974F1016B1F6C400717730 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
 		EB974F1116B1F6C400717730 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		EB974F1216B1F6C400717730 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
@@ -207,8 +207,8 @@
 		EB974E7F16B1E48C00717730 /* sskeychain */ = {
 			isa = PBXGroup;
 			children = (
-				EB974E8516B1E48C00717730 /* SSKeychain.h */,
-				EB974E8616B1E48C00717730 /* SSKeychain.m */,
+				EB3533F816B834AA00968488 /* SSKeychain.h */,
+				EB3533F916B834AA00968488 /* SSKeychain.m */,
 			);
 			name = sskeychain;
 			path = ../External/sskeychain;
@@ -436,13 +436,13 @@
 				EB974E7B16B1E45600717730 /* AFURLConnectionOperation.m in Sources */,
 				EB974E7C16B1E45600717730 /* AFXMLRequestOperation.m in Sources */,
 				EB974E7D16B1E45600717730 /* UIImageView+AFNetworking.m in Sources */,
-				EB974E9816B1E48C00717730 /* SSKeychain.m in Sources */,
 				EB974F1D16B1F6C400717730 /* Base64Transcoder.c in Sources */,
 				EB974F1E16B1F6C400717730 /* hmac.c in Sources */,
 				EB974F1F16B1F6C400717730 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
 				EB974F2016B1F6C400717730 /* sha1.c in Sources */,
 				EB974F2116B1F6C400717730 /* NSString+URLEncoding.m in Sources */,
 				EB974F2216B1F6C400717730 /* OAuth.m in Sources */,
+				EB3533FA16B834AA00968488 /* SSKeychain.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +507,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Context.IO iOS Example App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/Context.IO iOS Example App-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -518,6 +519,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Context.IO iOS Example App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/Context.IO iOS Example App-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
