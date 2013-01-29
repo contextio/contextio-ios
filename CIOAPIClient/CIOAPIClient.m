@@ -12,14 +12,13 @@
 #import "OAuth.h"
 #import "SSKeychain.h"
 
-//static NSString * const kCIOAPIBaseURLString = @"https://api.context.io/2.0/";
-static NSString * const kCIOAPIBaseURLString = @"https://perion-dev-api.context.io/2.0/";
+static NSString * const kCIOAPIBaseURLString = @"https://api.context.io/2.0/";
 
 // Keychain keys
 static NSString * const kCIOKeyChainServicePrefix = @"Context-IO-";
-static NSString * const kCIOAccountIDKeyChainKey = @"kOIBAccountID";
-static NSString * const kCIOTokenKeyChainKey = @"kOIBToken";
-static NSString * const kCIOTokenSecretKeyChainKey = @"kOIBTokenSecret";
+static NSString * const kCIOAccountIDKeyChainKey = @"kCIOAccountID";
+static NSString * const kCIOTokenKeyChainKey = @"kCIOToken";
+static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 @interface CIOAPIClient () {
     
