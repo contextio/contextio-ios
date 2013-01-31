@@ -3,7 +3,7 @@ CIOAPIClient is an easy to use iOS and OS X library for communicating with the C
 ## Getting Started
 
 - Sign up for a developer account at [Context.IO](http://context.io).
-- [Download CIOAPIClient](http://github.com/ContextIO/ios-contextio) and check out the included iOS example app. It is also available as a [CocoaPod](http://cocoapods.org/) to make it even easier to add to your project.
+- [Download CIOAPIClient](https://github.com/contextio/contextio-ios) and check out the included iOS example app. It is also available as a [CocoaPod](http://cocoapods.org/) to make it even easier to add to your project.
 - Browse the [full documentation](http://context.io/) for a comprehensive look at all of the methods provided by the client.
 - View the full [Context.IO API documentation](http://context.io/docs/2.0) to better familiarize yourself with the API.
 
