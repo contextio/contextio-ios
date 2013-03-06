@@ -169,7 +169,7 @@
             [self.delegate userCompletedLogin];
         } else {
             
-            [self.APIClient finishLoginWithConnectToken:connectToken saveCredentials:YES success:^{
+            [self.APIClient finishLoginWithConnectToken:connectToken saveCredentials:YES success:^(id responseObject) {
                 [self.delegate userCompletedLogin];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"error getting connect token details: %@", error);
