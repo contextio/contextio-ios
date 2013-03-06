@@ -149,7 +149,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 - (void)finishLoginWithConnectToken:(NSString *)connectToken
                     saveCredentials:(BOOL)saveCredentials
-                            success:(void (^)())successBlock
+                            success:(void (^)(id responseObject))successBlock
                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
     
     // Not needed if adding a source to an existing account
@@ -183,7 +183,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
             }
             
             if (successBlock != nil) {
-                successBlock();
+                successBlock(responseObject);
             }
         } else {
             

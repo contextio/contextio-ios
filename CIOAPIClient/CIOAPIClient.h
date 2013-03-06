@@ -98,7 +98,7 @@ typedef enum {
  */
 - (void)finishLoginWithConnectToken:(NSString *)connectToken
                     saveCredentials:(BOOL)saveCredentials
-                            success:(void (^)())successBlock
+                            success:(void (^)(id responseObject))successBlock
                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
 
 /**
