@@ -93,7 +93,7 @@ typedef enum {
  
  @param connectToken The connect token returned by the API after the user successfully authenticates an email account. This is returned as a query parameter appended to the callback URL that the API uses as a final redirect.
  @param saveCredentials This determines if credentials are saved to the device's keychain.
- @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes no arguments.
+ @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the object created from the response data of request.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (void)finishLoginWithConnectToken:(NSString *)connectToken
