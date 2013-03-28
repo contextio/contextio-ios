@@ -31,7 +31,6 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     NSString *_tmpOAuthTokenSecret;
 }
 
-@property (nonatomic, strong) AFHTTPClient *HTTPClient;
 @property (nonatomic, strong) OAuth *OAuthGenerator;
 @property (nonatomic, readonly) NSString *accountPath;
 
@@ -58,7 +57,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     
     _OAuthConsumerKey = consumerKey;
     
-    self.HTTPClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kCIOAPIBaseURLString]];
+    _HTTPClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kCIOAPIBaseURLString]];
     [self.HTTPClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
     [self.HTTPClient setDefaultHeader:@"Accept" value:@"application/json"];
     

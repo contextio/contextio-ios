@@ -37,6 +37,11 @@ typedef enum {
  */
 @property (nonatomic, readonly) BOOL isAuthorized;
 
+/**
+ The HTTP client used to interact with the API.
+ */
+@property (readonly, strong) AFHTTPClient *HTTPClient;
+
 ///---------------------------------------------
 /// @name Creating and Initializing API Clients
 ///---------------------------------------------
