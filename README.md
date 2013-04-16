@@ -65,7 +65,7 @@ CIOAPIClient and its dependencies all require ARC.
 
 If you are using CIOAPIClient in a non-ARC project, you will need to set a -fobjc-arc compiler flag on all of the CIOAPIClient, AFNetworking, and sskeychain source files.
 
-To set a compiler flag in Xcode, go to your active target and select the "Build Phases" tab. Now select all relevate source files, press Enter, insert -fobjc-arc, and then "Done" to enable ARC.
+To set a compiler flag in Xcode, go to your active target and select the "Build Phases" tab. Now select all relevant source files and press enter. Insert -fobjc-arc, and then "Done" to enable ARC.
 
 ## Acknowledgements
 
