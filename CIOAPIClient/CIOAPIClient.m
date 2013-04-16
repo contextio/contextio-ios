@@ -46,6 +46,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 @synthesize HTTPClient = _HTTPClient;
 @synthesize OAuthGenerator = _OAuthGenerator;
+@synthesize timeoutInterval = _timeoutInterval;
 
 - (id)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret {
@@ -60,6 +61,8 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     _HTTPClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kCIOAPIBaseURLString]];
     [self.HTTPClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
     [self.HTTPClient setDefaultHeader:@"Accept" value:@"application/json"];
+    
+    self.timeoutInterval = 60;
     
     self.OAuthGenerator = [[OAuth alloc] initWithConsumerKey:consumerKey andConsumerSecret:consumerSecret];
     
@@ -303,6 +306,8 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     
     mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
     
+    mutableURLRequest.timeoutInterval = self.timeoutInterval;
+    
     AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
                                                                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                                                         
@@ -321,6 +326,8 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"POST" path:path parameters:params];
     
     mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
+    
+    mutableURLRequest.timeoutInterval = self.timeoutInterval;
     
     AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
                                                                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -341,6 +348,8 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
     mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
     
+    mutableURLRequest.timeoutInterval = self.timeoutInterval;
+    
     AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
                                                                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                                                             
@@ -359,7 +368,9 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"DELETE" path:path parameters:nil];
     
     mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:nil useToken:_isAuthorized];
-
+    
+    mutableURLRequest.timeoutInterval = self.timeoutInterval;
+    
     AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
                                                                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                                                             

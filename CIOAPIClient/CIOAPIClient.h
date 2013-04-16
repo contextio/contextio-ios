@@ -42,6 +42,11 @@ typedef enum {
  */
 @property (readonly, strong) AFHTTPClient *HTTPClient;
 
+/**
+ The timeout interval for all requests made. Defaults to 60 seconds.
+ */
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
+
 ///---------------------------------------------
 /// @name Creating and Initializing API Clients
 ///---------------------------------------------
