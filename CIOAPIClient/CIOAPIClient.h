@@ -170,6 +170,17 @@ typedef enum {
 ///---------------------------------------------
 
 /**
+ Retrieves the current account's details.
+ 
+ @param params A dictionary of parameters to be sent with the request. See the API documentation for possible parameters.
+ @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
+ @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
+ */
+- (void)getAccountWithParams:(NSDictionary *)params
+                     success:(void (^)(NSDictionary *responseDict))successBlock
+                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+
+/**
  Retrieves the account's contacts.
  
  @param params A dictionary of parameters to be sent with the request. See the API documentation for possible parameters.

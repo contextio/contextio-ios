@@ -372,6 +372,16 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark -
 
+- (void)getAccountWithParams:(NSDictionary *)params
+                     success:(void (^)(NSDictionary *responseDict))successBlock
+                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+    
+    [self getPath:self.accountPath
+           params:params
+          success:successBlock
+          failure:failureBlock];
+}
+
 - (void)getContactsWithParams:(NSDictionary *)params
                       success:(void (^)(NSDictionary *responseDict))successBlock
                       failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
