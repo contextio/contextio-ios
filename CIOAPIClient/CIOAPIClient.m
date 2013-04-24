@@ -393,6 +393,24 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
           failure:failureBlock];
 }
 
+- (void)updateAccountWithParams:(NSDictionary *)params
+                        success:(void (^)(NSDictionary *responseDict))successBlock
+                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+    
+    [self postPath:self.accountPath
+            params:params
+           success:successBlock
+           failure:failureBlock];
+}
+
+- (void)deleteAccountWithSuccess:(void (^)(NSDictionary *responseDict))successBlock
+                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+    
+    [self deletePath:self.accountPath
+             success:successBlock
+             failure:failureBlock];
+}
+
 - (void)getContactsWithParams:(NSDictionary *)params
                       success:(void (^)(NSDictionary *responseDict))successBlock
                       failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
