@@ -2,63 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Example/Context.IO iOS Example App.xcodeproj">
+      location = "group:CIOAPIClient.xcodeproj">
    </FileRef>
-   <Group
-      location = "group:CIOAPIClient"
-      name = "CIOAPIClient">
-      <FileRef
-         location = "group:CIOAPIClient.h">
-      </FileRef>
-      <FileRef
-         location = "group:CIOAPIClient.m">
-      </FileRef>
-      <Group
-         location = "group:OAuth"
-         name = "OAuth">
-         <Group
-            location = "group:Crypto"
-            name = "Crypto">
-            <FileRef
-               location = "group:Base64Transcoder.c">
-            </FileRef>
-            <FileRef
-               location = "group:Base64Transcoder.h">
-            </FileRef>
-            <FileRef
-               location = "group:hmac.c">
-            </FileRef>
-            <FileRef
-               location = "group:hmac.h">
-            </FileRef>
-            <FileRef
-               location = "group:OAHMAC_SHA1SignatureProvider.h">
-            </FileRef>
-            <FileRef
-               location = "group:OAHMAC_SHA1SignatureProvider.m">
-            </FileRef>
-            <FileRef
-               location = "group:OASignatureProviding.h">
-            </FileRef>
-            <FileRef
-               location = "group:sha1.c">
-            </FileRef>
-            <FileRef
-               location = "group:sha1.h">
-            </FileRef>
-         </Group>
-         <FileRef
-            location = "group:NSString+URLEncoding.h">
-         </FileRef>
-         <FileRef
-            location = "group:NSString+URLEncoding.m">
-         </FileRef>
-         <FileRef
-            location = "group:OAuth.h">
-         </FileRef>
-         <FileRef
-            location = "group:OAuth.m">
-         </FileRef>
-      </Group>
-   </Group>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
 </Workspace>

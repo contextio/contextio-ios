@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AFNetworking.h"
+#import <AFNetworking/AFNetworking.h>
 
 /**
  `CIOAPIClient` provides an easy to use client for interacting with the Context.IO API from Objective-C. It is built on top of AFNetworking and provides convenient asynchronous block based methods for the various calls used to interact with a user's email accounts. The client also handles authentication and all signing of requests.
@@ -22,15 +22,17 @@
  As with AFNetworking on which CIOAPIClient is built upon, it will generally be helpful to create a `CIOAPIClient` subclass that contains your consumer key and secret, as well as a class method that returns a singleton shared API client. This will allow you to persist your credentials and any other configuration across the entire application. Please note however, that once authenticated, nearly all API calls are scoped to the user's account. If you would like to access multiple user accounts, you will need to use separate API clients for each.
  */
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
     CIOEmailProviderTypeGenericIMAP = 0,
     CIOEmailProviderTypeGmail = 1,
     CIOEmailProviderTypeYahoo = 2,
     CIOEmailProviderTypeAOL = 3,
     CIOEmailProviderTypeHotmail = 4,
-} CIOEmailProviderType;
+};
 
 @interface CIOAPIClient : NSObject
+
+@property (readonly, nonatomic) NSString *accountID;
 
 /**
  The current authorization status of the API client.
@@ -78,6 +80,8 @@ typedef enum {
                     token:(NSString *)token
               tokenSecret:(NSString *)tokenSecret
                 accountID:(NSString *)accountID;
+
+- (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Authenticating the API Client

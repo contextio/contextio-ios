@@ -9,11 +9,12 @@ Pod::Spec.new do |s|
   s.source_files = 'CIOAPIClient', 'CIOAPIClient/OAuth', 'CIOAPIClient/OAuth/Crypto'
   s.requires_arc = true
 
-  s.ios.deployment_target = '5.0'
+  s.ios.deployment_target = '7.0'
   s.ios.frameworks = 'Security'
 
   s.osx.deployment_target = '10.7'
 
   s.dependency 'AFNetworking', '~> 1.0'
   s.dependency 'SSKeychain', '>= 0.2.1'
+  s.dependency 'TDOAuth', '~> 1.1'
 end

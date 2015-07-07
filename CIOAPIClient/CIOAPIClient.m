@@ -111,7 +111,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
         connectTokenPath = @"connect_tokens";
     }
     
-    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
+    NSMutableDictionary *mutableParams = [(params ?: @{}) mutableCopy];
     
     switch (providerType) {
         case CIOEmailProviderTypeGenericIMAP:
@@ -297,18 +297,23 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark -
 
+- (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
+
+    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET" path:path parameters:params];
+    mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
+    mutableURLRequest.timeoutInterval = self.timeoutInterval;
+
+    return mutableURLRequest;
+}
+
 - (void)getPath:(NSString *)path
          params:(NSDictionary *)params
         success:(void (^)(id responseObject))successBlock
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
     
-    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET" path:path parameters:params];
-    
-    mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
-    
-    mutableURLRequest.timeoutInterval = self.timeoutInterval;
-    
-    AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
+    NSURLRequest *request = [self requestForPath:path method:@"GET" params:params];
+
+    AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:request
                                                                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                                                         
                                                                                             if (successBlock) {
