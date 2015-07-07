@@ -8,24 +8,6 @@
 
 #import <XCTest/XCTest.h>
 #import "CIOAPIClient.h"
-#import "OAuth.h"
-
-@interface DeterministicOAuth : OAuth
-
-@end
-
-
-@implementation DeterministicOAuth
-
-- (NSString *)oauth_timestamp {
-    return @"1456789012";
-}
-
-- (NSString *)oauth_nonce {
-    return @"static-nonce-for-testing";
-}
-
-@end
 
 @interface OAuthSigningTests : XCTestCase
 
@@ -38,8 +20,20 @@
 - (void)setUp {
     [super setUp];
     self.client = [[CIOAPIClient alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
-    [self.client setValue:[[DeterministicOAuth alloc] initWithConsumerKey:@"consumer_key" andConsumerSecret:@"consumer_secret"]
-                   forKey:@"OAuthGenerator"];
+}
+
+- (NSString *)extractSignature:(NSString *)oAuthHeader {
+    NSString *stripped = [oAuthHeader stringByReplacingOccurrencesOfString:@"OAuth " withString:@""];
+    NSArray *sections = [stripped componentsSeparatedByString:@", "];
+    for (NSString *section in sections) {
+        NSArray *split = [section componentsSeparatedByString:@"="];
+        if (split.count > 1) {
+            if ([split[0] isEqualToString:@"oauth_signature"]){
+                return [split[1] stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+            }
+        }
+    }
+    return nil;
 }
 
 - (void)testTwoLeggedSigning {
@@ -48,7 +42,9 @@
                                                  params:@{@"email": @"@gmail.com"}];
 
     NSString *authHeader = [request valueForHTTPHeaderField:@"Authorization"];
-    XCTAssertEqualObjects(authHeader, @"OAuth realm=\"\", oauth_timestamp=\"1456789012\", oauth_nonce=\"static-nonce-for-testing\", oauth_signature_method=\"HMAC-SHA1\", oauth_consumer_key=\"consumer_key\", oauth_version=\"1.0\", email=\"%40gmail.com\", oauth_signature=\"Ejjxthf%2FkLf5q83G%2FXWBLhZotU4%3D\"");
+    NSString *signature = [self extractSignature:authHeader];
+    XCTAssertNotNil(signature);
+    XCTAssertEqualObjects(signature, @"Ejjxthf%2FkLf5q83G%2FXWBLhZotU4%3D");
 }
 
 - (void)testThreeLeggedSigning {
@@ -61,7 +57,9 @@
                                                  params:@{@"email": @"@gmail.com"}];
 
     NSString *authHeader = [request valueForHTTPHeaderField:@"Authorization"];
-    XCTAssertEqualObjects(authHeader, @"OAuth realm=\"\", oauth_timestamp=\"1456789012\", oauth_nonce=\"static-nonce-for-testing\", oauth_signature_method=\"HMAC-SHA1\", oauth_consumer_key=\"consumer_key\", oauth_version=\"1.0\", oauth_token=\"oauth_token\", email=\"%40gmail.com\", oauth_signature=\"P7%2Be0k40MTzRkMVV9CaGF4YGtok%3D\"");
+    NSString *signature = [self extractSignature:authHeader];
+    XCTAssertNotNil(signature);
+    XCTAssertEqualObjects(signature, @"P7%2Be0k40MTzRkMVV9CaGF4YGtok%3D");
 }
 
 @end

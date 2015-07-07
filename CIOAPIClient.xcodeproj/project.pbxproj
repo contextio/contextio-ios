@@ -11,12 +11,6 @@
 		FA2E564F1B4B039000AEF151 /* OAuthSigningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */; };
 		FAD8612C1B44C75B002A4407 /* libCIOAPIClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD861201B44C75B002A4407 /* libCIOAPIClient.a */; };
 		FAD8615D1B44C83C002A4407 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */; };
-		FAD8616D1B44C84C002A4407 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = FAD861601B44C84C002A4407 /* Base64Transcoder.c */; };
-		FAD8616E1B44C84C002A4407 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = FAD861621B44C84C002A4407 /* hmac.c */; };
-		FAD8616F1B44C84C002A4407 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD861651B44C84C002A4407 /* OAHMAC_SHA1SignatureProvider.m */; };
-		FAD861701B44C84C002A4407 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = FAD861671B44C84C002A4407 /* sha1.c */; };
-		FAD861711B44C84C002A4407 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD8616A1B44C84C002A4407 /* NSString+URLEncoding.m */; };
-		FAD861721B44C84C002A4407 /* OAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD8616C1B44C84C002A4407 /* OAuth.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +36,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		42CCA8FADEAC5D3F8424A46D /* Pods.test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.test.xcconfig; path = "Pods/Target Support Files/Pods/Pods.test.xcconfig"; sourceTree = "<group>"; };
 		9513E578FEC176F57F6108D2 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F73E5C8846ABA9C8336A4AA4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,19 +46,6 @@
 		FAD8612B1B44C75B002A4407 /* CIOAPIClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CIOAPIClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD8615A1B44C83C002A4407 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAPIClient.h; path = CIOAPIClient/CIOAPIClient.h; sourceTree = SOURCE_ROOT; };
 		FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAPIClient.m; path = CIOAPIClient/CIOAPIClient.m; sourceTree = SOURCE_ROOT; };
-		FAD861601B44C84C002A4407 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
-		FAD861611B44C84C002A4407 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
-		FAD861621B44C84C002A4407 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
-		FAD861631B44C84C002A4407 /* hmac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
-		FAD861641B44C84C002A4407 /* OAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
-		FAD861651B44C84C002A4407 /* OAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
-		FAD861661B44C84C002A4407 /* OASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OASignatureProviding.h; sourceTree = "<group>"; };
-		FAD861671B44C84C002A4407 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
-		FAD861681B44C84C002A4407 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
-		FAD861691B44C84C002A4407 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
-		FAD8616A1B44C84C002A4407 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
-		FAD8616B1B44C84C002A4407 /* OAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuth.h; sourceTree = "<group>"; };
-		FAD8616C1B44C84C002A4407 /* OAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAuth.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +73,7 @@
 			children = (
 				B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */,
 				9513E578FEC176F57F6108D2 /* Pods.release.xcconfig */,
+				42CCA8FADEAC5D3F8424A46D /* Pods.test.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -128,7 +111,6 @@
 			children = (
 				FAD8615A1B44C83C002A4407 /* CIOAPIClient.h */,
 				FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */,
-				FAD8615E1B44C84C002A4407 /* OAuth */,
 			);
 			name = CIOAPIClient;
 			path = "contextio-ios";
@@ -137,40 +119,11 @@
 		FAD8612F1B44C75B002A4407 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				FA2E564C1B4B004200AEF151 /* Info.plist */,
 				FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */,
+				FA2E564C1B4B004200AEF151 /* Info.plist */,
 			);
 			name = Tests;
 			path = "contextio-iosTests";
-			sourceTree = "<group>";
-		};
-		FAD8615E1B44C84C002A4407 /* OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				FAD8615F1B44C84C002A4407 /* Crypto */,
-				FAD861691B44C84C002A4407 /* NSString+URLEncoding.h */,
-				FAD8616A1B44C84C002A4407 /* NSString+URLEncoding.m */,
-				FAD8616B1B44C84C002A4407 /* OAuth.h */,
-				FAD8616C1B44C84C002A4407 /* OAuth.m */,
-			);
-			name = OAuth;
-			path = CIOAPIClient/OAuth;
-			sourceTree = SOURCE_ROOT;
-		};
-		FAD8615F1B44C84C002A4407 /* Crypto */ = {
-			isa = PBXGroup;
-			children = (
-				FAD861601B44C84C002A4407 /* Base64Transcoder.c */,
-				FAD861611B44C84C002A4407 /* Base64Transcoder.h */,
-				FAD861621B44C84C002A4407 /* hmac.c */,
-				FAD861631B44C84C002A4407 /* hmac.h */,
-				FAD861641B44C84C002A4407 /* OAHMAC_SHA1SignatureProvider.h */,
-				FAD861651B44C84C002A4407 /* OAHMAC_SHA1SignatureProvider.m */,
-				FAD861661B44C84C002A4407 /* OASignatureProviding.h */,
-				FAD861671B44C84C002A4407 /* sha1.c */,
-				FAD861681B44C84C002A4407 /* sha1.h */,
-			);
-			path = Crypto;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,13 +249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD861711B44C84C002A4407 /* NSString+URLEncoding.m in Sources */,
-				FAD861701B44C84C002A4407 /* sha1.c in Sources */,
-				FAD8616E1B44C84C002A4407 /* hmac.c in Sources */,
 				FAD8615D1B44C83C002A4407 /* CIOAPIClient.m in Sources */,
-				FAD861721B44C84C002A4407 /* OAuth.m in Sources */,
-				FAD8616D1B44C84C002A4407 /* Base64Transcoder.c in Sources */,
-				FAD8616F1B44C84C002A4407 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +272,70 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		FA7023E81B4C757C00A4AEC6 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VALID_ARCHS = "arm64 armv7 armv7s i386";
+			};
+			name = Test;
+		};
+		FA7023E91B4C757C00A4AEC6 /* Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42CCA8FADEAC5D3F8424A46D /* Pods.test.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Test;
+		};
+		FA7023EA1B4C757C00A4AEC6 /* Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42CCA8FADEAC5D3F8424A46D /* Pods.test.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.contextio.contextio-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Test;
+		};
 		FAD861311B44C75B002A4407 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -409,7 +420,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
 			buildSettings = {
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -419,7 +429,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9513E578FEC176F57F6108D2 /* Pods.release.xcconfig */;
 			buildSettings = {
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -439,7 +448,7 @@
 		};
 		FAD861381B44C75B002A4407 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 9513E578FEC176F57F6108D2 /* Pods.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Tests/Info.plist;
@@ -456,6 +465,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FAD861311B44C75B002A4407 /* Debug */,
+				FA7023E81B4C757C00A4AEC6 /* Test */,
 				FAD861321B44C75B002A4407 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -465,6 +475,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FAD861341B44C75B002A4407 /* Debug */,
+				FA7023E91B4C757C00A4AEC6 /* Test */,
 				FAD861351B44C75B002A4407 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -474,6 +485,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FAD861371B44C75B002A4407 /* Debug */,
+				FA7023EA1B4C757C00A4AEC6 /* Test */,
 				FAD861381B44C75B002A4407 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
