@@ -279,12 +279,6 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     }
 }
 
-- (NSString *)accountPath {
-    return [@"accounts" stringByAppendingPathComponent:_accountID];
-}
-
-#pragma mark -
-
 - (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
 
     NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET" path:path parameters:params];
@@ -293,6 +287,12 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
     return mutableURLRequest;
 }
+
+- (NSString *)accountPath {
+    return [@"accounts" stringByAppendingPathComponent:_accountID];
+}
+
+#pragma mark -
 
 - (void)getPath:(NSString *)path
          params:(NSDictionary *)params

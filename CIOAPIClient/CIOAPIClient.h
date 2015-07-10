@@ -80,6 +80,14 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
               tokenSecret:(NSString *)tokenSecret
                 accountID:(NSString *)accountID;
 
+/**
+ *  Create a signed `NSURLRequest` for the context.io API using current OAuth credentials
+ *
+ *  @param path   path in the 2.0 API namespace, e.g. "accounts/<id>/contacts"
+ *  @param method HTTP request method
+ *  @param params parameters to send, will be sent as URL params for GET, otherwise sent as a x-www-form-urlencoded body
+ *
+ */
 - (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params;
 
 ///---------------------------------------------
