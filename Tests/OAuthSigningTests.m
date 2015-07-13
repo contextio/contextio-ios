@@ -44,7 +44,7 @@
     NSString *authHeader = [request valueForHTTPHeaderField:@"Authorization"];
     NSString *signature = [self extractSignature:authHeader];
     XCTAssertNotNil(signature);
-    XCTAssertEqualObjects(signature, @"Ejjxthf%2FkLf5q83G%2FXWBLhZotU4%3D");
+    XCTAssertEqualObjects(signature, @"2AaRHKvlFRrLVbRY7qFAJgP%2Bzjk%3D");
 }
 
 - (void)testThreeLeggedSigning {
@@ -59,7 +59,7 @@
     NSString *authHeader = [request valueForHTTPHeaderField:@"Authorization"];
     NSString *signature = [self extractSignature:authHeader];
     XCTAssertNotNil(signature);
-    XCTAssertEqualObjects(signature, @"P7%2Be0k40MTzRkMVV9CaGF4YGtok%3D");
+    XCTAssertEqualObjects(signature, @"M71dKyk6LLpHEYQNXEEBn8NCCIQ%3D");
 }
 
 @end

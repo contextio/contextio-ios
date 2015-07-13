@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1CE4615FE9E82DB90887096B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F73E5C8846ABA9C8336A4AA4 /* libPods.a */; };
 		FA2E564F1B4B039000AEF151 /* OAuthSigningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */; };
+		FA9FD7E91B5049B900143F09 /* CIOAFNetworkingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FD7E81B5049B900143F09 /* CIOAFNetworkingClient.m */; };
+		FA9FD7EC1B5052F500143F09 /* CIORequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FD7EB1B5052F500143F09 /* CIORequest.m */; };
 		FAD8612C1B44C75B002A4407 /* libCIOAPIClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD861201B44C75B002A4407 /* libCIOAPIClient.a */; };
 		FAD8615D1B44C83C002A4407 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */; };
 /* End PBXBuildFile section */
@@ -42,6 +44,10 @@
 		F73E5C8846ABA9C8336A4AA4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA2E564C1B4B004200AEF151 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Tests/Info.plist; sourceTree = SOURCE_ROOT; };
 		FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OAuthSigningTests.m; path = Tests/OAuthSigningTests.m; sourceTree = SOURCE_ROOT; };
+		FA9FD7E71B5049B900143F09 /* CIOAFNetworkingClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAFNetworkingClient.h; path = CIOAPIClient/CIOAFNetworkingClient.h; sourceTree = SOURCE_ROOT; };
+		FA9FD7E81B5049B900143F09 /* CIOAFNetworkingClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAFNetworkingClient.m; path = CIOAPIClient/CIOAFNetworkingClient.m; sourceTree = SOURCE_ROOT; };
+		FA9FD7EA1B5052F500143F09 /* CIORequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIORequest.h; path = CIOAPIClient/CIORequest.h; sourceTree = SOURCE_ROOT; };
+		FA9FD7EB1B5052F500143F09 /* CIORequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIORequest.m; path = CIOAPIClient/CIORequest.m; sourceTree = SOURCE_ROOT; };
 		FAD861201B44C75B002A4407 /* libCIOAPIClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCIOAPIClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD8612B1B44C75B002A4407 /* CIOAPIClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CIOAPIClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD8615A1B44C83C002A4407 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAPIClient.h; path = CIOAPIClient/CIOAPIClient.h; sourceTree = SOURCE_ROOT; };
@@ -111,6 +117,10 @@
 			children = (
 				FAD8615A1B44C83C002A4407 /* CIOAPIClient.h */,
 				FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */,
+				FA9FD7E71B5049B900143F09 /* CIOAFNetworkingClient.h */,
+				FA9FD7E81B5049B900143F09 /* CIOAFNetworkingClient.m */,
+				FA9FD7EA1B5052F500143F09 /* CIORequest.h */,
+				FA9FD7EB1B5052F500143F09 /* CIORequest.m */,
 			);
 			name = CIOAPIClient;
 			path = "contextio-ios";
@@ -249,7 +259,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA9FD7EC1B5052F500143F09 /* CIORequest.m in Sources */,
 				FAD8615D1B44C83C002A4407 /* CIOAPIClient.m in Sources */,
+				FA9FD7E91B5049B900143F09 /* CIOAFNetworkingClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

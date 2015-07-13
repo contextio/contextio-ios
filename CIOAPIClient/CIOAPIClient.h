@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AFNetworking/AFNetworking.h>
+#import "CIORequest.h"
 
 /**
  `CIOAPIClient` provides an easy to use client for interacting with the Context.IO API from Objective-C. It is built on top of AFNetworking and provides convenient asynchronous block based methods for the various calls used to interact with a user's email accounts. The client also handles authentication and all signing of requests.
@@ -29,9 +30,11 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
     CIOEmailProviderTypeHotmail = 4,
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CIOAPIClient : NSObject
 
-@property (readonly, nonatomic) NSString *accountID;
+@property (readonly, nonatomic, nullable) NSString *accountID;
 
 /**
  The current authorization status of the API client.
@@ -39,14 +42,9 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
 @property (nonatomic, readonly) BOOL isAuthorized;
 
 /**
- The HTTP client used to interact with the API.
- */
-@property (readonly, strong) AFHTTPClient *HTTPClient;
-
-/**
  The timeout interval for all requests made. Defaults to 60 seconds.
  */
-@property (nonatomic, assign) NSTimeInterval timeoutInterval;
+@property (nonatomic) NSTimeInterval timeoutInterval;
 
 ///---------------------------------------------
 /// @name Creating and Initializing API Clients
@@ -60,7 +58,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  
  @return The newly-initialized API client
  */
-- (id)initWithConsumerKey:(NSString *)consumerKey
+- (instancetype)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret;
 
 /**
@@ -74,11 +72,11 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  
  @return The newly-initialized API client
  */
-- (id)initWithConsumerKey:(NSString *)consumerKey
+- (instancetype)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret
-                    token:(NSString *)token
-              tokenSecret:(NSString *)tokenSecret
-                accountID:(NSString *)accountID;
+                    token:(nullable NSString *)token
+              tokenSecret:(nullable NSString *)tokenSecret
+                accountID:(nullable NSString *)accountID;
 
 /**
  *  Create a signed `NSURLRequest` for the context.io API using current OAuth credentials
@@ -88,7 +86,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  *  @param params parameters to send, will be sent as URL params for GET, otherwise sent as a x-www-form-urlencoded body
  *
  */
-- (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params;
+- (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(nullable NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Authenticating the API Client
@@ -103,11 +101,14 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the auth redirect URL that should be loaded in your UIWebView to allow the user to authenticate their email account.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)beginAuthForProviderType:(CIOEmailProviderType)providerType
-               callbackURLString:(NSString *)callbackURLString
-                          params:(NSDictionary *)params
-                         success:(void (^)(NSURL *authRedirectURL))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (NSURLRequest *)beginAuthForProviderType:(CIOEmailProviderType)providerType
+                         callbackURLString:(NSString *)callbackURLString
+                                    params:(NSDictionary *)params;
+
+- (nullable NSURL *)extractRedirectURLFromResponse:(NSDictionary *)responseDict;
+
+- (NSURLRequest *)finishLoginWithConnectToken:(NSString *)connectToken
+                              saveCredentials:(BOOL)saveCredentials;
 
 /**
  Uses the connect token received from the API to complete the authentication process and optionally save the credentials to the keychain.
@@ -117,69 +118,12 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the object created from the response data of request.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)finishLoginWithConnectToken:(NSString *)connectToken
-                    saveCredentials:(BOOL)saveCredentials
-                            success:(void (^)(id responseObject))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (BOOL)completeLoginWithResponse:(NSDictionary *)responseObject saveCredentials:(BOOL)saveCredentials;
 
 /**
  Clears the credentials stored in the keychain.
  */
 - (void)clearCredentials;
-
-///---------------------------------------------
-/// @name Self Constructing API Calls
-///---------------------------------------------
-
-/**
- Constructs and enqueues a GET request to the API.
- 
- @param path The path for the request.
- @param params The parameters for the request. This can be `nil` if no parameters are required.
- @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the object created from the response data of request.
- @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
- */
-- (void)getPath:(NSString *)path
-         params:(NSDictionary *)params
-        success:(void (^)(id responseObject))successBlock
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
-
-/**
- Constructs and enqueues a POST request to the API.
- 
- @param path The path for the request.
- @param params The parameters for the request. This can be `nil` if no parameters are required.
- @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the object created from the response data of request.
- @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
- */
-- (void)postPath:(NSString *)path
-          params:(NSDictionary *)params
-         success:(void (^)(id responseObject))successBlock
-         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
-
-/**
- Constructs and enqueues a PUT request to the API.
- 
- @param path The path for the request.
- @param params The parameters for the request. This can be `nil` if no parameters are required.
- @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the object created from the response data of request.
- @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
- */
-- (void)putPath:(NSString *)path
-         params:(NSDictionary *)params
-        success:(void (^)(id responseObject))successBlock
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
-
-/**
- Constructs and enqueues a DELETE request to the API.
- 
- @param path The path for the request.
- @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the object created from the response data of request.
- @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
- */
-- (void)deletePath:(NSString *)path
-           success:(void (^)(id responseObject))successBlock
-           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
 
 ///---------------------------------------------
 /// @name Working With Contacts and Related Resources
@@ -192,9 +136,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getAccountWithParams:(NSDictionary *)params
-                     success:(void (^)(NSDictionary *responseDict))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getAccountWithParams:(NSDictionary *)params;
+
 
 /**
  Updates the current account's details.
@@ -203,9 +146,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)updateAccountWithParams:(NSDictionary *)params
-                        success:(void (^)(NSDictionary *responseDict))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)updateAccountWithParams:(NSDictionary *)params;
 
 /**
  Deletes the current account.
@@ -213,8 +154,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)deleteAccountWithSuccess:(void (^)(NSDictionary *responseDict))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)deleteAccount;
 
 /**
  Retrieves the account's contacts.
@@ -223,10 +163,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */ 
-- (void)getContactsWithParams:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
-
+- (CIODictionaryRequest *)getContactsWithParams:(NSDictionary *)params;
 /**
  Retrieves the contact with the specified email.
  
@@ -235,10 +172,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getContactWithEmail:(NSString *)email
-                     params:(NSDictionary *)params
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getContactWithEmail:(NSString *)email
+                     params:(NSDictionary *)params;
 
 /**
  Retrieves any files associated with a particular contact.
@@ -248,10 +183,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
 */
-- (void)getFilesForContactWithEmail:(NSString *)email
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSArray *responseArray))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getFilesForContactWithEmail:(NSString *)email
+                             params:(NSDictionary *)params;
 
 /**
  Retrieves any messages associated with a particular contact.
@@ -261,10 +194,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getMessagesForContactWithEmail:(NSString *)email
-                                params:(NSDictionary *)params
-                               success:(void (^)(NSArray *responseArray))successBlock
-                               failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getMessagesForContactWithEmail:(NSString *)email
+                                params:(NSDictionary *)params;
 
 /**
  Retrieves any threads associated with a particular contact.
@@ -274,10 +205,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getThreadsForContactWithEmail:(NSString *)email
-                               params:(NSDictionary *)params
-                              success:(void (^)(NSArray *responseArray))successBlock
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getThreadsForContactWithEmail:(NSString *)email
+                               params:(NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Email Address aliases
@@ -290,9 +219,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getEmailAddressesWithParams:(NSDictionary *)params
-                            success:(void (^)(NSArray *responseArray))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getEmailAddressesWithParams:(NSDictionary *)params;
 
 /**
  Associates a new email address with the account.
@@ -302,10 +229,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)createEmailAddressWithEmail:(NSString *)email
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)createEmailAddressWithEmail:(NSString *)email
+                             params:(NSDictionary *)params;
 
 /**
  Retrieves the details of a particular email address.
@@ -315,10 +240,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getEmailAddressWithEmail:(NSString *)email
-                          params:(NSDictionary *)params
-                         success:(void (^)(NSDictionary *responseDict))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getEmailAddressWithEmail:(NSString *)email
+                          params:(NSDictionary *)params;
 
 /**
  Updates the details of a particular email address.
@@ -328,10 +251,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)updateEmailAddressWithEmail:(NSString *)email
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)updateEmailAddressWithEmail:(NSString *)email
+                             params:(NSDictionary *)params;
 
 /**
  Disassociates a particular email address from the account.
@@ -340,10 +261,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)deleteEmailAddressWithEmail:(NSString *)email
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
-
+- (CIODictionaryRequest *)deleteEmailAddressWithEmail:(NSString *)email;
 
 ///---------------------------------------------
 /// @name Working With Files and Related Resources
@@ -356,9 +274,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getFilesWithParams:(NSDictionary *)params
-                   success:(void (^)(NSArray *responseArray))successBlock
-                   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getFilesWithParams:(NSDictionary *)params;
 
 /**
  Retrieves the file with the specified id.
@@ -368,10 +284,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getFileWithID:(NSString *)fileID
-               params:(NSDictionary *)params
-              success:(void (^)(NSDictionary *responseDict))successBlock
-              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getFileWithID:(NSString *)fileID
+               params:(NSDictionary *)params;
 
 /**
  Retrieves any changes associated with a particular file.
@@ -381,10 +295,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getChangesForFileWithID:(NSString *)fileID
-                         params:(NSDictionary *)params
-                        success:(void (^)(NSArray *responseArray))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getChangesForFileWithID:(NSString *)fileID
+                         params:(NSDictionary *)params;
 
 /**
  Retrieves a public facing URL that can be used to download a particular file.
@@ -394,10 +306,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getContentsURLForFileWithID:(NSString *)fileID
-                            params:(NSDictionary *)params
-                           success:(void (^)(NSDictionary *responseDict))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getContentsURLForFileWithID:(NSString *)fileID
+                            params:(NSDictionary *)params;
 
 /**
  Retrieves the contents of a particular file.
@@ -409,12 +319,12 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  @param progressBlock A block object to be executed during the downloading of the contents to update you on the progress. This block has no return value and takes three arguments: the bytes read since the last execution of the block, the total number of bytes read, and the total number of bytes that are expected to be read. This block will be executed multiple times during the download process.
  */
-- (void)downloadContentsOfFileWithID:(NSString *)fileID
-                          saveToPath:(NSString *)saveToPath
-                              params:(NSDictionary *)params
-                             success:(void (^)())successBlock
-                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock
-                            progress:(void (^) (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead ))progressBlock;
+//- (void)downloadContentsOfFileWithID:(NSString *)fileID
+//                          saveToPath:(NSString *)saveToPath
+//                              params:(NSDictionary *)params
+//                             success:(void (^)())successBlock
+//                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock
+//                            progress:(void (^) (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead ))progressBlock;
 
 /**
  Retrieves other files associated with a particular file.
@@ -424,10 +334,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getRelatedForFileWithID:(NSString *)fileID
-                         params:(NSDictionary *)params
-                        success:(void (^)(NSArray *responseArray))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID
+                         params:(NSDictionary *)params;
 
 /**
  Retrieves the revisions of a particular file.
@@ -437,10 +345,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getRevisionsForFileWithID:(NSString *)fileID
-                           params:(NSDictionary *)params
-                          success:(void (^)(NSArray *responseArray))successBlock
-                          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getRevisionsForFileWithID:(NSString *)fileID
+                           params:(NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Messages and Related Resources
@@ -453,9 +359,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getMessagesWithParams:(NSDictionary *)params
-                      success:(void (^)(NSArray *responseArray))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getMessagesWithParams:(NSDictionary *)params;
 
 /**
  Retrieves the message with the specified id.
@@ -465,10 +369,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getMessageWithID:(NSString *)messageID
-                  params:(NSDictionary *)params
-                 success:(void (^)(NSDictionary *responseDict))successBlock
-                 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getMessageWithID:(NSString *)messageID
+                  params:(NSDictionary *)params;
 
 /**
  Updates the message with the specified id.
@@ -479,11 +381,9 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)updateMessageWithID:(NSString *)messageID
+- (CIODictionaryRequest *)updateMessageWithID:(NSString *)messageID
           destinationFolder:(NSString *)destinationFolder
-                     params:(NSDictionary *)params
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+                                       params:(NSDictionary *)params;
 
 /**
  Deletes the message with the specified id.
@@ -492,9 +392,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)deleteMessageWithID:(NSString *)messageID
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)deleteMessageWithID:(NSString *)messageID;
 
 /**
  Retrieves the message with the specified id.
@@ -504,10 +402,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getBodyForMessageWithID:(NSString *)messageID
-                         params:(NSDictionary *)params
-                        success:(void (^)(NSDictionary *responseDict))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getBodyForMessageWithID:(NSString *)messageID
+                         params:(NSDictionary *)params;
 
 /**
  Retrieves the flags for a particular message.
@@ -517,10 +413,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getFlagsForMessageWithID:(NSString *)messageID
-                          params:(NSDictionary *)params
-                         success:(void (^)(NSDictionary *responseDict))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getFlagsForMessageWithID:(NSString *)messageID
+                          params:(NSDictionary *)params;
 
 /**
  Updates the flags for a particular message.
@@ -530,10 +424,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)updateFlagsForMessageWithID:(NSString *)messageID
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)updateFlagsForMessageWithID:(NSString *)messageID
+                             params:(NSDictionary *)params;
 
 /**
  Retrieves the folders for a particular message.
@@ -543,10 +435,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getFoldersForMessageWithID:(NSString *)messageID
-                            params:(NSDictionary *)params
-                           success:(void (^)(NSArray *responseArray))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getFoldersForMessageWithID:(NSString *)messageID
+                            params:(NSDictionary *)params;
 
 /**
  Updates the folders for a particular message.
@@ -556,10 +446,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)updateFoldersForMessageWithID:(NSString *)messageID
-                               params:(NSDictionary *)params
-                              success:(void (^)(NSDictionary *responseDict))successBlock
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)updateFoldersForMessageWithID:(NSString *)messageID
+                               params:(NSDictionary *)params;
 
 /**
  Sets the folders for a particular message.
@@ -569,10 +457,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)setFoldersForMessageWithID:(NSString *)messageID
-                           folders:(NSDictionary *)folders
-                           success:(void (^)(NSDictionary *responseDict))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)setFoldersForMessageWithID:(NSString *)messageID
+                           folders:(NSDictionary *)folders;
 
 /**
  Retrieves the headers for a particular message.
@@ -582,10 +468,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getHeadersForMessageWithID:(NSString *)messageID
-                            params:(NSDictionary *)params
-                           success:(void (^)(NSDictionary *responseDict))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getHeadersForMessageWithID:(NSString *)messageID
+                            params:(NSDictionary *)params;
 
 /**
  Retrieves the source for a particular message.
@@ -595,10 +479,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getSourceForMessageWithID:(NSString *)messageID
-                           params:(NSDictionary *)params
-                          success:(void (^)(NSDictionary *responseDict))successBlock
-                          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getSourceForMessageWithID:(NSString *)messageID
+                           params:(NSDictionary *)params;
 
 /**
  Retrieves the thread for a particular message.
@@ -608,10 +490,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getThreadForMessageWithID:(NSString *)messageID
-                           params:(NSDictionary *)params
-                          success:(void (^)(NSDictionary *responseDict))successBlock
-                          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getThreadForMessageWithID:(NSString *)messageID
+                           params:(NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Sources and Related Resources
@@ -624,9 +504,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getSourcesWithParams:(NSDictionary *)params
-                     success:(void (^)(NSArray *responseArray))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getSourcesWithParams:(NSDictionary *)params;
 
 /**
  Creates a new source under the account. Note: It is usually preferred to use `-beginAuthForProviderType:callbackURLString:params:success:failure:` to add a new source to the account.
@@ -641,15 +519,13 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)createSourceWithEmail:(NSString *)email
+- (CIODictionaryRequest *)createSourceWithEmail:(NSString *)email
                        server:(NSString *)server
                      username:(NSString *)username
                        useSSL:(BOOL)useSSL
                          port:(NSInteger)port
                          type:(NSString *)type
-                       params:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+                       params:(NSDictionary *)params;
 
 /**
  Retrieves the source with the specified label.
@@ -659,10 +535,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getSourceWithLabel:(NSString *)sourceLabel
-                    params:(NSDictionary *)params
-                   success:(void (^)(NSDictionary *responseDict))successBlock
-                   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getSourceWithLabel:(NSString *)sourceLabel
+                    params:(NSDictionary *)params;
 
 /**
  Updates the source with the specified label.
@@ -672,10 +546,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)updateSourceWithLabel:(NSString *)sourceLabel
-                       params:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)updateSourceWithLabel:(NSString *)sourceLabel
+                       params:(NSDictionary *)params;
 
 /**
  Deletes the source with the specified label.
@@ -684,9 +556,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)deleteSourceWithLabel:(NSString *)sourceLabel
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)deleteSourceWithLabel:(NSString *)sourceLabel;
 
 /**
  Retrieves the folders for a particular source.
@@ -696,10 +566,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getFoldersForSourceWithLabel:(NSString *)sourceLabel
-                              params:(NSDictionary *)params
-                             success:(void (^)(NSArray *responseArray))successBlock
-                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getFoldersForSourceWithLabel:(NSString *)sourceLabel
+                              params:(NSDictionary *)params;
 
 /**
  Retrieves a folder belonging to a particular source.
@@ -710,11 +578,9 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getFolderWithPath:(NSString *)folderPath
+- (CIODictionaryRequest *)getFolderWithPath:(NSString *)folderPath
               sourceLabel:(NSString *)sourceLabel
-                   params:(NSDictionary *)params
-                  success:(void (^)(NSDictionary *responseDict))successBlock
-                  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+                   params:(NSDictionary *)params;
 
 /**
  Deletes a folder belonging to a particular source.
@@ -724,10 +590,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)deleteFolderWithPath:(NSString *)folderPath
-                 sourceLabel:(NSString *)sourceLabel
-                     success:(void (^)(NSDictionary *responseDict))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)deleteFolderWithPath:(NSString *)folderPath
+                 sourceLabel:(NSString *)sourceLabel;
 
 /**
  Creates a new folder belonging to a particular source.
@@ -738,11 +602,9 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)createFolderWithPath:(NSString *)folderPath
+- (CIODictionaryRequest *)createFolderWithPath:(NSString *)folderPath
                  sourceLabel:(NSString *)sourceLabel
-                      params:(NSDictionary *)params
-                     success:(void (^)(NSDictionary *responseDict))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+                      params:(NSDictionary *)params;
 
 /**
  Expunges a folder belonging to a particular source.
@@ -753,11 +615,9 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)expungeFolderWithPath:(NSString *)folderPath
+- (CIODictionaryRequest *)expungeFolderWithPath:(NSString *)folderPath
                   sourceLabel:(NSString *)sourceLabel
-                       params:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+                       params:(NSDictionary *)params;
 
 /**
  Retrieve the messages for a folder belonging to a particular source.
@@ -768,11 +628,9 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getMessagesForFolderWithPath:(NSString *)folderPath
+- (CIOArrayRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
                          sourceLabel:(NSString *)sourceLabel
-                              params:(NSDictionary *)params
-                             success:(void (^)(NSArray *responseArray))successBlock
-                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+                              params:(NSDictionary *)params;
 
 /**
  Retrieves the sync status for a particular source.
@@ -782,10 +640,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getSyncStatusForSourceWithLabel:(NSString *)sourceLabel
-                                 params:(NSDictionary *)params
-                                success:(void (^)(NSDictionary *responseDict))successBlock
-                                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getSyncStatusForSourceWithLabel:(NSString *)sourceLabel
+                                 params:(NSDictionary *)params;
 
 /**
  Force a sync for a particular source.
@@ -795,10 +651,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)forceSyncForSourceWithLabel:(NSString *)sourceLabel
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)forceSyncForSourceWithLabel:(NSString *)sourceLabel
+                             params:(NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Sources and Related Resources
@@ -811,9 +665,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getThreadsWithParams:(NSDictionary *)params
-                     success:(void (^)(NSArray *responseArray))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getThreadsWithParams:(NSDictionary *)params;
 
 /**
  Retrieves the thread with the specified id.
@@ -823,10 +675,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getThreadWithID:(NSString *)threadID
-                 params:(NSDictionary *)params
-                success:(void (^)(NSDictionary *responseDict))successBlock
-                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getThreadWithID:(NSString *)threadID
+                 params:(NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Webhooks and Related Resources
@@ -840,9 +690,7 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 
-- (void)getWebhooksWithParams:(NSDictionary *)params
-                      success:(void (^)(NSArray *responseArray))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIOArrayRequest *)getWebhooksWithParams:(NSDictionary *)params;
 
 /**
  Creates a new webhook.
@@ -853,11 +701,9 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)createWebhookWithCallbackURLString:(NSString *)callbackURLString
+- (CIODictionaryRequest *)createWebhookWithCallbackURLString:(NSString *)callbackURLString
               failureNotificationURLString:(NSString *)failureNotificationURLString
-                                    params:(NSDictionary *)params
-                                   success:(void (^)(NSDictionary *responseDict))successBlock
-                                   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+                                    params:(NSDictionary *)params;
 
 /**
  Retrieves the webhook with the specified id.
@@ -867,10 +713,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)getWebhookWithID:(NSString *)webhookID
-                  params:(NSDictionary *)params
-                 success:(void (^)(NSDictionary *responseDict))successBlock
-                 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)getWebhookWithID:(NSString *)webhookID
+                  params:(NSDictionary *)params;
 
 /**
  Updates the webhook with the specified id.
@@ -880,10 +724,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)updateWebhookWithID:(NSString *)webhookID
-                     params:(NSDictionary *)params
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)updateWebhookWithID:(NSString *)webhookID
+                     params:(NSDictionary *)params;
 
 /**
  Deletes the webhook with the specified id.
@@ -892,8 +734,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (void)deleteWebhookWithID:(NSString *)webhookID
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock;
+- (CIODictionaryRequest *)deleteWebhookWithID:(NSString *)webhookID;
 
 @end
+
+NS_ASSUME_NONNULL_END

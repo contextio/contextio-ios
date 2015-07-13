@@ -8,7 +8,6 @@
 
 #import "CIOAPIClient.h"
 
-#import <AFNetworking/AFNetworking.h>
 #import <SSKeychain/SSKeychain.h>
 #import <TDOAuth/TDOAuth.h>
 
@@ -44,7 +43,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 @implementation CIOAPIClient
 
-- (id)initWithConsumerKey:(NSString *)consumerKey
+- (instancetype)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret {
     
     self = [super init];
@@ -55,10 +54,6 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     _OAuthConsumerKey = consumerKey;
     _OAuthConsumerSecret = consumerSecret;
     
-    _HTTPClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kCIOAPIBaseURLString]];
-    [self.HTTPClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
-    [self.HTTPClient setDefaultHeader:@"Accept" value:@"application/json"];
-    
     self.timeoutInterval = 60;
     
     _isAuthorized = NO;
@@ -68,7 +63,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return self;
 }
 
-- (id)initWithConsumerKey:(NSString *)consumerKey
+- (instancetype)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret
                     token:(NSString *)token
               tokenSecret:(NSString *)tokenSecret
@@ -79,7 +74,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
         return nil;
     }
     
-    if (_accountID && _OAuthToken && _OAuthTokenSecret) {
+    if (accountID && token && tokenSecret) {
         
         _OAuthToken = token;
         _OAuthTokenSecret = tokenSecret;
@@ -93,11 +88,9 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark -
 
-- (void)beginAuthForProviderType:(CIOEmailProviderType)providerType
+- (NSURLRequest *)beginAuthForProviderType:(CIOEmailProviderType)providerType
                callbackURLString:(NSString *)callbackURLString
-                          params:(NSDictionary *)params
-                         success:(void (^)(NSURL *authRedirectURL))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                          params:(NSDictionary *)params {
     
     NSString *connectTokenPath = nil;
     if (_isAuthorized) {
@@ -127,73 +120,56 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
             break;
     }
     
-    [mutableParams setValue:callbackURLString forKey:@"callback_url"];
-    
-    [self postPath:connectTokenPath
-            params:[NSDictionary dictionaryWithDictionary:mutableParams]
-           success:^(NSDictionary *responseDict) {
-
-               if (_isAuthorized == NO) {
-                   _tmpOAuthToken = [responseDict valueForKey:@"access_token"];
-                   _tmpOAuthTokenSecret = [responseDict valueForKey:@"access_token_secret"];
-               }
-               
-               if (successBlock != nil) {
-                   successBlock([NSURL URLWithString:[responseDict valueForKey:@"browser_redirect_url"]]);
-               }
-           } failure:failureBlock];
+    mutableParams[@"callback_url"] = callbackURLString;
+    return [self requestForPath:connectTokenPath method:@"POST" params:params];
 }
 
-- (void)finishLoginWithConnectToken:(NSString *)connectToken
-                    saveCredentials:(BOOL)saveCredentials
-                            success:(void (^)(id responseObject))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (nullable NSURL *)extractRedirectURLFromResponse:(NSDictionary *)responseDict {
+    if (_isAuthorized == NO) {
+        _tmpOAuthToken = responseDict[@"access_token"];
+        _tmpOAuthTokenSecret = responseDict[@"access_token_secret"];
+    }
+
+    return [NSURL URLWithString:responseDict[@"browser_redirect_url"]];
+}
+
+- (NSURLRequest *)finishLoginWithConnectToken:(NSString *)connectToken
+                    saveCredentials:(BOOL)saveCredentials {
     
     // Not needed if adding a source to an existing account
     if (_isAuthorized) {
-        return;
+        return nil;
     }
     
     // This method is a bit of a one off due to the use of the temporary token/secret
     NSString *connectTokenPath = [@"connect_tokens" stringByAppendingPathComponent:connectToken];
-    
-    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET" path:connectTokenPath parameters:nil];
-    [self signURLRequest:mutableURLRequest parameters:nil token:_tmpOAuthToken tokenSecret:_tmpOAuthTokenSecret];
-    
-    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:mutableURLRequest];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        NSString *OAuthToken = [responseObject valueForKeyPath:@"account.access_token"];
-        NSString *OAuthTokenSecret = [responseObject valueForKeyPath:@"account.access_token_secret"];
-        NSString *accountID = [responseObject valueForKeyPath:@"account.id"];
-        
-        if ((OAuthToken && ![OAuthToken isEqual:[NSNull null]]) &&
-            (OAuthTokenSecret && ![OAuthTokenSecret isEqual:[NSNull null]]) &&
-            (accountID && ![accountID isEqual:[NSNull null]])) {
-            
-            _OAuthToken = OAuthToken;
-            _OAuthTokenSecret = OAuthTokenSecret;
-            _accountID = accountID;
-            
-            if (saveCredentials) {
-                [self saveCredentials];
-            }
-            
-            if (successBlock != nil) {
-                successBlock(responseObject);
-            }
-        } else {
-            
-            if (failureBlock != nil) {
-                failureBlock(operation, nil);
-            }
+    return [self signedRequestForPath:connectTokenPath method:@"GET" parameters:nil token:_tmpOAuthToken tokenSecret:_tmpOAuthTokenSecret];
+}
+
+- (BOOL)completeLoginWithResponse:(NSDictionary *)responseObject saveCredentials:(BOOL)saveCredentials {
+    NSString *OAuthToken = [responseObject valueForKeyPath:@"account.access_token"];
+    NSString *OAuthTokenSecret = [responseObject valueForKeyPath:@"account.access_token_secret"];
+    NSString *accountID = [responseObject valueForKeyPath:@"account.id"];
+
+    if ((OAuthToken && ![OAuthToken isEqual:[NSNull null]]) &&
+        (OAuthTokenSecret && ![OAuthTokenSecret isEqual:[NSNull null]]) &&
+        (accountID && ![accountID isEqual:[NSNull null]])) {
+
+        _OAuthToken = OAuthToken;
+        _OAuthTokenSecret = OAuthTokenSecret;
+        _accountID = accountID;
+
+        if (saveCredentials) {
+            [self saveCredentials];
         }
-    } failure:failureBlock];
-    [operation start];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (void)loadCredentials {
-    
+
     NSString *serviceName = [NSString stringWithFormat:@"%@-%@", kCIOKeyChainServicePrefix, _OAuthConsumerKey];
     
     NSString *accountID = [SSKeychain passwordForService:serviceName account:kCIOAccountIDKeyChainKey];
@@ -244,6 +220,26 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark -
 
+- (NSURLRequest *)signedRequestForPath:(NSString *)path method:(NSString *)method parameters:(NSDictionary *)params token:(NSString *)token tokenSecret:(NSString *)tokenSecret {
+    NSURL *baseURL = [NSURL URLWithString:kCIOAPIBaseURLString];
+    NSString *basePath = [baseURL path];
+
+    NSMutableURLRequest *signedRequest = [[TDOAuth URLRequestForPath:[basePath stringByAppendingPathComponent:path]
+                                                          parameters:params
+                                                                host:baseURL.host
+                                                         consumerKey:_OAuthConsumerKey
+                                                      consumerSecret:_OAuthConsumerSecret
+                                                         accessToken:token
+                                                         tokenSecret:tokenSecret
+                                                              scheme:@"https"
+                                                       requestMethod:method
+                                                        dataEncoding:TDOAuthContentTypeUrlEncodedForm
+                                                        headerValues:@{@"Accept": @"application/json"}
+                                                     signatureMethod:TDOAuthSignatureMethodHmacSha1] mutableCopy];
+    signedRequest.timeoutInterval = self.timeoutInterval;
+    return signedRequest;
+}
+
 - (void)signURLRequest:(NSMutableURLRequest *)request parameters:(NSDictionary *)params token:(NSString *)token tokenSecret:(NSString *)tokenSecret {
 
     NSURL *url = request.URL;
@@ -264,7 +260,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                                       scheme:url.scheme
                                                requestMethod:request.HTTPMethod
                                                 dataEncoding:TDOAuthContentTypeUrlEncodedForm
-                                                headerValues:nil
+                                                headerValues:@{@"Accept": @"application/json"}
                                              signatureMethod:TDOAuthSignatureMethodHmacSha1];
     
     [request addValue:[signedRequest valueForHTTPHeaderField:@"Authorization"] forHTTPHeaderField:@"Authorization"];
@@ -279,296 +275,142 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     }
 }
 
-- (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
-
-    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET" path:path parameters:params];
-    [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
-    mutableURLRequest.timeoutInterval = self.timeoutInterval;
-
-    return mutableURLRequest;
-}
-
 - (NSString *)accountPath {
     return [@"accounts" stringByAppendingPathComponent:_accountID];
 }
 
 #pragma mark -
 
-- (void)getPath:(NSString *)path
-         params:(NSDictionary *)params
-        success:(void (^)(id responseObject))successBlock
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    NSURLRequest *request = [self requestForPath:path method:@"GET" params:params];
-
-    AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:request
-                                                                                        success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                                                                        
-                                                                                            if (successBlock) {
-                                                                                                successBlock(responseObject);
-                                                                                            }
-                                                                                        } failure:failureBlock];
-    [self.HTTPClient enqueueHTTPRequestOperation:requestOperation];
+- (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
+    NSString *token = _isAuthorized ? _OAuthToken : nil;
+    NSString *tokenSecret = _isAuthorized ? _OAuthTokenSecret : nil;
+    return [self signedRequestForPath:path method:method parameters:params token:token tokenSecret:tokenSecret];
 }
 
-- (void)postPath:(NSString *)path
-          params:(NSDictionary *)params
-         success:(void (^)(id responseObject))successBlock
-         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-
-    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"POST" path:path parameters:params];
-    [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
-    mutableURLRequest.timeoutInterval = self.timeoutInterval;
-    
-    AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
-                                                                                        success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                                                                            
-                                                                                            if (successBlock) {
-                                                                                                successBlock(responseObject);
-                                                                                            }
-                                                                                        } failure:failureBlock];
-    [self.HTTPClient enqueueHTTPRequestOperation:requestOperation];
+- (CIODictionaryRequest *)dictionaryRequestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
+    return [CIODictionaryRequest withURLRequest:[self requestForPath:path method:method params:params]];
 }
 
-- (void)putPath:(NSString *)path
-         params:(NSDictionary *)params
-        success:(void (^)(id responseObject))successBlock
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-
-    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"PUT" path:path parameters:params];
-    [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
-    mutableURLRequest.timeoutInterval = self.timeoutInterval;
-    
-    AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
-                                                                                        success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                                                                            
-                                                                                            if (successBlock) {
-                                                                                                successBlock(responseObject);
-                                                                                            }
-                                                                                        } failure:failureBlock];
-
-    [self.HTTPClient enqueueHTTPRequestOperation:requestOperation];
+- (CIOArrayRequest *)arrayRequestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
+    return [CIOArrayRequest withURLRequest:[self requestForPath:path method:method params:params]];
 }
 
-- (void)deletePath:(NSString *)path
-           success:(void (^)(id responseObject))successBlock
-           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
 
-    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"DELETE" path:path parameters:nil];
-    [self signURLRequest:mutableURLRequest parameters:nil useToken:_isAuthorized];
-    mutableURLRequest.timeoutInterval = self.timeoutInterval;
-    
-    AFHTTPRequestOperation *requestOperation = [self.HTTPClient HTTPRequestOperationWithRequest:mutableURLRequest
-                                                                                        success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                                                                            
-                                                                                            if (successBlock) {
-                                                                                                successBlock(responseObject);
-                                                                                            }
-                                                                                        } failure:failureBlock];
-    [self.HTTPClient enqueueHTTPRequestOperation:requestOperation];
+#pragma mark - Account
+
+- (CIODictionaryRequest *)getAccountWithParams:(NSDictionary *)params {
+    return [self dictionaryRequestForPath:self.accountPath method:@"GET" params:params];
 }
 
-#pragma mark -
-
-- (void)getAccountWithParams:(NSDictionary *)params
-                     success:(void (^)(NSDictionary *responseDict))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    [self getPath:self.accountPath
-           params:params
-          success:successBlock
-          failure:failureBlock];
+- (CIODictionaryRequest *)updateAccountWithParams:(NSDictionary *)params {
+    return [self dictionaryRequestForPath:self.accountPath method:@"POST" params:params];
 }
 
-- (void)updateAccountWithParams:(NSDictionary *)params
-                        success:(void (^)(NSDictionary *responseDict))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    [self postPath:self.accountPath
-            params:params
-           success:successBlock
-           failure:failureBlock];
+- (CIODictionaryRequest *)deleteAccount {
+    return [self dictionaryRequestForPath:self.accountPath method:@"DELETE" params:nil];
 }
 
-- (void)deleteAccountWithSuccess:(void (^)(NSDictionary *responseDict))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    [self deletePath:self.accountPath
-             success:successBlock
-             failure:failureBlock];
+#pragma mark Contacts
+
+- (CIODictionaryRequest *)getContactsWithParams:(NSDictionary *)params {
+    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"contacts"] method:@"GET" params:params];
 }
 
-- (void)getContactsWithParams:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"contacts"]
-           params:params
-          success:successBlock
-           failure:failureBlock];
+- (CIODictionaryRequest *)getContactWithEmail:(NSString *)email
+                     params:(NSDictionary *)params {
+    NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
+    return [self dictionaryRequestForPath:[contactsURLPath stringByAppendingPathComponent:email] method:@"GET" params:params];
 }
 
-- (void)getContactWithEmail:(NSString *)email
-                     params:(NSDictionary *)params
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getFilesForContactWithEmail:(NSString *)email
+                                               params:(NSDictionary *)params {
     
     NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
-    
-    [self getPath:[contactsURLPath stringByAppendingPathComponent:email]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
+    return [self dictionaryRequestForPath:[contactURLPath stringByAppendingPathComponent:@"files"] method:@"GET" params:params];
 }
 
-- (void)getFilesForContactWithEmail:(NSString *)email
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSArray *responseArray))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getMessagesForContactWithEmail:(NSString *)email
+                                params:(NSDictionary *)params {
+    NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
+    NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
+    return [self dictionaryRequestForPath:[contactURLPath stringByAppendingPathComponent:@"messages"] method:@"GET" params:params];
+}
+
+- (CIODictionaryRequest *)getThreadsForContactWithEmail:(NSString *)email
+                               params:(NSDictionary *)params {
     
     NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
     NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
     
-    [self getPath:[contactURLPath stringByAppendingPathComponent:@"files"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[contactURLPath stringByAppendingPathComponent:@"threads"] method:@"GET" params:params];
 }
 
-- (void)getMessagesForContactWithEmail:(NSString *)email
-                                params:(NSDictionary *)params
-                               success:(void (^)(NSArray *responseArray))successBlock
-                               failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+#pragma mark - Email Addresses
+
+- (CIOArrayRequest *)getEmailAddressesWithParams:(NSDictionary *)params {
     
-    NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
-    NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
-    
-    [self getPath:[contactURLPath stringByAppendingPathComponent:@"messages"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"email_addresses"] method:@"GET" params:params];
 }
 
-- (void)getThreadsForContactWithEmail:(NSString *)email
-                               params:(NSDictionary *)params
-                              success:(void (^)(NSArray *responseArray))successBlock
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
-    NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
-    
-    [self getPath:[contactURLPath stringByAppendingPathComponent:@"threads"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
-}
-
-#pragma mark - 
-
-- (void)getEmailAddressesWithParams:(NSDictionary *)params
-                            success:(void (^)(NSArray *responseArray))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"email_addresses"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
-}
-
-- (void)createEmailAddressWithEmail:(NSString *)email
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)createEmailAddressWithEmail:(NSString *)email
+                             params:(NSDictionary *)params {
     
     NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    [mutableParams setValue:email forKey:@"email_address"];
+    mutableParams[@"email_address"] = email;
     
-    [self postPath:[self.accountPath stringByAppendingPathComponent:@"email_addresses"]
-            params:[NSDictionary dictionaryWithDictionary:mutableParams]
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"email_addresses"] method:@"POST" params:[NSDictionary dictionaryWithDictionary:mutableParams]];
 }
 
-- (void)getEmailAddressWithEmail:(NSString *)email
-                          params:(NSDictionary *)params
-                         success:(void (^)(NSDictionary *responseDict))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getEmailAddressWithEmail:(NSString *)email
+                          params:(NSDictionary *)params {
     
     NSString *emailAddressesURLPath = [self.accountPath stringByAppendingPathComponent:@"email_addresses"];
     
-    [self getPath:[emailAddressesURLPath stringByAppendingPathComponent:email]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[emailAddressesURLPath stringByAppendingPathComponent:email] method:@"GET" params:params];
 }
 
-- (void)updateEmailAddressWithEmail:(NSString *)email
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)updateEmailAddressWithEmail:(NSString *)email
+                             params:(NSDictionary *)params {
     
     NSString *emailAddressesURLPath = [self.accountPath stringByAppendingPathComponent:@"email_addresses"];
     
-    [self postPath:[emailAddressesURLPath stringByAppendingPathComponent:email]
-            params:params
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[emailAddressesURLPath stringByAppendingPathComponent:email] method:@"POST" params:params];
 }
 
-- (void)deleteEmailAddressWithEmail:(NSString *)email
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)deleteEmailAddressWithEmail:(NSString *)email {
     
     NSString *emailAddressesURLPath = [self.accountPath stringByAppendingPathComponent:@"email_addresses"];
     
-    [self deletePath:[emailAddressesURLPath stringByAppendingPathComponent:email]
-             success:successBlock
-             failure:failureBlock];
+    return [self dictionaryRequestForPath:[emailAddressesURLPath stringByAppendingPathComponent:email] method:@"DELETE" params:nil];
 }
 
-#pragma mark -
+#pragma mark - Files
 
-- (void)getFilesWithParams:(NSDictionary *)params
-                   success:(void (^)(NSArray *responseArray))successBlock
-                   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIOArrayRequest *)getFilesWithParams:(NSDictionary *)params {
     
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"files"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"files"] method:@"GET" params:params];
 }
 
-- (void)getFileWithID:(NSString *)fileID
-               params:(NSDictionary *)params
-              success:(void (^)(NSDictionary *responseDict))successBlock
-              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getFileWithID:(NSString *)fileID
+               params:(NSDictionary *)params {
     
     NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
     
-    [self getPath:[filesURLPath stringByAppendingPathComponent:fileID]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[filesURLPath stringByAppendingPathComponent:fileID] method:@"GET" params:params];
 }
 
-- (void)getChangesForFileWithID:(NSString *)fileID
-                         params:(NSDictionary *)params
-                        success:(void (^)(NSArray *responseArray))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIOArrayRequest *)getChangesForFileWithID:(NSString *)fileID
+                                      params:(NSDictionary *)params {
     
     NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
     NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
     
-    [self getPath:[fileURLPath stringByAppendingPathComponent:@"changes"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"changes"] method:@"GET" params:params];
 }
 
-- (void)getContentsURLForFileWithID:(NSString *)fileID
-                            params:(NSDictionary *)params
-                           success:(void (^)(NSDictionary *responseDict))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getContentsURLForFileWithID:(NSString *)fileID
+                            params:(NSDictionary *)params {
     
     NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
     NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
@@ -576,525 +418,351 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
     [mutableParams setValue:[NSNumber numberWithBool:YES] forKey:@"as_link"];
     
-    [self getPath:[fileURLPath stringByAppendingPathComponent:@"content"]
-           params:[NSDictionary dictionaryWithDictionary:mutableParams]
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[fileURLPath stringByAppendingPathComponent:@"content"] method:@"GET" params:[NSDictionary dictionaryWithDictionary:mutableParams]];
 }
 
-- (void)downloadContentsOfFileWithID:(NSString *)fileID
-                          saveToPath:(NSString *)saveToPath
-                              params:(NSDictionary *)params
-                             success:(void (^)())successBlock
-                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock
-                            progress:(void (^) (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead ))progressBlock {
+//- (void)downloadContentsOfFileWithID:(NSString *)fileID
+//                          saveToPath:(NSString *)saveToPath
+//                              params:(NSDictionary *)params
+//                             success:(void (^)())successBlock
+//                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock
+//                            progress:(void (^) (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead ))progressBlock {
+//    
+//    NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
+//    NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
+//    
+//    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET"
+//                                                                           path:[fileURLPath stringByAppendingPathComponent:@"content"]
+//                                                                     parameters:params];
+//    
+//    [self signURLRequest:mutableURLRequest parameters:params useToken:YES];
+//    
+//    AFHTTPRequestOperation *downloadOperation = [[AFHTTPRequestOperation alloc] initWithRequest:mutableURLRequest];
+//    downloadOperation.outputStream = [NSOutputStream outputStreamToFileAtPath:saveToPath append:NO];
+//    [downloadOperation setCompletionBlockWithSuccess:successBlock failure:failureBlock];
+//    [downloadOperation setDownloadProgressBlock:progressBlock];
+//    [downloadOperation start];
+//}
+
+- (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID
+                                      params:(NSDictionary *)params {
     
     NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
     NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
     
-    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET"
-                                                                           path:[fileURLPath stringByAppendingPathComponent:@"content"]
-                                                                     parameters:params];
-    
-    [self signURLRequest:mutableURLRequest parameters:params useToken:YES];
-    
-    AFHTTPRequestOperation *downloadOperation = [[AFHTTPRequestOperation alloc] initWithRequest:mutableURLRequest];
-    downloadOperation.outputStream = [NSOutputStream outputStreamToFileAtPath:saveToPath append:NO];
-    [downloadOperation setCompletionBlockWithSuccess:successBlock failure:failureBlock];
-    [downloadOperation setDownloadProgressBlock:progressBlock];
-    [downloadOperation start];
+    return [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"related"] method:@"GET" params:params];
 }
 
-- (void)getRelatedForFileWithID:(NSString *)fileID
-                         params:(NSDictionary *)params
-                        success:(void (^)(NSArray *responseArray))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIOArrayRequest *)getRevisionsForFileWithID:(NSString *)fileID
+                                        params:(NSDictionary *)params {
     
     NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
     NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
     
-    [self getPath:[fileURLPath stringByAppendingPathComponent:@"related"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"revisions"] method:@"GET" params:params];
 }
 
-- (void)getRevisionsForFileWithID:(NSString *)fileID
-                           params:(NSDictionary *)params
-                          success:(void (^)(NSArray *responseArray))successBlock
-                          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+#pragma mark - Messages
+
+- (CIOArrayRequest *)getMessagesWithParams:(NSDictionary *)params {
     
-    NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
-    NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
-    
-    [self getPath:[fileURLPath stringByAppendingPathComponent:@"revisions"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"messages"] method:@"GET" params:params];
 }
 
-#pragma mark -
-
-- (void)getMessagesWithParams:(NSDictionary *)params
-                      success:(void (^)(NSArray *responseArray))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"messages"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
-}
-
-- (void)getMessageWithID:(NSString *)messageID
-                  params:(NSDictionary *)params
-                 success:(void (^)(NSDictionary *responseDict))successBlock
-                 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getMessageWithID:(NSString *)messageID
+                  params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     
-    [self getPath:[messagesURLPath stringByAppendingPathComponent:messageID]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[messagesURLPath stringByAppendingPathComponent:messageID] method:@"GET" params:params];
 }
 
-- (void)updateMessageWithID:(NSString *)messageID
+- (CIODictionaryRequest *)updateMessageWithID:(NSString *)messageID
           destinationFolder:(NSString *)destinationFolder
-                     params:(NSDictionary *)params
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                     params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     
     NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    [mutableParams setValue:destinationFolder forKey:@"dst_folder"];
+    mutableParams[@"dst_folder"] = destinationFolder;
     
-    [self postPath:[messagesURLPath stringByAppendingPathComponent:messageID]
-            params:[NSDictionary dictionaryWithDictionary:mutableParams]
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[messagesURLPath stringByAppendingPathComponent:messageID]
+                                   method:@"POST"
+                                   params:mutableParams];
 }
 
-- (void)deleteMessageWithID:(NSString *)messageID
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)deleteMessageWithID:(NSString *)messageID {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
 
-    [self deletePath:[messagesURLPath stringByAppendingPathComponent:messageID]
-             success:successBlock
-             failure:failureBlock];
+    return [self dictionaryRequestForPath:[messagesURLPath stringByAppendingPathComponent:messageID] method:@"DELETE" params:nil];
 }
 
-- (void)getBodyForMessageWithID:(NSString *)messageID
-                         params:(NSDictionary *)params
-                        success:(void (^)(NSDictionary *responseDict))successBlock
-                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getBodyForMessageWithID:(NSString *)messageID
+                         params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self getPath:[messageURLPath stringByAppendingPathComponent:@"body"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"body"] method:@"GET" params:params];
 }
 
-- (void)getFlagsForMessageWithID:(NSString *)messageID
-                          params:(NSDictionary *)params
-                         success:(void (^)(NSDictionary *responseDict))successBlock
-                         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getFlagsForMessageWithID:(NSString *)messageID
+                          params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self getPath:[messageURLPath stringByAppendingPathComponent:@"flags"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"flags"] method:@"GET" params:params];
 }
 
-- (void)updateFlagsForMessageWithID:(NSString *)messageID
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)updateFlagsForMessageWithID:(NSString *)messageID
+                             params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self postPath:[messageURLPath stringByAppendingPathComponent:@"flags"]
-            params:params
-           success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"flags"] method:@"POST" params:params];
 }
 
-- (void)getFoldersForMessageWithID:(NSString *)messageID
-                            params:(NSDictionary *)params
-                           success:(void (^)(NSArray *responseArray))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIOArrayRequest *)getFoldersForMessageWithID:(NSString *)messageID
+                                         params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self getPath:[messageURLPath stringByAppendingPathComponent:@"folders"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[messageURLPath stringByAppendingPathComponent:@"folders"] method:@"GET" params:params];
 }
 
-- (void)updateFoldersForMessageWithID:(NSString *)messageID
-                               params:(NSDictionary *)params
-                              success:(void (^)(NSDictionary *responseDict))successBlock
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)updateFoldersForMessageWithID:(NSString *)messageID
+                               params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self postPath:[messageURLPath stringByAppendingPathComponent:@"folders"]
-            params:params
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"folders"] method:@"POST" params:params];
 }
 
-- (void)setFoldersForMessageWithID:(NSString *)messageID
-                           folders:(NSDictionary *)folders
-                           success:(void (^)(NSDictionary *responseDict))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)setFoldersForMessageWithID:(NSString *)messageID
+                           folders:(NSDictionary *)folders {
+    
+    NSString *folderPath = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"folders"]];
+    return [self dictionaryRequestForPath:folderPath method:@"PUT" params:nil];
+}
+
+- (CIODictionaryRequest *)getHeadersForMessageWithID:(NSString *)messageID
+                            params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self putPath:[messageURLPath stringByAppendingPathComponent:@"folders"]
-           params:folders
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"headers"] method:@"GET" params:params];
 }
 
-- (void)getHeadersForMessageWithID:(NSString *)messageID
-                            params:(NSDictionary *)params
-                           success:(void (^)(NSDictionary *responseDict))successBlock
-                           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getSourceForMessageWithID:(NSString *)messageID
+                           params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self getPath:[messageURLPath stringByAppendingPathComponent:@"headers"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"source"] method:@"GET" params:params];
 }
 
-- (void)getSourceForMessageWithID:(NSString *)messageID
-                           params:(NSDictionary *)params
-                          success:(void (^)(NSDictionary *responseDict))successBlock
-                          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getThreadForMessageWithID:(NSString *)messageID
+                           params:(NSDictionary *)params {
     
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     
-    [self getPath:[messageURLPath stringByAppendingPathComponent:@"source"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"thread"] method:@"GET" params:params];
 }
 
-- (void)getThreadForMessageWithID:(NSString *)messageID
-                           params:(NSDictionary *)params
-                          success:(void (^)(NSDictionary *responseDict))successBlock
-                          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+#pragma mark - Source
+
+- (CIOArrayRequest *)getSourcesWithParams:(NSDictionary *)params {
     
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-    
-    [self getPath:[messageURLPath stringByAppendingPathComponent:@"thread"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"sources"] method:@"GET" params:params];
 }
 
-#pragma mark -
-
-- (void)getSourcesWithParams:(NSDictionary *)params
-                     success:(void (^)(NSArray *responseArray))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
-}
-
-- (void)createSourceWithEmail:(NSString *)email
+- (CIODictionaryRequest *)createSourceWithEmail:(NSString *)email
                        server:(NSString *)server
                      username:(NSString *)username
                        useSSL:(BOOL)useSSL
                          port:(NSInteger)port
                          type:(NSString *)type
-                       params:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                       params:(NSDictionary *)params {
     
     NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    [mutableParams setValue:email forKey:@"email"];
-    [mutableParams setValue:server forKey:@"server"];
-    [mutableParams setValue:username forKey:@"username"];
-    [mutableParams setValue:[NSNumber numberWithBool:useSSL] forKey:@"use_ssl"];
-    [mutableParams setValue:[NSNumber numberWithInteger:port] forKey:@"port"];
-    [mutableParams setValue:type forKey:@"type"];
+    mutableParams[@"email"] = email;
+    mutableParams[@"server"] = server;
+    mutableParams[@"username"] = username;
+    mutableParams[@"use_ssl"] = @(useSSL);
+    mutableParams[@"port"] = @(port);
+    mutableParams[@"type"] = type;
     
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
-           params:[NSDictionary dictionaryWithDictionary:mutableParams]
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
+                                   method:@"GET"
+                                   params:mutableParams];
 }
 
-- (void)getSourceWithLabel:(NSString *)sourceLabel
-                    params:(NSDictionary *)params
-                   success:(void (^)(NSDictionary *responseDict))successBlock
-                   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getSourceWithLabel:(NSString *)sourceLabel
+                    params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     
-    [self getPath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel] method:@"GET" params:params];
 }
 
-- (void)updateSourceWithLabel:(NSString *)sourceLabel
-                       params:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)updateSourceWithLabel:(NSString *)sourceLabel
+                       params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     
-    [self postPath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel]
-            params:params
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel] method:@"POST" params:params];
 }
 
-- (void)deleteSourceWithLabel:(NSString *)sourceLabel
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)deleteSourceWithLabel:(NSString *)sourceLabel {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     
-    [self deletePath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel]
-             success:successBlock
-             failure:failureBlock];
+    return [self dictionaryRequestForPath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel] method:@"DELETE" params:nil];
 }
 
-- (void)getFoldersForSourceWithLabel:(NSString *)sourceLabel
-                              params:(NSDictionary *)params
-                             success:(void (^)(NSArray *responseArray))successBlock
-                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIOArrayRequest *)getFoldersForSourceWithLabel:(NSString *)sourceLabel
+                                           params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
     
-    [self getPath:[sourceURLPath stringByAppendingPathComponent:@"folders"]
-              params:params
-             success:successBlock
-             failure:failureBlock];
+    return [self arrayRequestForPath:[sourceURLPath stringByAppendingPathComponent:@"folders"] method:@"GET" params:params];
 }
 
-- (void)getFolderWithPath:(NSString *)folderPath
+- (CIODictionaryRequest *)getFolderWithPath:(NSString *)folderPath
               sourceLabel:(NSString *)sourceLabel
-                   params:(NSDictionary *)params
-                  success:(void (^)(NSDictionary *responseDict))successBlock
-                  failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                   params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
     NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
     
-    [self getPath:[foldersURLPath stringByAppendingPathComponent:folderPath]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[foldersURLPath stringByAppendingPathComponent:folderPath] method:@"GET" params:params];
 }
 
-- (void)deleteFolderWithPath:(NSString *)folderPath
+- (CIODictionaryRequest *)deleteFolderWithPath:(NSString *)folderPath
+                 sourceLabel:(NSString *)sourceLabel {
+    
+    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
+    NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
+    NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
+    
+    return [self dictionaryRequestForPath:[foldersURLPath stringByAppendingPathComponent:folderPath] method:@"DELETE" params:nil];
+}
+
+- (CIODictionaryRequest *)createFolderWithPath:(NSString *)folderPath
                  sourceLabel:(NSString *)sourceLabel
-                     success:(void (^)(NSDictionary *responseDict))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                      params:(NSDictionary *)params {
     
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-    NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
-    NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
-    
-    [self deletePath:[foldersURLPath stringByAppendingPathComponent:folderPath]
-             success:successBlock
-             failure:failureBlock];
+    NSString *foldersURLPath = [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel, @"folders", folderPath]];
+    return [self dictionaryRequestForPath:foldersURLPath method:@"PUT" params:params];
 }
 
-- (void)createFolderWithPath:(NSString *)folderPath
-                 sourceLabel:(NSString *)sourceLabel
-                      params:(NSDictionary *)params
-                     success:(void (^)(NSDictionary *responseDict))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
-    
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-    NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
-    NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
-    
-    [self putPath:[foldersURLPath stringByAppendingPathComponent:folderPath]
-           params:params
-          success:successBlock
-          failure:failureBlock];
-}
-
-- (void)expungeFolderWithPath:(NSString *)folderPath
+- (CIODictionaryRequest *)expungeFolderWithPath:(NSString *)folderPath
                   sourceLabel:(NSString *)sourceLabel
-                       params:(NSDictionary *)params
-                      success:(void (^)(NSDictionary *responseDict))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                       params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
     NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
     NSString *folderURLPath = [foldersURLPath stringByAppendingPathComponent:folderPath];
     
-    [self postPath:[folderURLPath stringByAppendingPathComponent:@"expunge"]
-            params:params
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[folderURLPath stringByAppendingPathComponent:@"expunge"] method:@"POST" params:params];
 }
 
-- (void)getMessagesForFolderWithPath:(NSString *)folderPath
+- (CIOArrayRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
                          sourceLabel:(NSString *)sourceLabel
-                              params:(NSDictionary *)params
-                             success:(void (^)(NSArray *responseArray))successBlock
-                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                                           params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
     NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
     NSString *folderURLPath = [foldersURLPath stringByAppendingPathComponent:folderPath];
     
-    [self getPath:[folderURLPath stringByAppendingPathComponent:@"messages"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[folderURLPath stringByAppendingPathComponent:@"messages"] method:@"GET" params:params];
 }
 
-- (void)getSyncStatusForSourceWithLabel:(NSString *)sourceLabel
-                                 params:(NSDictionary *)params
-                                success:(void (^)(NSDictionary *responseDict))successBlock
-                                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getSyncStatusForSourceWithLabel:(NSString *)sourceLabel
+                                 params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
     
-    [self getPath:[sourceURLPath stringByAppendingPathComponent:@"sync"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[sourceURLPath stringByAppendingPathComponent:@"sync"] method:@"GET" params:params];
 }
 
-- (void)forceSyncForSourceWithLabel:(NSString *)sourceLabel
-                             params:(NSDictionary *)params
-                            success:(void (^)(NSDictionary *responseDict))successBlock
-                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)forceSyncForSourceWithLabel:(NSString *)sourceLabel
+                             params:(NSDictionary *)params {
     
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
     
-    [self postPath:[sourceURLPath stringByAppendingPathComponent:@"sync"]
-            params:params
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[sourceURLPath stringByAppendingPathComponent:@"sync"] method:@"POST" params:params];
 }
 
-#pragma mark -
+#pragma mark - Threads
 
-- (void)getThreadsWithParams:(NSDictionary *)params
-                     success:(void (^)(NSArray *responseArray))successBlock
-                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIOArrayRequest *)getThreadsWithParams:(NSDictionary *)params {
     
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"threads"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"threads"] method:@"GET" params:params];
 }
 
-- (void)getThreadWithID:(NSString *)threadID
-                 params:(NSDictionary *)params
-                success:(void (^)(NSDictionary *responseDict))successBlock
-                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getThreadWithID:(NSString *)threadID
+                 params:(NSDictionary *)params {
     
     NSString *threadsURLPath = [self.accountPath stringByAppendingPathComponent:@"threads"];
     
-    [self getPath:[threadsURLPath stringByAppendingPathComponent:threadID]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[threadsURLPath stringByAppendingPathComponent:threadID] method:@"GET" params:params];
 }
 
-#pragma mark -
+#pragma mark - Webhooks
+// TODO: Is there a practical reason to make webhooks API available to iOS apps?
 
-- (void)getWebhooksWithParams:(NSDictionary *)params
-                      success:(void (^)(NSArray *responseArray))successBlock
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIOArrayRequest *)getWebhooksWithParams:(NSDictionary *)params {
     
-    [self getPath:[self.accountPath stringByAppendingPathComponent:@"webhooks"]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"webhooks"] method:@"GET" params:params];
 }
 
-- (void)createWebhookWithCallbackURLString:(NSString *)callbackURLString
+- (CIODictionaryRequest *)createWebhookWithCallbackURLString:(NSString *)callbackURLString
               failureNotificationURLString:(NSString *)failureNotificationURLString
-                                    params:(NSDictionary *)params
-                                   success:(void (^)(NSDictionary *responseDict))successBlock
-                                   failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+                                    params:(NSDictionary *)params {
     
     NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params ];
-    [mutableParams setValue:callbackURLString forKey:@"callback_url"];
-    [mutableParams setValue:failureNotificationURLString forKey:@"failure_notif_url"];
+    mutableParams[@"callback_url"] = callbackURLString;
+    mutableParams[@"failure_notif_url"] = failureNotificationURLString;
     
-    [self postPath:[self.accountPath stringByAppendingPathComponent:@"webhooks"]
-            params:[NSDictionary dictionaryWithDictionary:mutableParams]
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"webhooks"] method:@"POST" params:[NSDictionary dictionaryWithDictionary:mutableParams]];
 }
 
-- (void)getWebhookWithID:(NSString *)webhookID
-                  params:(NSDictionary *)params
-                 success:(void (^)(NSDictionary *responseDict))successBlock
-                 failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)getWebhookWithID:(NSString *)webhookID
+                  params:(NSDictionary *)params {
     
     NSString *webhooksURLPath = [self.accountPath stringByAppendingPathComponent:@"webhooks"];
     
-    [self getPath:[webhooksURLPath stringByAppendingPathComponent:webhookID]
-           params:params
-          success:successBlock
-          failure:failureBlock];
+    return [self dictionaryRequestForPath:[webhooksURLPath stringByAppendingPathComponent:webhookID] method:@"GET" params:params];
 }
 
-- (void)updateWebhookWithID:(NSString *)webhookID
-                     params:(NSDictionary *)params
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)updateWebhookWithID:(NSString *)webhookID
+                     params:(NSDictionary *)params {
     
     NSString *webhooksURLPath = [self.accountPath stringByAppendingPathComponent:@"webhooks"];
     
-    [self postPath:[webhooksURLPath stringByAppendingPathComponent:webhookID]
-            params:params
-           success:successBlock
-           failure:failureBlock];
+    return [self dictionaryRequestForPath:[webhooksURLPath stringByAppendingPathComponent:webhookID] method:@"POST" params:params];
 }
 
-- (void)deleteWebhookWithID:(NSString *)webhookID
-                    success:(void (^)(NSDictionary *responseDict))successBlock
-                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock {
+- (CIODictionaryRequest *)deleteWebhookWithID:(NSString *)webhookID {
     
     NSString *webhooksURLPath = [self.accountPath stringByAppendingPathComponent:@"webhooks"];
     
-    [self deletePath:[webhooksURLPath stringByAppendingPathComponent:webhookID]
-             success:successBlock
-             failure:failureBlock];
+    return [self dictionaryRequestForPath:[webhooksURLPath stringByAppendingPathComponent:webhookID] method:@"DELETE" params:nil];
 }
 
 @end
