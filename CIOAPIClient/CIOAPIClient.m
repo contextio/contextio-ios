@@ -11,7 +11,7 @@
 #import <SSKeychain/SSKeychain.h>
 #import <TDOAuth/TDOAuth.h>
 
-NSString * const kCIOAPIBaseURLString = @"https://api.context.io/2.0/";
+NSString * const CIOAPIBaseURLString = @"https://api.context.io/2.0/";
 
 // Keychain keys
 static NSString * const kCIOKeyChainServicePrefix = @"Context-IO-";
@@ -63,7 +63,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     _OAuthConsumerKey = consumerKey;
     _OAuthConsumerSecret = consumerSecret;
 
-    self.baseURL = [NSURL URLWithString:kCIOAPIBaseURLString];
+    self.baseURL = [NSURL URLWithString:CIOAPIBaseURLString];
     self.basePath = [self.baseURL path];
 
     self.timeoutInterval = 60;

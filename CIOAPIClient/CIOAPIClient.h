@@ -9,17 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CIORequest.h"
 
-/**
- `CIOAPIClient` provides an easy to use client for interacting with the Context.IO API from Objective-C. It is built on top of AFNetworking and provides convenient asynchronous block based methods for the various calls used to interact with a user's email accounts. The client also handles authentication and all signing of requests.
- 
- ## Response Parsing
- 
- JSON reponses from the API are automatically parsed into dictionary or array objects depending on the particular API call.
- 
- ## Subclassing Notes
- 
- As with AFNetworking on which CIOAPIClient is built upon, it will generally be helpful to create a `CIOAPIClient` subclass that contains your consumer key and secret, as well as a class method that returns a singleton shared API client. This will allow you to persist your credentials and any other configuration across the entire application. Please note however, that once authenticated, nearly all API calls are scoped to the user's account. If you would like to access multiple user accounts, you will need to use separate API clients for each.
- */
+
 
 typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
     CIOEmailProviderTypeGenericIMAP = 0,
@@ -31,8 +21,13 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const kCIOAPIBaseURLString;
+extern NSString * const CIOAPIBaseURLString;
 
+/**
+ `CIOAPIClient` provides an easy to use interface for constructing requests against the Context.IO API. The client handles authentication and all signing of requests.
+
+ Each `CIOAPIClient` instance handles its own authentication credentials. If the credentials are saved to the keychain via `completeLoginWithResponse:saveCredentials:`, they are keyed off of the consumer key. `CIOAPIClient` will restore saved credentials if it is initalized with a previously-authenticated consumer key/secret.
+ */
 @interface CIOAPIClient : NSObject
 
 @property (readonly, nonatomic, nullable) NSString *accountID;
@@ -47,12 +42,10 @@ extern NSString * const kCIOAPIBaseURLString;
  */
 @property (nonatomic) NSTimeInterval timeoutInterval;
 
-///---------------------------------------------
-/// @name Creating and Initializing API Clients
-///---------------------------------------------
+#pragma mark - Creating and Initializing API Clients
 
 /**
- Initializes a `CIOAPIClient` object with the specified consumer key and secret.
+ Initializes a `CIOAPIClient` object with the specified consumer key and secret. If a previously-authenticated consumer key is provided, its authentcation information will be restored from the keychain.
  
  @param consumerKey The consumer key for the API client. This argument must not be `nil`.
  @param consumerSecret The consumer secret for the API client. This argument must not be `nil`.
@@ -84,14 +77,12 @@ extern NSString * const kCIOAPIBaseURLString;
  *
  *  @param path   path in the 2.0 API namespace, e.g. "accounts/<id>/contacts"
  *  @param method HTTP request method
- *  @param params parameters to send, will be sent as URL params for GET, otherwise sent as a x-www-form-urlencoded body
+ *  @param params parameters to send, will be sent as URL params for GET, otherwise sent as a `x-www-form-urlencoded` body
  *
  */
 - (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(nullable NSDictionary *)params;
 
-///---------------------------------------------
-/// @name Authenticating the API Client
-///---------------------------------------------
+#pragma mark - Authenticating the API Client
 
 /**
  Begins the authentication process for a new account/email source by creating a connect token.
@@ -121,9 +112,7 @@ extern NSString * const kCIOAPIBaseURLString;
  */
 - (void)clearCredentials;
 
-///---------------------------------------------
-/// @name Working With Contacts and Related Resources
-///---------------------------------------------
+#pragma mark - Working With Contacts and Related Resources
 
 /**
  Retrieves the current account's details.
@@ -152,6 +141,7 @@ extern NSString * const kCIOAPIBaseURLString;
  @param params A dictionary of parameters to be sent with the request. See the API documentation for possible parameters.
  */ 
 - (CIODictionaryRequest *)getContactsWithParams:(nullable NSDictionary *)params;
+
 /**
  Retrieves the contact with the specified email.
  
@@ -188,9 +178,7 @@ extern NSString * const kCIOAPIBaseURLString;
 - (CIOArrayRequest *)getThreadsForContactWithEmail:(NSString *)email
                                params:(nullable NSDictionary *)params;
 
-///---------------------------------------------
-/// @name Working With Email Address aliases
-///---------------------------------------------
+#pragma mark - Working With Email Address Aliases
 
 /**
  Retrieves the account's email addresses.
@@ -233,9 +221,7 @@ extern NSString * const kCIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)deleteEmailAddressWithEmail:(NSString *)email;
 
-///---------------------------------------------
-/// @name Working With Files and Related Resources
-///---------------------------------------------
+#pragma mark - Working With Files and Related Resources
 
 /**
  Retrieves the account's files.
@@ -297,9 +283,7 @@ extern NSString * const kCIOAPIBaseURLString;
 - (CIOArrayRequest *)getRevisionsForFileWithID:(NSString *)fileID
                            params:(nullable NSDictionary *)params;
 
-///---------------------------------------------
-/// @name Working With Messages and Related Resources
-///---------------------------------------------
+#pragma mark - Working With Messages and Related Resources
 
 /**
  Retrieves the account's messages.
@@ -416,9 +400,7 @@ extern NSString * const kCIOAPIBaseURLString;
 - (CIODictionaryRequest *)getThreadForMessageWithID:(NSString *)messageID
                            params:(nullable NSDictionary *)params;
 
-///---------------------------------------------
-/// @name Working With Sources and Related Resources
-///---------------------------------------------
+#pragma mark - Working With Sources and Related Resources
 
 /**
  Retrieves the account's sources.
@@ -551,9 +533,7 @@ extern NSString * const kCIOAPIBaseURLString;
 - (CIODictionaryRequest *)forceSyncForSourceWithLabel:(NSString *)sourceLabel
                              params:(nullable NSDictionary *)params;
 
-///---------------------------------------------
-/// @name Working With Sources and Related Resources
-///---------------------------------------------
+#pragma mark - Working With Sources and Related Resources
 
 /**
  Retrieves the account's threads.
@@ -571,9 +551,7 @@ extern NSString * const kCIOAPIBaseURLString;
 - (CIODictionaryRequest *)getThreadWithID:(NSString *)threadID
                  params:(nullable NSDictionary *)params;
 
-///---------------------------------------------
-/// @name Working With Webhooks and Related Resources
-///---------------------------------------------
+#pragma mark - Working With Webhooks and Related Resources
 
 /**
  Retrieves the account's webhooks.
