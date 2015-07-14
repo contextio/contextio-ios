@@ -7,7 +7,7 @@
 //
 
 #import "CIOAppDelegate.h"
-#import <CIOAPIClient/CIOAFNetworking1Client.h>
+#import <CIOAPIClient/CIOAPISession.h>
 #import "CIOContactsViewController.h"
 
 #error Please enter your Context.IO API credentials below and comment out this line.
@@ -21,7 +21,7 @@ static NSString * const kContextIOConsumerSecret = @"";
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
-    CIOAFNetworking1Client *client = [[CIOAFNetworking1Client alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret];
+    CIOAPISession *client = [[CIOAPISession alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret];
     CIOContactsViewController *contactsController = [[CIOContactsViewController alloc] initWithStyle:UITableViewStylePlain];
     contactsController.APIClient = client;
 

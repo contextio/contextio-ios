@@ -1,9 +1,7 @@
 platform :ios, '7.0'
+
 podspec
-
 xcodeproj 'CIOAPIClient', 'Test' => :debug
-
-
 
 # Enable TDOAUTH_USE_STATIC_VALUES_FOR_AUTOMATIC_TESTING for the Test
 # build config, for deterministic OAuth testing

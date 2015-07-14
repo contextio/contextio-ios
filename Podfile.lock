@@ -1,17 +1,14 @@
 PODS:
-  - AFNetworking (1.3.4)
   - OMGHTTPURLRQ/UserAgent (2.1.3)
   - SSKeychain (1.2.3)
   - TDOAuth (1.1.0):
     - OMGHTTPURLRQ/UserAgent
 
 DEPENDENCIES:
-  - AFNetworking (~> 1.0)
-  - SSKeychain (>= 0.2.1)
+  - SSKeychain (~> 1)
   - TDOAuth (~> 1.1)
 
 SPEC CHECKSUMS:
-  AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018
   OMGHTTPURLRQ: c4268dea4295b585d711055dbcd87bfa82badd5f
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   TDOAuth: efb25d45d5062b9cfb41c14c54f74c7b6c7a1abc

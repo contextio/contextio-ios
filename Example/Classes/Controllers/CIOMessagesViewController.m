@@ -12,7 +12,7 @@
 
 @property (nonatomic) NSString *contactEmailAddress;
 @property (nonatomic) NSArray *messagesArray;
-@property (nonatomic) CIOAFNetworking1Client *APIClient;
+@property (nonatomic) CIOAPISession *APIClient;
 
 - (void)fetchMessages;
 
@@ -23,7 +23,7 @@
 @synthesize contactEmailAddress = _contactEmailAddress;
 @synthesize messagesArray = _messagesArray;
 
-- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress CIOClient:(CIOAFNetworking1Client *)CIOClient {
+- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress CIOClient:(CIOAPISession *)CIOClient {
     
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
@@ -59,7 +59,7 @@
     [self.APIClient executeArrayRequest:messagesRequest success:^(NSArray *response) {
         self.messagesArray = response;
         [self.tableView reloadData];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSError *error) {
         NSLog(@"error getting messages: %@", error);
     }];
 }

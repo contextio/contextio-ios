@@ -10,7 +10,7 @@
 
 @interface CIOAuthViewController ()
 
-@property (nonatomic, strong) CIOAFNetworking1Client *APIClient;
+@property (nonatomic, strong) CIOAPISession *APIClient;
 @property (nonatomic, assign) BOOL allowCancel;
 @property (nonatomic, assign) NSInteger selectedProviderType;
 @property (nonatomic, strong) UILabel *instructionsTextView;
@@ -34,7 +34,7 @@
 @synthesize yahooButton = _yahooButton;
 @synthesize aolButton = _aolButton;
 
-- (id)initWithAPIClient:(CIOAFNetworking1Client *)APIClient allowCancel:(BOOL)allowCancel {
+- (id)initWithAPIClient:(CIOAPISession *)APIClient allowCancel:(BOOL)allowCancel {
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
@@ -142,32 +142,27 @@
                                          }
 
                                          UIViewController *webViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
+                                         webViewController.edgesForExtendedLayout = UIRectEdgeNone;
                                          UIWebView *loginWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
                                          loginWebView.delegate = self;
-                                         [webViewController.view addSubview:loginWebView];
+                                         webViewController.view = loginWebView;
                                          [self.navigationController pushViewController:webViewController animated:YES];
                                          
                                          [loginWebView loadRequest:[NSURLRequest requestWithURL:authRedirectURL]];
                                      }
-                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                     failure:^(NSError *error) {
                                          NSLog(@"error creating connect token: %@", error);
-                                         if ([operation isKindOfClass:[AFJSONRequestOperation class]]) {
-                                             AFJSONRequestOperation *jsonOp = (AFJSONRequestOperation*)operation;
-                                             NSString *error = jsonOp.responseJSON[@"value"];
-                                             if (error) {
-                                                 NSString *title = @"Error";
-                                                 NSNumber *code = jsonOp.responseJSON[@"code"];
-                                                 if (code) {
-                                                     title = [NSString stringWithFormat:@"Error Code %@", code];
-                                                 }
-                                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                                                                 message:error
-                                                                                                delegate:nil
-                                                                                       cancelButtonTitle:@"OK"
-                                                                                       otherButtonTitles:nil];
-                                                 [alert show];
-                                             }
+                                         NSString *title = @"Error";
+                                         NSHTTPURLResponse *response = error.userInfo[CIOAPISessionURLResponseErrorKey];
+                                         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                                             title = [NSString stringWithFormat:@"Error Code %ld", (long)((NSHTTPURLResponse*)response).statusCode];
                                          }
+                                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                                                         message:error.localizedDescription
+                                                                                        delegate:nil
+                                                                               cancelButtonTitle:@"OK"
+                                                                               otherButtonTitles:nil];
+                                         [alert show];
                                      }];
 }
 
@@ -198,7 +193,7 @@
                                                      NSLog(@"Missing credentials from Authenticationr esponse");
                                                      [self.delegate userCancelledLogin];
                                                  }
-                                             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                             } failure:^(NSError *error) {
                                                  [self.delegate userCancelledLogin];
                                                  NSLog(@"error getting connect token details: %@", error);
                                              }];

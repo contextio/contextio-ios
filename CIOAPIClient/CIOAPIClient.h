@@ -31,6 +31,8 @@ typedef NS_ENUM(NSInteger, CIOEmailProviderType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString * const kCIOAPIBaseURLString;
+
 @interface CIOAPIClient : NSObject
 
 @property (readonly, nonatomic, nullable) NSString *accountID;

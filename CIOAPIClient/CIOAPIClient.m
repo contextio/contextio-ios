@@ -11,7 +11,7 @@
 #import <SSKeychain/SSKeychain.h>
 #import <TDOAuth/TDOAuth.h>
 
-static NSString * const kCIOAPIBaseURLString = @"https://api.context.io/2.0/";
+NSString * const kCIOAPIBaseURLString = @"https://api.context.io/2.0/";
 
 // Keychain keys
 static NSString * const kCIOKeyChainServicePrefix = @"Context-IO-";

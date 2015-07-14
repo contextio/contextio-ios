@@ -10,23 +10,11 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.ios.deployment_target = '7.0'
-  s.osx.deployment_target = '10.7'
+  s.osx.deployment_target = '10.9'
   s.ios.frameworks = 'Security'
 
-  s.default_subspec = 'Core'
-
-  s.subspec "Core" do |sp|
-      sp.source_files = 'CIOAPIClient/*.{h,m}'
-
-      sp.dependency 'SSKeychain', '~> 1'
-      sp.dependency 'TDOAuth', '~> 1.1'
-  end
-
-  s.subspec "AFNetworking1" do |sp|
-    sp.source_files = "CIOAPIClient/AFNetworking1x"
-
-    sp.dependency 'CIOAPIClient/Core'
-    sp.dependency 'AFNetworking', '~> 1.0'
-  end
+  s.source_files = 'CIOAPIClient/*.{h,m}'
+  s.dependency 'SSKeychain', '~> 1'
+  s.dependency 'TDOAuth', '~> 1.1'
 
 end

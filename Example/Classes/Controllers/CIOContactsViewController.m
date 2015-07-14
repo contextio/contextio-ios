@@ -65,7 +65,7 @@
                                      success:^(NSDictionary *responseDict) {
                                          self.contactsArray = [responseDict valueForKey:@"matches"];;
                                          [self.tableView reloadData];
-                                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                     } failure:^(NSError *error) {
                                          NSLog(@"error getting contacts: %@", error);
                                      }];
 }
