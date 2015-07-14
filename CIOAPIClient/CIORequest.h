@@ -19,23 +19,25 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- *  An API request to the Context.IO API which returns a dictionary
+ *  A Context.io API request which returns a dictionary
  *  as its top level response object.
  */
 @interface CIODictionaryRequest : CIORequest
 @end
 
-
 /**
- *  An API request to the Context.IO API which returns an array
+ *  A Context.io API request which returns an array
  *  as its top level response object.
  */
-
 @interface CIOArrayRequest : CIORequest
 @end
 
-@interface CIODownloadRequest : CIORequest
 
+/**
+ *  A Context.io API request which returns a single string
+    in its response.
+ */
+@interface CIOStringRequest : CIORequest
 @end
 
 NS_ASSUME_NONNULL_END

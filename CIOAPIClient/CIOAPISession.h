@@ -23,11 +23,13 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
 
 - (void)executeArrayRequest:(CIOArrayRequest *)request success:(nullable void (^)(NSArray *responseArray))success failure:(nullable void (^)(NSError *error))failure;
 
-- (void)downloadFileWithRequest:(CIODownloadRequest *)request
-                      saveToURL:(NSURL *)fileURL
-                        success:(nullable void (^)())successBlock
-                        failure:(nullable void (^)(NSError *error))failureBlock
-                       progress:(nullable CIOSessionDownloadProgressBlock)progressBlock;
+- (void)executeStringRequest:(CIOStringRequest*)request success:(nullable void(^)(NSString *responseString))success failure:(nullable void (^)(NSError *error))failure;
+
+- (void)downloadRequestToFile:(CIORequest *)request
+                    saveToURL:(NSURL *)fileURL
+                      success:(nullable void (^)())successBlock
+                      failure:(nullable void (^)(NSError *error))failureBlock
+                     progress:(nullable CIOSessionDownloadProgressBlock)progressBlock;
 
 
 - (NSError *)errorForResponse:(NSHTTPURLResponse *)response responseObject:(nullable id)responseObject;

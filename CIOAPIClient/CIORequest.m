@@ -32,6 +32,6 @@
 
 @end
 
-@implementation CIODownloadRequest
+@implementation CIOStringRequest
 
 @end

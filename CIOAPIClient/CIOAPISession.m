@@ -47,14 +47,18 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
 }
 
 - (void)executeDictionaryRequest:(CIODictionaryRequest *)request success:(void (^)(NSDictionary *))success failure:(void (^)(NSError *))failure {
-    [self executeRequest:request.urlRequest success:success failure:failure];
+    [self executeRequest:request success:success failure:failure];
 }
 
 - (void)executeArrayRequest:(CIOArrayRequest *)request success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
-    [self executeRequest:request.urlRequest success:success failure:failure];
+    [self executeRequest:request success:success failure:failure];
 }
 
-- (void)downloadFileWithRequest:(CIODownloadRequest *)request saveToURL:(NSURL *)saveToURL success:(void (^)())successBlock failure:(void (^)(NSError *))failureBlock progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
+- (void)executeStringRequest:(CIOStringRequest *)request success:(void (^)(NSString *))success failure:(void (^)(NSError *))failure {
+    [self executeRequest:request success:success failure:failure];
+}
+
+- (void)downloadRequestToFile:(CIORequest *)request saveToURL:(NSURL *)saveToURL success:(void (^)())successBlock failure:(void (^)(NSError *))failureBlock progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
     NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:request.urlRequest];
     CIODownloadTask *cioTask = [CIODownloadTask new];
     cioTask.saveToURL = saveToURL;
@@ -100,36 +104,44 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
 }
 
 - (id)parseResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError **)error {
-    id jsonResponse = nil;
+    id responseObject = nil;
     if (data && [data length] > 0) {
-        NSError *jsonError;
-        jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-        if (jsonError) {
-            *error = jsonError;
-            return nil;
+        if ([[response MIMEType] isEqualToString:@"application/json"]) {
+            NSError *jsonError;
+            responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+            if (jsonError) {
+                *error = jsonError;
+                return nil;
+            }
+        } else {
+            NSStringEncoding encoding = NSUTF8StringEncoding;
+            if (response.textEncodingName) {
+                encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)response.textEncodingName));
+            }
+            responseObject = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         }
     }
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSUInteger code = (NSUInteger)[(NSHTTPURLResponse*)response statusCode];
         if (![self.acceptableStatusCodes containsIndex:code]) {
-            *error = [self errorForResponse:(NSHTTPURLResponse*)response responseObject:jsonResponse];
-            return jsonResponse;
+            *error = [self errorForResponse:(NSHTTPURLResponse*)response responseObject:responseObject];
+            return responseObject;
         }
     }
-    return jsonResponse;
+    return responseObject;
 }
 
-- (void)executeRequest:(NSURLRequest *)request success:(void (^)(id responseObject))successBlock failure:(void (^)(NSError *error))failureBlock {
-    NSURLSessionDataTask *dataTask = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+- (void)executeRequest:(CIORequest *)request success:(void (^)(id responseObject))successBlock failure:(void (^)(NSError *error))failureBlock {
+    NSURLSessionDataTask *dataTask = [self.urlSession dataTaskWithRequest:request.urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
             [self _dispatchMain:failureBlock parameter:error];
             return;
         }
-        id jsonResponse = [self parseResponse:response data:data error:&error];
+        id responseObject = [self parseResponse:response data:data error:&error];
         if (error) {
             [self _dispatchMain:failureBlock parameter:error];
         } else {
-            [self _dispatchMain:successBlock parameter:jsonResponse];
+            [self _dispatchMain:successBlock parameter:responseObject];
         }
     }];
     [dataTask resume];

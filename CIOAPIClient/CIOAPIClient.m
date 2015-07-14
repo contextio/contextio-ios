@@ -39,8 +39,6 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 - (void)loadCredentials;
 - (void)saveCredentials;
 
-- (void)signURLRequest:(NSMutableURLRequest *)request parameters:(NSDictionary *)params token:(NSString *)token tokenSecret:(NSString *)tokenSecret;
-- (void)signURLRequest:(NSMutableURLRequest *)request parameters:(NSDictionary *)params useToken:(BOOL)useToken;
 @end
 
 
@@ -236,41 +234,6 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return signedRequest;
 }
 
-- (void)signURLRequest:(NSMutableURLRequest *)request parameters:(NSDictionary *)params token:(NSString *)token tokenSecret:(NSString *)tokenSecret {
-
-    NSURL *url = request.URL;
-    NSString *urlPath = [url path];
-    // Strip query string if needed
-    if ([url query] != nil) {
-        NSString *queryString = [@"?" stringByAppendingString:[url query]];
-        urlPath = [urlPath stringByReplacingOccurrencesOfString:queryString withString:@""];
-    }
-    
-    NSURLRequest *signedRequest = [TDOAuth URLRequestForPath:urlPath
-                                                  parameters:params
-                                                        host:url.host
-                                                 consumerKey:_OAuthConsumerKey
-                                              consumerSecret:_OAuthConsumerSecret
-                                                 accessToken:token
-                                                 tokenSecret:tokenSecret
-                                                      scheme:url.scheme
-                                               requestMethod:request.HTTPMethod
-                                                dataEncoding:TDOAuthContentTypeUrlEncodedForm
-                                                headerValues:@{@"Accept": @"application/json"}
-                                             signatureMethod:TDOAuthSignatureMethodHmacSha1];
-    
-    [request addValue:[signedRequest valueForHTTPHeaderField:@"Authorization"] forHTTPHeaderField:@"Authorization"];
-}
-
-- (void)signURLRequest:(NSMutableURLRequest *)mutableURLRequest parameters:(NSDictionary *)params useToken:(BOOL)useToken {
-    
-    if (useToken) {
-        [self signURLRequest:mutableURLRequest parameters:params token:_OAuthToken tokenSecret:_OAuthTokenSecret];
-    } else {        
-        [self signURLRequest:mutableURLRequest parameters:params token:nil tokenSecret:nil];
-    }
-}
-
 - (NSString *)accountPath {
     return [@"accounts" stringByAppendingPathComponent:_accountID];
 }
@@ -405,22 +368,19 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"changes"] method:@"GET" params:params];
 }
 
-- (CIODictionaryRequest *)getContentsURLForFileWithID:(NSString *)fileID
+- (CIOStringRequest *)getContentsURLForFileWithID:(NSString *)fileID
                             params:(NSDictionary *)params {
     
-    NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
-    NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
-    
-    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    [mutableParams setValue:[NSNumber numberWithBool:YES] forKey:@"as_link"];
-    
-    return [self dictionaryRequestForPath:[fileURLPath stringByAppendingPathComponent:@"content"] method:@"GET" params:[NSDictionary dictionaryWithDictionary:mutableParams]];
+    NSString *requestPath = [NSString pathWithComponents:@[self.accountPath, @"files", fileID, @"content"]];
+    NSMutableDictionary *mutableParams = [params ?: @{} mutableCopy];
+    mutableParams[@"as_link"] = @YES;
+    return [CIOStringRequest withURLRequest:[self requestForPath:requestPath method:@"GET" params:mutableParams]];
 }
 
-- (CIODownloadRequest *)downloadContentsOfFileWithID:(NSString *)fileID {
+- (CIORequest *)downloadContentsOfFileWithID:(NSString *)fileID {
 
     NSString *path = [NSString pathWithComponents:@[self.accountPath, @"files", fileID, @"content"]];
-    return [CIODownloadRequest withURLRequest:[self requestForPath:path method:@"GET" params:nil]];
+    return [CIORequest withURLRequest:[self requestForPath:path method:@"GET" params:nil]];
 }
 
 - (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID
@@ -538,13 +498,11 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"headers"] method:@"GET" params:params];
 }
 
-- (CIODictionaryRequest *)getSourceForMessageWithID:(NSString *)messageID
+- (CIOStringRequest *)getSourceForMessageWithID:(NSString *)messageID
                            params:(NSDictionary *)params {
     
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-    
-    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"source"] method:@"GET" params:params];
+    NSString *requestPath = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"source"]];
+    return [CIOStringRequest withURLRequest:[self requestForPath:requestPath method:@"GET" params:params]];
 }
 
 - (CIODictionaryRequest *)getThreadForMessageWithID:(NSString *)messageID
