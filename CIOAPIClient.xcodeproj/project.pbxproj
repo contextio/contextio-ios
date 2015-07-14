@@ -69,6 +69,7 @@
 		FADC96711B55768700A2CC66 /* CIOAPISession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAPISession.h; path = CIOAPIClient/CIOAPISession.h; sourceTree = SOURCE_ROOT; };
 		FADC96721B55768700A2CC66 /* CIOAPISession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAPISession.m; path = CIOAPIClient/CIOAPISession.m; sourceTree = SOURCE_ROOT; };
 		FADC96741B55928400A2CC66 /* CIOAPISessionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAPISessionTests.m; path = Tests/CIOAPISessionTests.m; sourceTree = SOURCE_ROOT; };
+		FADC96761B55C8DE00A2CC66 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				FA269E1D1B548F3400CB7DB1 /* CIOAPIClient.podspec */,
+				FADC96761B55C8DE00A2CC66 /* README.md */,
 				FAD861221B44C75B002A4407 /* CIOAPIClient */,
 				FAD8612F1B44C75B002A4407 /* Tests */,
 				FAD861211B44C75B002A4407 /* Products */,

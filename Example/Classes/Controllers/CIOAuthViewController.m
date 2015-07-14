@@ -190,7 +190,7 @@
                                                  if ([self.APIClient completeLoginWithResponse:responseObject saveCredentials:YES]) {
                                                      [self.delegate userCompletedLogin];
                                                  } else {
-                                                     NSLog(@"Missing credentials from Authenticationr esponse");
+                                                     NSLog(@"Missing credentials from Authentication response");
                                                      [self.delegate userCancelledLogin];
                                                  }
                                              } failure:^(NSError *error) {
