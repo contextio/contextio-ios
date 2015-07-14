@@ -417,28 +417,11 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return [self dictionaryRequestForPath:[fileURLPath stringByAppendingPathComponent:@"content"] method:@"GET" params:[NSDictionary dictionaryWithDictionary:mutableParams]];
 }
 
-//- (void)downloadContentsOfFileWithID:(NSString *)fileID
-//                          saveToPath:(NSString *)saveToPath
-//                              params:(NSDictionary *)params
-//                             success:(void (^)())successBlock
-//                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock
-//                            progress:(void (^) (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead ))progressBlock {
-//    
-//    NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
-//    NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
-//    
-//    NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"GET"
-//                                                                           path:[fileURLPath stringByAppendingPathComponent:@"content"]
-//                                                                     parameters:params];
-//    
-//    [self signURLRequest:mutableURLRequest parameters:params useToken:YES];
-//    
-//    AFHTTPRequestOperation *downloadOperation = [[AFHTTPRequestOperation alloc] initWithRequest:mutableURLRequest];
-//    downloadOperation.outputStream = [NSOutputStream outputStreamToFileAtPath:saveToPath append:NO];
-//    [downloadOperation setCompletionBlockWithSuccess:successBlock failure:failureBlock];
-//    [downloadOperation setDownloadProgressBlock:progressBlock];
-//    [downloadOperation start];
-//}
+- (CIODownloadRequest *)downloadContentsOfFileWithID:(NSString *)fileID {
+
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"files", fileID, @"content"]];
+    return [CIODownloadRequest withURLRequest:[self requestForPath:path method:@"GET" params:nil]];
+}
 
 - (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID
                                       params:(NSDictionary *)params {

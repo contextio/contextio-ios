@@ -319,12 +319,7 @@ extern NSString * const kCIOAPIBaseURLString;
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  @param progressBlock A block object to be executed during the downloading of the contents to update you on the progress. This block has no return value and takes three arguments: the bytes read since the last execution of the block, the total number of bytes read, and the total number of bytes that are expected to be read. This block will be executed multiple times during the download process.
  */
-//- (void)downloadContentsOfFileWithID:(NSString *)fileID
-//                          saveToPath:(NSString *)saveToPath
-//                              params:(nullable NSDictionary *)params
-//                             success:(void (^)())successBlock
-//                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock
-//                            progress:(void (^) (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead ))progressBlock;
+- (CIODownloadRequest *)downloadContentsOfFileWithID:(NSString *)fileID;
 
 /**
  Retrieves other files associated with a particular file.

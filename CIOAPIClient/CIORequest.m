@@ -31,3 +31,7 @@
 @implementation CIOArrayRequest
 
 @end
+
+@implementation CIODownloadRequest
+
+@end

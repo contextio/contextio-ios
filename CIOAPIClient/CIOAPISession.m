@@ -10,10 +10,27 @@
 
 NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
 
-@interface CIOAPISession ()
+@interface CIODownloadTask : NSObject
+
+@property (nullable, nonatomic) NSURL *saveToURL;
+@property (nullable, nonatomic, copy) CIOSessionDownloadProgressBlock progressBlock;
+@property (nullable, nonatomic, copy) void (^successBlock)();
+@property (nullable, nonatomic, copy) void (^failureBlock)(NSError *error);
+
+@end
+
+@implementation CIODownloadTask
+
+@end
+
+#pragma mark -
+
+@interface CIOAPISession () <NSURLSessionDownloadDelegate>
 
 @property (nonatomic) NSURLSession *urlSession;
 @property (nonatomic) NSIndexSet *acceptableStatusCodes;
+// Mapping from Task ID to CIODownloadTask. Must only be read/written on the underlying NSURLSession queue.
+@property (nonatomic) NSMutableDictionary *downloadTaskIDToCIOTask;
 
 @end
 
@@ -21,12 +38,36 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
 
 - (instancetype)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret token:(NSString *)token tokenSecret:(NSString *)tokenSecret accountID:(NSString *)accountID {
     if ((self = [super initWithConsumerKey:consumerKey consumerSecret:consumerSecret token:token tokenSecret:tokenSecret accountID:accountID])) {
-        self.urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        self.urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]delegate:self delegateQueue:nil];
         // Hat tip to AFNetworking
         self.acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
+        self.downloadTaskIDToCIOTask = [NSMutableDictionary dictionary];
     }
     return self;
 }
+
+- (void)executeDictionaryRequest:(CIODictionaryRequest *)request success:(void (^)(NSDictionary *))success failure:(void (^)(NSError *))failure {
+    [self executeRequest:request.urlRequest success:success failure:failure];
+}
+
+- (void)executeArrayRequest:(CIOArrayRequest *)request success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
+    [self executeRequest:request.urlRequest success:success failure:failure];
+}
+
+- (void)downloadFileWithRequest:(CIODownloadRequest *)request saveToURL:(NSURL *)saveToURL success:(void (^)())successBlock failure:(void (^)(NSError *))failureBlock progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
+    NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:request.urlRequest];
+    CIODownloadTask *cioTask = [CIODownloadTask new];
+    cioTask.saveToURL = saveToURL;
+    cioTask.successBlock = successBlock;
+    cioTask.failureBlock = failureBlock;
+    cioTask.progressBlock = progressBlock;
+    [self.urlSession.delegateQueue addOperationWithBlock:^{
+        self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)] = cioTask;
+        [downloadTask resume];
+    }];
+}
+
+#pragma mark -
 
 // If `block` is nonnull, calls it with `parameter` on the main dispatch queue
 - (void)_dispatchMain:(nullable void (^)(id param))block parameter:(id)parameter {
@@ -94,12 +135,43 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
     [dataTask resume];
 }
 
-- (void)executeDictionaryRequest:(CIODictionaryRequest *)request success:(void (^)(NSDictionary *))success failure:(void (^)(NSError *))failure {
-    [self executeRequest:request.urlRequest success:success failure:failure];
+#pragma mark - NSURLSessionTaskDelegate
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    CIODownloadTask *cioTask = self.downloadTaskIDToCIOTask[@(task.taskIdentifier)];
+    if (cioTask) {
+        if (error) {
+            [self _dispatchMain:cioTask.failureBlock parameter:error];
+        } else if (cioTask.successBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cioTask.successBlock();
+            });
+        }
+        [self.downloadTaskIDToCIOTask removeObjectForKey:@(task.taskIdentifier)];
+    }
 }
 
-- (void)executeArrayRequest:(CIOArrayRequest *)request success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
-    [self executeRequest:request.urlRequest success:success failure:failure];
+#pragma mark - NSURLSessionDownloadDelegate
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    CIODownloadTask *cioTask = self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)];
+    if (cioTask.progressBlock) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            cioTask.progressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+        });
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+    CIODownloadTask *cioTask = self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)];
+    if (cioTask.saveToURL) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] moveItemAtURL:location toURL:cioTask.saveToURL error:&error];
+        if (error) {
+            [self _dispatchMain:cioTask.failureBlock parameter:error];
+            [self.downloadTaskIDToCIOTask removeObjectForKey:@(downloadTask.taskIdentifier)];
+        }
+    }
 }
 
 @end

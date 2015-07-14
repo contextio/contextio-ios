@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  as its top level response object.
  */
 @interface CIODictionaryRequest : CIORequest
-
 @end
 
 
@@ -33,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 @interface CIOArrayRequest : CIORequest
+@end
+
+@interface CIODownloadRequest : CIORequest
 
 @end
 
