@@ -31,6 +31,9 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     NSString *_tmpOAuthTokenSecret;
 }
 
+@property (nonatomic) NSURL *baseURL;
+@property (nonatomic) NSString *basePath;
+
 @property (nonatomic, readonly) NSString *accountPath;
 
 - (void)loadCredentials;
@@ -45,21 +48,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 - (instancetype)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret {
-    
-    self = [super init];
-    if (!self) {
-        return nil;
-    }
-    
-    _OAuthConsumerKey = consumerKey;
-    _OAuthConsumerSecret = consumerSecret;
-    
-    self.timeoutInterval = 60;
-    
-    _isAuthorized = NO;
-    
-    [self loadCredentials];
-    
+    self = [self initWithConsumerKey:consumerKey consumerSecret:consumerSecret token:nil tokenSecret:nil accountID:nil];
     return self;
 }
 
@@ -69,11 +58,22 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
               tokenSecret:(NSString *)tokenSecret
                 accountID:(NSString *)accountID {
     
-    self = [self initWithConsumerKey:consumerKey consumerSecret:consumerSecret];
+    self = [super init];
     if (!self) {
         return nil;
     }
-    
+    _OAuthConsumerKey = consumerKey;
+    _OAuthConsumerSecret = consumerSecret;
+
+    self.baseURL = [NSURL URLWithString:kCIOAPIBaseURLString];
+    self.basePath = [self.baseURL path];
+
+    self.timeoutInterval = 60;
+
+    _isAuthorized = NO;
+
+    [self loadCredentials];
+
     if (accountID && token && tokenSecret) {
         
         _OAuthToken = token;
@@ -88,7 +88,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark -
 
-- (NSURLRequest *)beginAuthForProviderType:(CIOEmailProviderType)providerType
+- (CIODictionaryRequest *)beginAuthForProviderType:(CIOEmailProviderType)providerType
                callbackURLString:(NSString *)callbackURLString
                           params:(NSDictionary *)params {
     
@@ -121,10 +121,10 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     }
     
     mutableParams[@"callback_url"] = callbackURLString;
-    return [self requestForPath:connectTokenPath method:@"POST" params:params];
+    return [self dictionaryRequestForPath:connectTokenPath method:@"POST" params:mutableParams];
 }
 
-- (nullable NSURL *)extractRedirectURLFromResponse:(NSDictionary *)responseDict {
+- (NSURL *)redirectURLFromResponse:(NSDictionary *)responseDict {
     if (_isAuthorized == NO) {
         _tmpOAuthToken = responseDict[@"access_token"];
         _tmpOAuthTokenSecret = responseDict[@"access_token_secret"];
@@ -133,17 +133,15 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return [NSURL URLWithString:responseDict[@"browser_redirect_url"]];
 }
 
-- (NSURLRequest *)finishLoginWithConnectToken:(NSString *)connectToken
-                    saveCredentials:(BOOL)saveCredentials {
-    
-    // Not needed if adding a source to an existing account
-    if (_isAuthorized) {
-        return nil;
-    }
-    
+- (CIODictionaryRequest *)fetchAccountWithConnectToken:(NSString *)connectToken {
     // This method is a bit of a one off due to the use of the temporary token/secret
     NSString *connectTokenPath = [@"connect_tokens" stringByAppendingPathComponent:connectToken];
-    return [self signedRequestForPath:connectTokenPath method:@"GET" parameters:nil token:_tmpOAuthToken tokenSecret:_tmpOAuthTokenSecret];
+    NSURLRequest *URLRequest = [self signedRequestForPath:connectTokenPath
+                                                   method:@"GET"
+                                               parameters:nil
+                                                    token:_tmpOAuthToken
+                                              tokenSecret:_tmpOAuthTokenSecret];
+    return [CIODictionaryRequest withURLRequest:URLRequest];
 }
 
 - (BOOL)completeLoginWithResponse:(NSDictionary *)responseObject saveCredentials:(BOOL)saveCredentials {
@@ -221,12 +219,10 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 #pragma mark -
 
 - (NSURLRequest *)signedRequestForPath:(NSString *)path method:(NSString *)method parameters:(NSDictionary *)params token:(NSString *)token tokenSecret:(NSString *)tokenSecret {
-    NSURL *baseURL = [NSURL URLWithString:kCIOAPIBaseURLString];
-    NSString *basePath = [baseURL path];
 
-    NSMutableURLRequest *signedRequest = [[TDOAuth URLRequestForPath:[basePath stringByAppendingPathComponent:path]
+    NSMutableURLRequest *signedRequest = [[TDOAuth URLRequestForPath:[self.basePath stringByAppendingPathComponent:path]
                                                           parameters:params
-                                                                host:baseURL.host
+                                                                host:self.baseURL.host
                                                          consumerKey:_OAuthConsumerKey
                                                       consumerSecret:_OAuthConsumerSecret
                                                          accessToken:token

@@ -29,7 +29,6 @@
 		EBB454DA16B1CB8E00397319 /* CIOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D216B1CB8E00397319 /* CIOAuthViewController.m */; };
 		EBB454DB16B1CB8E00397319 /* CIOContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D416B1CB8E00397319 /* CIOContactsViewController.m */; };
 		EBB454DC16B1CB8E00397319 /* CIOMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D616B1CB8E00397319 /* CIOMessagesViewController.m */; };
-		EBB454DD16B1CB8E00397319 /* CIOExampleAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454D916B1CB8E00397319 /* CIOExampleAPIClient.m */; };
 		EBB454E516B1CBB500397319 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBB454DE16B1CBB500397319 /* InfoPlist.strings */; };
 		EBB454E716B1CBB500397319 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB454E116B1CBB500397319 /* main.m */; };
 		EBB454E816B1CBB500397319 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB454E216B1CBB500397319 /* Default-568h@2x.png */; };
@@ -68,8 +67,6 @@
 		EBB454D416B1CB8E00397319 /* CIOContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOContactsViewController.m; sourceTree = "<group>"; };
 		EBB454D516B1CB8E00397319 /* CIOMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOMessagesViewController.h; sourceTree = "<group>"; };
 		EBB454D616B1CB8E00397319 /* CIOMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOMessagesViewController.m; sourceTree = "<group>"; };
-		EBB454D816B1CB8E00397319 /* CIOExampleAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOExampleAPIClient.h; sourceTree = "<group>"; };
-		EBB454D916B1CB8E00397319 /* CIOExampleAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOExampleAPIClient.m; sourceTree = "<group>"; };
 		EBB454DE16B1CBB500397319 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		EBB454DF16B1CBB500397319 /* Context.IO iOS Example App-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Context.IO iOS Example App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		EBB454E016B1CBB500397319 /* Context.IO iOS Example App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Context.IO iOS Example App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
@@ -214,8 +211,6 @@
 			children = (
 				EBB454EC16B1CBD900397319 /* CIOAppDelegate.h */,
 				EBB454EB16B1CBD900397319 /* CIOAppDelegate.m */,
-				EBB454D816B1CB8E00397319 /* CIOExampleAPIClient.h */,
-				EBB454D916B1CB8E00397319 /* CIOExampleAPIClient.m */,
 			);
 			path = "Other Sources";
 			sourceTree = "<group>";
@@ -336,7 +331,6 @@
 				EBB454DA16B1CB8E00397319 /* CIOAuthViewController.m in Sources */,
 				EBB454DB16B1CB8E00397319 /* CIOContactsViewController.m in Sources */,
 				EBB454DC16B1CB8E00397319 /* CIOMessagesViewController.m in Sources */,
-				EBB454DD16B1CB8E00397319 /* CIOExampleAPIClient.m in Sources */,
 				EBB454E716B1CBB500397319 /* main.m in Sources */,
 				EBB454ED16B1CBD900397319 /* CIOAppDelegate.m in Sources */,
 			);

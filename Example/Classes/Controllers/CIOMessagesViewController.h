@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CIOAPIClient/CIOAFNetworkingClient.h>
 
 @interface CIOMessagesViewController : UITableViewController
 
-- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress;
+- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress CIOClient:(CIOAFNetworkingClient *)CIOClient;
 
 @end

@@ -10,7 +10,7 @@
 
 @interface CIORequest ()
 
-@property (nonnull, nonatomic) NSURLRequest *URLrequest;
+@property (nonnull, nonatomic) NSURLRequest *urlRequest;
 
 @end
 
@@ -18,7 +18,7 @@
 
 + (instancetype)withURLRequest:(NSURLRequest *)URLrequest {
     CIORequest *request = [[self alloc] init];
-    request.URLrequest = URLrequest;
+    request.urlRequest = URLrequest;
     return request;
 }
 

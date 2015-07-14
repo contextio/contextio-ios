@@ -8,12 +8,11 @@
 
 #import "CIOMessagesViewController.h"
 
-#import "CIOExampleAPIClient.h"
-
 @interface CIOMessagesViewController ()
 
-@property (nonatomic, strong) NSString *contactEmailAddress;
-@property (nonatomic, strong) NSArray *messagesArray;
+@property (nonatomic) NSString *contactEmailAddress;
+@property (nonatomic) NSArray *messagesArray;
+@property (nonatomic) CIOAFNetworkingClient *APIClient;
 
 - (void)fetchMessages;
 
@@ -24,14 +23,13 @@
 @synthesize contactEmailAddress = _contactEmailAddress;
 @synthesize messagesArray = _messagesArray;
 
-- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress {
+- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress CIOClient:(CIOAFNetworkingClient *)CIOClient {
     
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
-        
         self.title = NSLocalizedString(@"Messages", @"");
-        
         self.contactEmailAddress = contactEmailAddress;
+        self.APIClient = CIOClient;
     }
     
     return self;
@@ -57,9 +55,9 @@
 
 - (void)fetchMessages {
     
-    [[CIOExampleAPIClient sharedClient] getMessagesForContactWithEmail:self.contactEmailAddress params:nil success:^(NSArray *responseArray) {
-        
-        self.messagesArray = responseArray;
+    CIOArrayRequest *messagesRequest = [self.APIClient getMessagesForContactWithEmail:self.contactEmailAddress params:nil];
+    [self.APIClient executeArrayRequest:messagesRequest success:^(NSArray *response) {
+        self.messagesArray = response;
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error getting messages: %@", error);

@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "CIOAPIClient.h"
+#import "TestUtil.h"
 
 @interface OAuthSigningTests : XCTestCase
 
@@ -22,27 +23,13 @@
     self.client = [[CIOAPIClient alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
 }
 
-- (NSString *)extractSignature:(NSString *)oAuthHeader {
-    NSString *stripped = [oAuthHeader stringByReplacingOccurrencesOfString:@"OAuth " withString:@""];
-    NSArray *sections = [stripped componentsSeparatedByString:@", "];
-    for (NSString *section in sections) {
-        NSArray *split = [section componentsSeparatedByString:@"="];
-        if (split.count > 1) {
-            if ([split[0] isEqualToString:@"oauth_signature"]){
-                return [split[1] stringByReplacingOccurrencesOfString:@"\"" withString:@""];
-            }
-        }
-    }
-    return nil;
-}
-
 - (void)testTwoLeggedSigning {
     NSURLRequest *request = [self.client requestForPath:@"connect_tokens"
                                                  method:@"POST"
                                                  params:@{@"email": @"@gmail.com"}];
 
     NSString *authHeader = [request valueForHTTPHeaderField:@"Authorization"];
-    NSString *signature = [self extractSignature:authHeader];
+    NSString *signature = [TestUtil OAuthSignature:authHeader];
     XCTAssertNotNil(signature);
     XCTAssertEqualObjects(signature, @"2AaRHKvlFRrLVbRY7qFAJgP%2Bzjk%3D");
 }
@@ -57,7 +44,7 @@
                                                  params:@{@"email": @"@gmail.com"}];
 
     NSString *authHeader = [request valueForHTTPHeaderField:@"Authorization"];
-    NSString *signature = [self extractSignature:authHeader];
+    NSString *signature = [TestUtil OAuthSignature:authHeader];
     XCTAssertNotNil(signature);
     XCTAssertEqualObjects(signature, @"M71dKyk6LLpHEYQNXEEBn8NCCIQ%3D");
 }

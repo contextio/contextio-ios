@@ -8,8 +8,7 @@
 
 #import "CIOContactsViewController.h"
 #import "CIOMessagesViewController.h"
-
-#import "CIOExampleAPIClient.h"
+#import "CIOAuthViewController.h"
 
 @interface CIOContactsViewController ()
 
@@ -44,9 +43,9 @@
     
     [super viewDidAppear:animated];
     
-    if (![[CIOExampleAPIClient sharedClient] isAuthorized]) {
+    if (!self.APIClient.isAuthorized) {
         
-        CIOAuthViewController *authController = [[CIOAuthViewController alloc] initWithAPIClient:[CIOExampleAPIClient sharedClient] allowCancel:NO];
+        CIOAuthViewController *authController = [[CIOAuthViewController alloc] initWithAPIClient:self.APIClient allowCancel:NO];
         authController.delegate = self;
         UINavigationController *authNavController = [[UINavigationController alloc] initWithRootViewController:authController];
         [self presentViewController:authNavController animated:YES completion:nil];
@@ -62,14 +61,13 @@
 #pragma mark - Actions
 
 - (void)fetchContacts {
-    
-    [[CIOExampleAPIClient sharedClient] getContactsWithParams:nil success:^(NSDictionary *responseDict) {
-        
-        self.contactsArray = [responseDict valueForKey:@"matches"];;
-        [self.tableView reloadData];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"error getting contacts: %@", error);
-    }];
+    [self.APIClient executeDictionaryRequest:[self.APIClient getContactsWithParams:nil]
+                                     success:^(NSDictionary *responseDict) {
+                                         self.contactsArray = [responseDict valueForKey:@"matches"];;
+                                         [self.tableView reloadData];
+                                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                         NSLog(@"error getting contacts: %@", error);
+                                     }];
 }
 
 #pragma mark - Table view data source
@@ -105,7 +103,7 @@
     NSDictionary *contact = [self.contactsArray objectAtIndex:indexPath.row];
     NSString *contactEmailAddress = [contact valueForKey:@"email"];
     
-    CIOMessagesViewController *messagesController = [[CIOMessagesViewController alloc] initWithContactEmailAddress:contactEmailAddress];
+    CIOMessagesViewController *messagesController = [[CIOMessagesViewController alloc] initWithContactEmailAddress:contactEmailAddress CIOClient:self.APIClient];
     [self.navigationController pushViewController:messagesController animated:YES];
 }
 

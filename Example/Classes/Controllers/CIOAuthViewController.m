@@ -10,7 +10,7 @@
 
 @interface CIOAuthViewController ()
 
-@property (nonatomic, strong) CIOAPIClient *APIClient;
+@property (nonatomic, strong) CIOAFNetworkingClient *APIClient;
 @property (nonatomic, assign) BOOL allowCancel;
 @property (nonatomic, assign) NSInteger selectedProviderType;
 @property (nonatomic, strong) UITextView *instructionsTextView;
@@ -34,7 +34,7 @@
 @synthesize yahooButton = _yahooButton;
 @synthesize aolButton = _aolButton;
 
-- (id)initWithAPIClient:(CIOAPIClient *)APIClient allowCancel:(BOOL)allowCancel {
+- (id)initWithAPIClient:(CIOAFNetworkingClient *)APIClient allowCancel:(BOOL)allowCancel {
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
@@ -126,27 +126,30 @@
     NSMutableDictionary *mutableParams = [NSMutableDictionary dictionary];
     [mutableParams setValue:@"*hidden*" forKey:@"first_name"];
     [mutableParams setValue:@"*hidden*" forKey:@"last_name"];
-    
-    [self.APIClient beginAuthForProviderType:providerType callbackURLString:@"cio-api-auth://" params:[NSDictionary dictionaryWithDictionary:mutableParams] success:^(NSURL *authRedirectURL) {
-        
-        //clear context.io cookies before using the new web view
-        NSHTTPCookieStorage *sharedCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-        for (NSHTTPCookie *cookie in [sharedCookieStorage cookies]) {
-            if ([cookie.domain rangeOfString:@"context.io"].location != NSNotFound) {
-                [sharedCookieStorage deleteCookie:cookie];
-            }
-        }
-        
-        UIViewController *webViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
-        UIWebView *loginWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
-        loginWebView.delegate = self;
-        [webViewController.view addSubview:loginWebView];
-        [self.navigationController pushViewController:webViewController animated:YES];
-        
-        [loginWebView loadRequest:[NSURLRequest requestWithURL:authRedirectURL]];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"error creating connect token: %@", error);
-    }];
+
+    CIODictionaryRequest *authRequest = [self.APIClient beginAuthForProviderType:providerType callbackURLString:@"cio-api-auth://" params:mutableParams];
+    [self.APIClient executeDictionaryRequest:authRequest
+                                     success:^(NSDictionary *responseDict) {
+                                         NSURL *authRedirectURL = [self.APIClient redirectURLFromResponse:responseDict];
+                                         //clear context.io cookies before using the new web view
+                                         NSHTTPCookieStorage *sharedCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+                                         for (NSHTTPCookie *cookie in [sharedCookieStorage cookies]) {
+                                             if ([cookie.domain rangeOfString:@"context.io"].location != NSNotFound) {
+                                                 [sharedCookieStorage deleteCookie:cookie];
+                                             }
+                                         }
+
+                                         UIViewController *webViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
+                                         UIWebView *loginWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
+                                         loginWebView.delegate = self;
+                                         [webViewController.view addSubview:loginWebView];
+                                         [self.navigationController pushViewController:webViewController animated:YES];
+                                         
+                                         [loginWebView loadRequest:[NSURLRequest requestWithURL:authRedirectURL]];
+                                     }
+                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                         NSLog(@"error creating connect token: %@", error);
+                                     }];
 }
 
 #pragma mark UIWebViewDelegate methods
@@ -165,17 +168,22 @@
             }
         }
         
-        if ([self.APIClient isAuthorized] == YES) {            
+        if (self.APIClient.isAuthorized) {
             [self.delegate userCompletedLogin];
         } else {
-            
-            [self.APIClient finishLoginWithConnectToken:connectToken saveCredentials:YES success:^(id responseObject) {
-                [self.delegate userCompletedLogin];
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"error getting connect token details: %@", error);
-            }];
+            [self.APIClient executeDictionaryRequest:[self.APIClient fetchAccountWithConnectToken:connectToken]
+                                             success:^(NSDictionary *responseObject) {
+                                                 if ([self.APIClient completeLoginWithResponse:responseObject saveCredentials:YES]) {
+                                                     [self.delegate userCompletedLogin];
+                                                 } else {
+                                                     NSLog(@"Missing credentials from Authenticationr esponse");
+                                                     [self.delegate userCancelledLogin];
+                                                 }
+                                             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                 [self.delegate userCancelledLogin];
+                                                 NSLog(@"error getting connect token details: %@", error);
+                                             }];
         }
-        
         return NO;
     }
     

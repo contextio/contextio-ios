@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AFNetworking/AFNetworking.h>
 #import "CIORequest.h"
 
 /**
@@ -76,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
            consumerSecret:(NSString *)consumerSecret
                     token:(nullable NSString *)token
               tokenSecret:(nullable NSString *)tokenSecret
-                accountID:(nullable NSString *)accountID;
+                accountID:(nullable NSString *)accountID NS_DESIGNATED_INITIALIZER;
 
 /**
  *  Create a signed `NSURLRequest` for the context.io API using current OAuth credentials
@@ -101,14 +100,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: the auth redirect URL that should be loaded in your UIWebView to allow the user to authenticate their email account.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (NSURLRequest *)beginAuthForProviderType:(CIOEmailProviderType)providerType
+- (CIODictionaryRequest *)beginAuthForProviderType:(CIOEmailProviderType)providerType
                          callbackURLString:(NSString *)callbackURLString
-                                    params:(NSDictionary *)params;
+                                    params:(nullable NSDictionary *)params;
 
-- (nullable NSURL *)extractRedirectURLFromResponse:(NSDictionary *)responseDict;
+- (NSURL *)redirectURLFromResponse:(NSDictionary *)responseDict;
 
-- (NSURLRequest *)finishLoginWithConnectToken:(NSString *)connectToken
-                              saveCredentials:(BOOL)saveCredentials;
+- (CIODictionaryRequest *)fetchAccountWithConnectToken:(NSString *)connectToken;
 
 /**
  Uses the connect token received from the API to complete the authentication process and optionally save the credentials to the keychain.
@@ -136,7 +134,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (CIODictionaryRequest *)getAccountWithParams:(NSDictionary *)params;
+- (CIODictionaryRequest *)getAccountWithParams:(nullable NSDictionary *)params;
 
 
 /**
@@ -146,7 +144,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (CIODictionaryRequest *)updateAccountWithParams:(NSDictionary *)params;
+- (CIODictionaryRequest *)updateAccountWithParams:(nullable NSDictionary *)params;
 
 /**
  Deletes the current account.
@@ -163,7 +161,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: a dictionary representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */ 
-- (CIODictionaryRequest *)getContactsWithParams:(NSDictionary *)params;
+- (CIODictionaryRequest *)getContactsWithParams:(nullable NSDictionary *)params;
 /**
  Retrieves the contact with the specified email.
  
@@ -173,7 +171,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getContactWithEmail:(NSString *)email
-                     params:(NSDictionary *)params;
+                     params:(nullable NSDictionary *)params;
 
 /**
  Retrieves any files associated with a particular contact.
@@ -184,7 +182,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
 */
 - (CIOArrayRequest *)getFilesForContactWithEmail:(NSString *)email
-                             params:(NSDictionary *)params;
+                             params:(nullable NSDictionary *)params;
 
 /**
  Retrieves any messages associated with a particular contact.
@@ -195,7 +193,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIOArrayRequest *)getMessagesForContactWithEmail:(NSString *)email
-                                params:(NSDictionary *)params;
+                                params:(nullable NSDictionary *)params;
 
 /**
  Retrieves any threads associated with a particular contact.
@@ -206,7 +204,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIOArrayRequest *)getThreadsForContactWithEmail:(NSString *)email
-                               params:(NSDictionary *)params;
+                               params:(nullable NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Email Address aliases
@@ -219,7 +217,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (CIOArrayRequest *)getEmailAddressesWithParams:(NSDictionary *)params;
+- (CIOArrayRequest *)getEmailAddressesWithParams:(nullable NSDictionary *)params;
 
 /**
  Associates a new email address with the account.
@@ -230,7 +228,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)createEmailAddressWithEmail:(NSString *)email
-                             params:(NSDictionary *)params;
+                             params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the details of a particular email address.
@@ -241,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getEmailAddressWithEmail:(NSString *)email
-                          params:(NSDictionary *)params;
+                          params:(nullable NSDictionary *)params;
 
 /**
  Updates the details of a particular email address.
@@ -252,7 +250,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)updateEmailAddressWithEmail:(NSString *)email
-                             params:(NSDictionary *)params;
+                             params:(nullable NSDictionary *)params;
 
 /**
  Disassociates a particular email address from the account.
@@ -274,7 +272,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (CIOArrayRequest *)getFilesWithParams:(NSDictionary *)params;
+- (CIOArrayRequest *)getFilesWithParams:(nullable NSDictionary *)params;
 
 /**
  Retrieves the file with the specified id.
@@ -285,7 +283,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getFileWithID:(NSString *)fileID
-               params:(NSDictionary *)params;
+               params:(nullable NSDictionary *)params;
 
 /**
  Retrieves any changes associated with a particular file.
@@ -296,7 +294,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIOArrayRequest *)getChangesForFileWithID:(NSString *)fileID
-                         params:(NSDictionary *)params;
+                         params:(nullable NSDictionary *)params;
 
 /**
  Retrieves a public facing URL that can be used to download a particular file.
@@ -307,7 +305,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getContentsURLForFileWithID:(NSString *)fileID
-                            params:(NSDictionary *)params;
+                            params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the contents of a particular file.
@@ -321,7 +319,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 //- (void)downloadContentsOfFileWithID:(NSString *)fileID
 //                          saveToPath:(NSString *)saveToPath
-//                              params:(NSDictionary *)params
+//                              params:(nullable NSDictionary *)params
 //                             success:(void (^)())successBlock
 //                             failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failureBlock
 //                            progress:(void (^) (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead ))progressBlock;
@@ -335,7 +333,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID
-                         params:(NSDictionary *)params;
+                         params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the revisions of a particular file.
@@ -346,7 +344,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIOArrayRequest *)getRevisionsForFileWithID:(NSString *)fileID
-                           params:(NSDictionary *)params;
+                           params:(nullable NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Messages and Related Resources
@@ -359,7 +357,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (CIOArrayRequest *)getMessagesWithParams:(NSDictionary *)params;
+- (CIOArrayRequest *)getMessagesWithParams:(nullable NSDictionary *)params;
 
 /**
  Retrieves the message with the specified id.
@@ -370,7 +368,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getMessageWithID:(NSString *)messageID
-                  params:(NSDictionary *)params;
+                  params:(nullable NSDictionary *)params;
 
 /**
  Updates the message with the specified id.
@@ -383,7 +381,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CIODictionaryRequest *)updateMessageWithID:(NSString *)messageID
           destinationFolder:(NSString *)destinationFolder
-                                       params:(NSDictionary *)params;
+                                       params:(nullable NSDictionary *)params;
 
 /**
  Deletes the message with the specified id.
@@ -403,7 +401,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getBodyForMessageWithID:(NSString *)messageID
-                         params:(NSDictionary *)params;
+                         params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the flags for a particular message.
@@ -414,7 +412,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getFlagsForMessageWithID:(NSString *)messageID
-                          params:(NSDictionary *)params;
+                          params:(nullable NSDictionary *)params;
 
 /**
  Updates the flags for a particular message.
@@ -425,7 +423,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)updateFlagsForMessageWithID:(NSString *)messageID
-                             params:(NSDictionary *)params;
+                             params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the folders for a particular message.
@@ -436,7 +434,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIOArrayRequest *)getFoldersForMessageWithID:(NSString *)messageID
-                            params:(NSDictionary *)params;
+                            params:(nullable NSDictionary *)params;
 
 /**
  Updates the folders for a particular message.
@@ -447,7 +445,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)updateFoldersForMessageWithID:(NSString *)messageID
-                               params:(NSDictionary *)params;
+                               params:(nullable NSDictionary *)params;
 
 /**
  Sets the folders for a particular message.
@@ -469,7 +467,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getHeadersForMessageWithID:(NSString *)messageID
-                            params:(NSDictionary *)params;
+                            params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the source for a particular message.
@@ -480,7 +478,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getSourceForMessageWithID:(NSString *)messageID
-                           params:(NSDictionary *)params;
+                           params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the thread for a particular message.
@@ -491,7 +489,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getThreadForMessageWithID:(NSString *)messageID
-                           params:(NSDictionary *)params;
+                           params:(nullable NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Sources and Related Resources
@@ -504,7 +502,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (CIOArrayRequest *)getSourcesWithParams:(NSDictionary *)params;
+- (CIOArrayRequest *)getSourcesWithParams:(nullable NSDictionary *)params;
 
 /**
  Creates a new source under the account. Note: It is usually preferred to use `-beginAuthForProviderType:callbackURLString:params:success:failure:` to add a new source to the account.
@@ -525,7 +523,7 @@ NS_ASSUME_NONNULL_BEGIN
                        useSSL:(BOOL)useSSL
                          port:(NSInteger)port
                          type:(NSString *)type
-                       params:(NSDictionary *)params;
+                       params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the source with the specified label.
@@ -536,7 +534,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getSourceWithLabel:(NSString *)sourceLabel
-                    params:(NSDictionary *)params;
+                    params:(nullable NSDictionary *)params;
 
 /**
  Updates the source with the specified label.
@@ -547,7 +545,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)updateSourceWithLabel:(NSString *)sourceLabel
-                       params:(NSDictionary *)params;
+                       params:(nullable NSDictionary *)params;
 
 /**
  Deletes the source with the specified label.
@@ -567,7 +565,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIOArrayRequest *)getFoldersForSourceWithLabel:(NSString *)sourceLabel
-                              params:(NSDictionary *)params;
+                              params:(nullable NSDictionary *)params;
 
 /**
  Retrieves a folder belonging to a particular source.
@@ -580,7 +578,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CIODictionaryRequest *)getFolderWithPath:(NSString *)folderPath
               sourceLabel:(NSString *)sourceLabel
-                   params:(NSDictionary *)params;
+                   params:(nullable NSDictionary *)params;
 
 /**
  Deletes a folder belonging to a particular source.
@@ -604,7 +602,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CIODictionaryRequest *)createFolderWithPath:(NSString *)folderPath
                  sourceLabel:(NSString *)sourceLabel
-                      params:(NSDictionary *)params;
+                      params:(nullable NSDictionary *)params;
 
 /**
  Expunges a folder belonging to a particular source.
@@ -617,7 +615,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CIODictionaryRequest *)expungeFolderWithPath:(NSString *)folderPath
                   sourceLabel:(NSString *)sourceLabel
-                       params:(NSDictionary *)params;
+                       params:(nullable NSDictionary *)params;
 
 /**
  Retrieve the messages for a folder belonging to a particular source.
@@ -630,7 +628,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CIOArrayRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
                          sourceLabel:(NSString *)sourceLabel
-                              params:(NSDictionary *)params;
+                              params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the sync status for a particular source.
@@ -641,7 +639,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getSyncStatusForSourceWithLabel:(NSString *)sourceLabel
-                                 params:(NSDictionary *)params;
+                                 params:(nullable NSDictionary *)params;
 
 /**
  Force a sync for a particular source.
@@ -652,7 +650,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)forceSyncForSourceWithLabel:(NSString *)sourceLabel
-                             params:(NSDictionary *)params;
+                             params:(nullable NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Sources and Related Resources
@@ -665,7 +663,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param successBlock A block object to be executed when the request finishes successfully. This block has no return value and takes one argument: an array representation of the API response.
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (CIOArrayRequest *)getThreadsWithParams:(NSDictionary *)params;
+- (CIOArrayRequest *)getThreadsWithParams:(nullable NSDictionary *)params;
 
 /**
  Retrieves the thread with the specified id.
@@ -676,7 +674,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getThreadWithID:(NSString *)threadID
-                 params:(NSDictionary *)params;
+                 params:(nullable NSDictionary *)params;
 
 ///---------------------------------------------
 /// @name Working With Webhooks and Related Resources
@@ -690,7 +688,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 
-- (CIOArrayRequest *)getWebhooksWithParams:(NSDictionary *)params;
+- (CIOArrayRequest *)getWebhooksWithParams:(nullable NSDictionary *)params;
 
 /**
  Creates a new webhook.
@@ -703,7 +701,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CIODictionaryRequest *)createWebhookWithCallbackURLString:(NSString *)callbackURLString
               failureNotificationURLString:(NSString *)failureNotificationURLString
-                                    params:(NSDictionary *)params;
+                                    params:(nullable NSDictionary *)params;
 
 /**
  Retrieves the webhook with the specified id.
@@ -714,7 +712,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)getWebhookWithID:(NSString *)webhookID
-                  params:(NSDictionary *)params;
+                  params:(nullable NSDictionary *)params;
 
 /**
  Updates the webhook with the specified id.
@@ -725,7 +723,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failureBlock A block object to be executed when the request finishes unsuccessfully, or that finishes successfully, but encounters an error while parsing the response data. This block has no return value and takes two arguments: the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
 - (CIODictionaryRequest *)updateWebhookWithID:(NSString *)webhookID
-                     params:(NSDictionary *)params;
+                     params:(nullable NSDictionary *)params;
 
 /**
  Deletes the webhook with the specified id.

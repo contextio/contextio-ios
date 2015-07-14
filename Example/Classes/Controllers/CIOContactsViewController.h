@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "CIOAuthViewController.h"
 
 @interface CIOContactsViewController : UITableViewController <CIOAuthViewController>
+
+@property (nonnull) CIOAFNetworkingClient *APIClient;
 
 @end

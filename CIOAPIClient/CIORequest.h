@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CIORequest : NSObject
 
-@property (readonly, nonatomic) NSURLRequest *URLrequest;
+@property (readonly, nonatomic) NSURLRequest *urlRequest;
 
 + (instancetype)withURLRequest:(NSURLRequest *)URLrequest;
 
