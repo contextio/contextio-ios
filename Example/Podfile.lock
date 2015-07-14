@@ -1,8 +1,10 @@
 PODS:
   - AFNetworking (1.3.4)
-  - CIOAPIClient (0.8.9):
+  - CIOAPIClient/AFNetworking1 (0.9.0-pre):
     - AFNetworking (~> 1.0)
-    - SSKeychain (>= 0.2.1)
+    - CIOAPIClient/Core
+  - CIOAPIClient/Core (0.9.0-pre):
+    - SSKeychain (~> 1)
     - TDOAuth (~> 1.1)
   - OMGHTTPURLRQ/UserAgent (3.0.0)
   - SSKeychain (1.2.3)
@@ -10,7 +12,7 @@ PODS:
     - OMGHTTPURLRQ/UserAgent
 
 DEPENDENCIES:
-  - CIOAPIClient (from `..`)
+  - CIOAPIClient/AFNetworking1 (from `..`)
 
 EXTERNAL SOURCES:
   CIOAPIClient:
@@ -18,7 +20,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018
-  CIOAPIClient: 81c9b229e05248bbd76313cb65510e492d13e7b7
+  CIOAPIClient: 63a1bcae7b9e6fe58115a59d71bb6771f66bc4b5
   OMGHTTPURLRQ: 45cd892e5643206a5a359307621df7678625ebec
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   TDOAuth: efb25d45d5062b9cfb41c14c54f74c7b6c7a1abc

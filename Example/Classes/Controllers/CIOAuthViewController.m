@@ -10,10 +10,10 @@
 
 @interface CIOAuthViewController ()
 
-@property (nonatomic, strong) CIOAFNetworkingClient *APIClient;
+@property (nonatomic, strong) CIOAFNetworking1Client *APIClient;
 @property (nonatomic, assign) BOOL allowCancel;
 @property (nonatomic, assign) NSInteger selectedProviderType;
-@property (nonatomic, strong) UITextView *instructionsTextView;
+@property (nonatomic, strong) UILabel *instructionsTextView;
 @property (nonatomic, strong) UIButton *gmailButton;
 @property (nonatomic, strong) UIButton *yahooButton;
 @property (nonatomic, strong) UIButton *aolButton;
@@ -34,7 +34,7 @@
 @synthesize yahooButton = _yahooButton;
 @synthesize aolButton = _aolButton;
 
-- (id)initWithAPIClient:(CIOAFNetworkingClient *)APIClient allowCancel:(BOOL)allowCancel {
+- (id)initWithAPIClient:(CIOAFNetworking1Client *)APIClient allowCancel:(BOOL)allowCancel {
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
@@ -52,12 +52,14 @@
     self.title = NSLocalizedString(@"Connect Account", @"");
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg-default.png"]];
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 
     if (self.allowCancel == YES) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
     }
     
-    self.instructionsTextView = [[UITextView alloc] initWithFrame:CGRectZero];
+    self.instructionsTextView = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.instructionsTextView.numberOfLines = 0;
     self.instructionsTextView.backgroundColor = [UIColor clearColor];
     self.instructionsTextView.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:15.0f];
     self.instructionsTextView.textColor = [UIColor colorWithWhite:(103.0f/255.0f) alpha:1.0f];
@@ -65,26 +67,26 @@
     self.instructionsTextView.text = NSLocalizedString(@"Sign in to connect your email account with Message Finder.", @"");
     [self.view addSubview:self.instructionsTextView];
     
-    UIImage *providerButtonBgImage = [[UIImage imageNamed:@"button-provider-bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(76.0f, 7.0f, 76.0f, 7.0f)];
+    UIImage *providerButtonBgImage = [[UIImage imageNamed:@"button-provider-bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(76.0f, 7.0f, 76.0f, 7.0f)];
     
     self.gmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.gmailButton.tag = CIOEmailProviderTypeGmail;
     [self.gmailButton setBackgroundImage:providerButtonBgImage forState:UIControlStateNormal];
-    [self.gmailButton setImage:[UIImage imageNamed:@"button-provider-gmail.png"] forState:UIControlStateNormal];
+    [self.gmailButton setImage:[UIImage imageNamed:@"button-provider-gmail"] forState:UIControlStateNormal];
     [self.gmailButton addTarget:self action:@selector(providerButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.gmailButton];
     
     self.yahooButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.yahooButton.tag = CIOEmailProviderTypeYahoo;
     [self.yahooButton setBackgroundImage:providerButtonBgImage forState:UIControlStateNormal];
-    [self.yahooButton setImage:[UIImage imageNamed:@"button-provider-yahoo.png"] forState:UIControlStateNormal];
+    [self.yahooButton setImage:[UIImage imageNamed:@"button-provider-yahoo"] forState:UIControlStateNormal];
     [self.yahooButton addTarget:self action:@selector(providerButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.yahooButton];
     
     self.aolButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.aolButton.tag = CIOEmailProviderTypeAOL;
     [self.aolButton setBackgroundImage:providerButtonBgImage forState:UIControlStateNormal];
-    [self.aolButton setImage:[UIImage imageNamed:@"button-provider-aol.png"] forState:UIControlStateNormal];
+    [self.aolButton setImage:[UIImage imageNamed:@"button-provider-aol"] forState:UIControlStateNormal];
     [self.aolButton addTarget:self action:@selector(providerButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.aolButton];
 }
@@ -149,6 +151,23 @@
                                      }
                                      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                          NSLog(@"error creating connect token: %@", error);
+                                         if ([operation isKindOfClass:[AFJSONRequestOperation class]]) {
+                                             AFJSONRequestOperation *jsonOp = (AFJSONRequestOperation*)operation;
+                                             NSString *error = jsonOp.responseJSON[@"value"];
+                                             if (error) {
+                                                 NSString *title = @"Error";
+                                                 NSNumber *code = jsonOp.responseJSON[@"code"];
+                                                 if (code) {
+                                                     title = [NSString stringWithFormat:@"Error Code %@", code];
+                                                 }
+                                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                                                                 message:error
+                                                                                                delegate:nil
+                                                                                       cancelButtonTitle:@"OK"
+                                                                                       otherButtonTitles:nil];
+                                                 [alert show];
+                                             }
+                                         }
                                      }];
 }
 

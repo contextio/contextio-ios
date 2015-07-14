@@ -1,5 +1,5 @@
 //
-//  CIOAFNetworkingClient.h
+//  CIOAFNetworking1Client.h
 //  CIOAPIClient
 //
 //  Created by Alex Pretzlav on 7/10/15.
@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CIOAFNetworkingClient : CIOAPIClient
+@interface CIOAFNetworking1Client : CIOAPIClient
 
 /**
  The HTTP client used to interact with the API.

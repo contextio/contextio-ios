@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CIOAPIClient/CIOAFNetworkingClient.h>
 
 @interface CIOAppDelegate : UIResponder <UIApplicationDelegate>
 

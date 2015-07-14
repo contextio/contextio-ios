@@ -1,22 +1,22 @@
 //
-//  CIOAFNetworkingClient.m
+//  CIOAFNetworking1Client.m
 //  CIOAPIClient
 //
 //  Created by Alex Pretzlav on 7/10/15.
 //  Copyright (c) 2015 Context.io. All rights reserved.
 //
 
-#import "CIOAFNetworkingClient.h"
+#import "CIOAFNetworking1Client.h"
 
 static NSString * const kCIOAPIBaseURLString = @"https://api.context.io/2.0/";
 
-@interface CIOAFNetworkingClient ()
+@interface CIOAFNetworking1Client ()
 
 @property (nonatomic) AFHTTPClient *HTTPClient;
 
 @end
 
-@implementation CIOAFNetworkingClient
+@implementation CIOAFNetworking1Client
 
 - (id)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret token:(NSString *)token tokenSecret:(NSString *)tokenSecret accountID:(NSString *)accountID {
     self = [super initWithConsumerKey:consumerKey consumerSecret:consumerSecret token:token tokenSecret:tokenSecret accountID:accountID];

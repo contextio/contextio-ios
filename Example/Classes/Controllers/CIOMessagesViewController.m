@@ -12,7 +12,7 @@
 
 @property (nonatomic) NSString *contactEmailAddress;
 @property (nonatomic) NSArray *messagesArray;
-@property (nonatomic) CIOAFNetworkingClient *APIClient;
+@property (nonatomic) CIOAFNetworking1Client *APIClient;
 
 - (void)fetchMessages;
 
@@ -23,7 +23,7 @@
 @synthesize contactEmailAddress = _contactEmailAddress;
 @synthesize messagesArray = _messagesArray;
 
-- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress CIOClient:(CIOAFNetworkingClient *)CIOClient {
+- (id)initWithContactEmailAddress:(NSString *)contactEmailAddress CIOClient:(CIOAFNetworking1Client *)CIOClient {
     
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {

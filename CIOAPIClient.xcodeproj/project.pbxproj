@@ -10,14 +10,23 @@
 		1CE4615FE9E82DB90887096B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F73E5C8846ABA9C8336A4AA4 /* libPods.a */; };
 		FA1A50F31B5468870061DFC3 /* AuthorizationRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1A50F21B5468870061DFC3 /* AuthorizationRequestTests.m */; };
 		FA269DF61B546EB400CB7DB1 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = FA269DF51B546EB400CB7DB1 /* TestUtil.m */; };
+		FA269E0D1B548E5E00CB7DB1 /* libCIOAFNetworking1Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA269E021B548E5E00CB7DB1 /* libCIOAFNetworking1Client.a */; };
+		FA269E1C1B548E9F00CB7DB1 /* libCIOAPIClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD861201B44C75B002A4407 /* libCIOAPIClient.a */; };
+		FA269E201B54918D00CB7DB1 /* CIOAFNetworking1Client.m in Sources */ = {isa = PBXBuildFile; fileRef = FA269E1F1B54918D00CB7DB1 /* CIOAFNetworking1Client.m */; };
 		FA2E564F1B4B039000AEF151 /* OAuthSigningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */; };
-		FA9FD7E91B5049B900143F09 /* CIOAFNetworkingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FD7E81B5049B900143F09 /* CIOAFNetworkingClient.m */; };
 		FA9FD7EC1B5052F500143F09 /* CIORequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FD7EB1B5052F500143F09 /* CIORequest.m */; };
 		FAD8612C1B44C75B002A4407 /* libCIOAPIClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD861201B44C75B002A4407 /* libCIOAPIClient.a */; };
 		FAD8615D1B44C83C002A4407 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		FA269E0E1B548E5E00CB7DB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAD861181B44C75B002A4407 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA269E011B548E5E00CB7DB1;
+			remoteInfo = CIOAFNetworking1Client;
+		};
 		FAD8612D1B44C75B002A4407 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FAD861181B44C75B002A4407 /* Project object */;
@@ -28,6 +37,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		FA269E001B548E5E00CB7DB1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FAD8611E1B44C75B002A4407 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -47,10 +65,14 @@
 		FA1A50F21B5468870061DFC3 /* AuthorizationRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthorizationRequestTests.m; path = Tests/AuthorizationRequestTests.m; sourceTree = SOURCE_ROOT; };
 		FA269DF41B546EB400CB7DB1 /* TestUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestUtil.h; path = Tests/TestUtil.h; sourceTree = SOURCE_ROOT; };
 		FA269DF51B546EB400CB7DB1 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestUtil.m; path = Tests/TestUtil.m; sourceTree = SOURCE_ROOT; };
+		FA269E021B548E5E00CB7DB1 /* libCIOAFNetworking1Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCIOAFNetworking1Client.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA269E0C1B548E5E00CB7DB1 /* CIOAFNetworking1ClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CIOAFNetworking1ClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA269E121B548E5E00CB7DB1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA269E1D1B548F3400CB7DB1 /* CIOAPIClient.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = CIOAPIClient.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		FA269E1E1B54918D00CB7DB1 /* CIOAFNetworking1Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAFNetworking1Client.h; path = CIOAPIClient/AFNetworking1x/CIOAFNetworking1Client.h; sourceTree = SOURCE_ROOT; };
+		FA269E1F1B54918D00CB7DB1 /* CIOAFNetworking1Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAFNetworking1Client.m; path = CIOAPIClient/AFNetworking1x/CIOAFNetworking1Client.m; sourceTree = SOURCE_ROOT; };
 		FA2E564C1B4B004200AEF151 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Tests/Info.plist; sourceTree = SOURCE_ROOT; };
 		FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OAuthSigningTests.m; path = Tests/OAuthSigningTests.m; sourceTree = SOURCE_ROOT; };
-		FA9FD7E71B5049B900143F09 /* CIOAFNetworkingClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAFNetworkingClient.h; path = CIOAPIClient/CIOAFNetworkingClient.h; sourceTree = SOURCE_ROOT; };
-		FA9FD7E81B5049B900143F09 /* CIOAFNetworkingClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAFNetworkingClient.m; path = CIOAPIClient/CIOAFNetworkingClient.m; sourceTree = SOURCE_ROOT; };
 		FA9FD7EA1B5052F500143F09 /* CIORequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIORequest.h; path = CIOAPIClient/CIORequest.h; sourceTree = SOURCE_ROOT; };
 		FA9FD7EB1B5052F500143F09 /* CIORequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIORequest.m; path = CIOAPIClient/CIORequest.m; sourceTree = SOURCE_ROOT; };
 		FAD861201B44C75B002A4407 /* libCIOAPIClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCIOAPIClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +82,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		FA269DFF1B548E5E00CB7DB1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA269E1C1B548E9F00CB7DB1 /* libCIOAPIClient.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA269E091B548E5E00CB7DB1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA269E0D1B548E5E00CB7DB1 /* libCIOAFNetworking1Client.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FAD8611D1B44C75B002A4407 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -97,11 +135,39 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FA269E031B548E5E00CB7DB1 /* CIOAFNetworking1Client */ = {
+			isa = PBXGroup;
+			children = (
+				FA269E1E1B54918D00CB7DB1 /* CIOAFNetworking1Client.h */,
+				FA269E1F1B54918D00CB7DB1 /* CIOAFNetworking1Client.m */,
+			);
+			path = CIOAFNetworking1Client;
+			sourceTree = "<group>";
+		};
+		FA269E101B548E5E00CB7DB1 /* CIOAFNetworking1ClientTests */ = {
+			isa = PBXGroup;
+			children = (
+				FA269E111B548E5E00CB7DB1 /* Supporting Files */,
+			);
+			path = CIOAFNetworking1ClientTests;
+			sourceTree = "<group>";
+		};
+		FA269E111B548E5E00CB7DB1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FA269E121B548E5E00CB7DB1 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		FAD861171B44C75B002A4407 = {
 			isa = PBXGroup;
 			children = (
+				FA269E1D1B548F3400CB7DB1 /* CIOAPIClient.podspec */,
 				FAD861221B44C75B002A4407 /* CIOAPIClient */,
 				FAD8612F1B44C75B002A4407 /* Tests */,
+				FA269E031B548E5E00CB7DB1 /* CIOAFNetworking1Client */,
+				FA269E101B548E5E00CB7DB1 /* CIOAFNetworking1ClientTests */,
 				FAD861211B44C75B002A4407 /* Products */,
 				6780477CE5AE8A7631EEC303 /* Pods */,
 				7D1CA8A37010BE8922D547FC /* Frameworks */,
@@ -113,6 +179,8 @@
 			children = (
 				FAD861201B44C75B002A4407 /* libCIOAPIClient.a */,
 				FAD8612B1B44C75B002A4407 /* CIOAPIClientTests.xctest */,
+				FA269E021B548E5E00CB7DB1 /* libCIOAFNetworking1Client.a */,
+				FA269E0C1B548E5E00CB7DB1 /* CIOAFNetworking1ClientTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -122,8 +190,6 @@
 			children = (
 				FAD8615A1B44C83C002A4407 /* CIOAPIClient.h */,
 				FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */,
-				FA9FD7E71B5049B900143F09 /* CIOAFNetworkingClient.h */,
-				FA9FD7E81B5049B900143F09 /* CIOAFNetworkingClient.m */,
 				FA9FD7EA1B5052F500143F09 /* CIORequest.h */,
 				FA9FD7EB1B5052F500143F09 /* CIORequest.m */,
 			);
@@ -147,6 +213,41 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		FA269E011B548E5E00CB7DB1 /* CIOAFNetworking1Client */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA269E131B548E5E00CB7DB1 /* Build configuration list for PBXNativeTarget "CIOAFNetworking1Client" */;
+			buildPhases = (
+				FA269DFE1B548E5E00CB7DB1 /* Sources */,
+				FA269DFF1B548E5E00CB7DB1 /* Frameworks */,
+				FA269E001B548E5E00CB7DB1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CIOAFNetworking1Client;
+			productName = CIOAFNetworking1Client;
+			productReference = FA269E021B548E5E00CB7DB1 /* libCIOAFNetworking1Client.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		FA269E0B1B548E5E00CB7DB1 /* CIOAFNetworking1ClientTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA269E171B548E5E00CB7DB1 /* Build configuration list for PBXNativeTarget "CIOAFNetworking1ClientTests" */;
+			buildPhases = (
+				FA269E081B548E5E00CB7DB1 /* Sources */,
+				FA269E091B548E5E00CB7DB1 /* Frameworks */,
+				FA269E0A1B548E5E00CB7DB1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FA269E0F1B548E5E00CB7DB1 /* PBXTargetDependency */,
+			);
+			name = CIOAFNetworking1ClientTests;
+			productName = CIOAFNetworking1ClientTests;
+			productReference = FA269E0C1B548E5E00CB7DB1 /* CIOAFNetworking1ClientTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		FAD8611F1B44C75B002A4407 /* CIOAPIClient */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FAD861331B44C75B002A4407 /* Build configuration list for PBXNativeTarget "CIOAPIClient" */;
@@ -193,6 +294,12 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Context.io;
 				TargetAttributes = {
+					FA269E011B548E5E00CB7DB1 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					FA269E0B1B548E5E00CB7DB1 = {
+						CreatedOnToolsVersion = 6.4;
+					};
 					FAD8611F1B44C75B002A4407 = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -215,11 +322,20 @@
 			targets = (
 				FAD8611F1B44C75B002A4407 /* CIOAPIClient */,
 				FAD8612A1B44C75B002A4407 /* CIOAPIClientTests */,
+				FA269E011B548E5E00CB7DB1 /* CIOAFNetworking1Client */,
+				FA269E0B1B548E5E00CB7DB1 /* CIOAFNetworking1ClientTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		FA269E0A1B548E5E00CB7DB1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FAD861291B44C75B002A4407 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -263,13 +379,27 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		FA269DFE1B548E5E00CB7DB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA269E201B54918D00CB7DB1 /* CIOAFNetworking1Client.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA269E081B548E5E00CB7DB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FAD8611C1B44C75B002A4407 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FA9FD7EC1B5052F500143F09 /* CIORequest.m in Sources */,
 				FAD8615D1B44C83C002A4407 /* CIOAPIClient.m in Sources */,
-				FA9FD7E91B5049B900143F09 /* CIOAFNetworkingClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +416,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		FA269E0F1B548E5E00CB7DB1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA269E011B548E5E00CB7DB1 /* CIOAFNetworking1Client */;
+			targetProxy = FA269E0E1B548E5E00CB7DB1 /* PBXContainerItemProxy */;
+		};
 		FAD8612E1B44C75B002A4407 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FAD8611F1B44C75B002A4407 /* CIOAPIClient */;
@@ -294,6 +429,99 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		FA269E141B548E5E00CB7DB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		FA269E151B548E5E00CB7DB1 /* Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Test;
+		};
+		FA269E161B548E5E00CB7DB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		FA269E181B548E5E00CB7DB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = CIOAFNetworking1ClientTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FA269E191B548E5E00CB7DB1 /* Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CIOAFNetworking1ClientTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Test;
+		};
+		FA269E1A1B548E5E00CB7DB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CIOAFNetworking1ClientTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		FA7023E81B4C757C00A4AEC6 /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -483,6 +711,26 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		FA269E131B548E5E00CB7DB1 /* Build configuration list for PBXNativeTarget "CIOAFNetworking1Client" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA269E141B548E5E00CB7DB1 /* Debug */,
+				FA269E151B548E5E00CB7DB1 /* Test */,
+				FA269E161B548E5E00CB7DB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA269E171B548E5E00CB7DB1 /* Build configuration list for PBXNativeTarget "CIOAFNetworking1ClientTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA269E181B548E5E00CB7DB1 /* Debug */,
+				FA269E191B548E5E00CB7DB1 /* Test */,
+				FA269E1A1B548E5E00CB7DB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FAD8611B1B44C75B002A4407 /* Build configuration list for PBXProject "CIOAPIClient" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

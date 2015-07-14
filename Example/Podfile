@@ -1,1 +1,1 @@
-pod 'CIOAPIClient', path: '..'
+pod 'CIOAPIClient/AFNetworking1', path: '..'
