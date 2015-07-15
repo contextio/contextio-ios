@@ -32,7 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CIOArrayRequest : CIORequest
 @end
 
-
 /**
  *  A Context.io API request which returns a single string
     in its response.

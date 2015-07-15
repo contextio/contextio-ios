@@ -14,20 +14,26 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Key to use when looking up the `NSURLResponse` object of an `NSError`'s `userInfo` property.
  */
-extern NSString * const CIOAPISessionURLResponseErrorKey;
+extern NSString *const CIOAPISessionURLResponseErrorKey;
 
-typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t totalBytesRead, int64_t totalBytesExpectedToRead);
+typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t totalBytesRead,
+                                                int64_t totalBytesExpectedToRead);
 
 #pragma mark -
 
-
 /**
- *  `CIOAPISession` extends `CIOAPIClient` with support for executing requests against the Context.IO API via `NSURLSession`.
+ *  `CIOAPISession` extends `CIOAPIClient` with support for executing requests against the Context.IO API via
+ `NSURLSession`.
     The requests are typed based on their result data type: dictionary, array, and string.
 
-    Untyped requests that are simply `CIORequest` can only be downloaded to a file via `downloadRequestToFile:saveToURL:success:failure:progress:`, however any request's result _may_ be downloaded to a file via that method. This is useful for `getSourceForMessageWithID:params:`, which will retrieve the entire raw data of an email, including all attachments.
- 
-    If an error is returned by the server, the best attempt will be made to populate the resulting `NSError`'s `localizedDescription` with the error returned by the API. The full `NSURLResponse` can be retrieved via the `CIOAPISessionURLResponseErrorKey` property of the error's `userInfo` property.
+    Untyped requests that are simply `CIORequest` can only be downloaded to a file via
+ `downloadRequestToFile:saveToURL:success:failure:progress:`, however any request's result _may_ be downloaded to a file
+ via that method. This is useful for `getSourceForMessageWithID:params:`, which will retrieve the entire raw data of an
+ email, including all attachments.
+
+    If an error is returned by the server, the best attempt will be made to populate the resulting `NSError`'s
+ `localizedDescription` with the error returned by the API. The full `NSURLResponse` can be retrieved via the
+ `CIOAPISessionURLResponseErrorKey` property of the error's `userInfo` property.
  */
 @interface CIOAPISession : CIOAPIClient
 
@@ -38,7 +44,9 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
  *  @param success Handler block that takes an `NSDictionary`
  *  @param failure Failure block
  */
-- (void)executeDictionaryRequest:(CIODictionaryRequest *)request success:(nullable void (^)(NSDictionary *responseDict))success failure:(nullable void (^)(NSError *error))failure;
+- (void)executeDictionaryRequest:(CIODictionaryRequest *)request
+                         success:(nullable void (^)(NSDictionary *responseDict))success
+                         failure:(nullable void (^)(NSError *error))failure;
 
 /**
  *  Execute a request against the Context.IO API which returns an Array of JSON data in its response.
@@ -47,7 +55,9 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
  *  @param success Handler block that takes an `NSArray`
  *  @param failure Failure block
  */
-- (void)executeArrayRequest:(CIOArrayRequest *)request success:(nullable void (^)(NSArray *responseArray))success failure:(nullable void (^)(NSError *error))failure;
+- (void)executeArrayRequest:(CIOArrayRequest *)request
+                    success:(nullable void (^)(NSArray *responseArray))success
+                    failure:(nullable void (^)(NSError *error))failure;
 
 /**
  *  Execute a request against the Context.IO API which returns a String.
@@ -56,13 +66,17 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
  *  @param success Handler block that takes a `String`
  *  @param failure Failure block
  */
-- (void)executeStringRequest:(CIOStringRequest*)request success:(nullable void(^)(NSString *responseString))success failure:(nullable void (^)(NSError *error))failure;
+- (void)executeStringRequest:(CIOStringRequest *)request
+                     success:(nullable void (^)(NSString *responseString))success
+                     failure:(nullable void (^)(NSError *error))failure;
 
 /**
- *  Execute a request against the Context.IO API and save the body of the response to a file on disk. Typically used for saving attachments or raw message content.
+ *  Execute a request against the Context.IO API and save the body of the response to a file on disk. Typically used for
+ * saving attachments or raw message content.
  *
  *  @param request       request to execute
- *  @param fileURL       `URL` on disk to save the destination file to. An error will be returned if a file already exists at this path.
+ *  @param fileURL       `URL` on disk to save the destination file to. An error will be returned if a file already
+ * exists at this path.
  *  @param successBlock  block to be called when the file download completes
  *  @param failureBlock  block to be called in the event of an error. No file will be written.
  *  @param progressBlock block to receive periodic progress updates during the file download

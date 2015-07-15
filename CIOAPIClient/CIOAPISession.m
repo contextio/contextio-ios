@@ -8,7 +8,7 @@
 
 #import "CIOAPISession.h"
 
-NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
+NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
 
 @interface CIODownloadTask : NSObject
 
@@ -36,9 +36,19 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
 
 @implementation CIOAPISession
 
-- (instancetype)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret token:(NSString *)token tokenSecret:(NSString *)tokenSecret accountID:(NSString *)accountID {
-    if ((self = [super initWithConsumerKey:consumerKey consumerSecret:consumerSecret token:token tokenSecret:tokenSecret accountID:accountID])) {
-        self.urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]delegate:self delegateQueue:nil];
+- (instancetype)initWithConsumerKey:(NSString *)consumerKey
+                     consumerSecret:(NSString *)consumerSecret
+                              token:(NSString *)token
+                        tokenSecret:(NSString *)tokenSecret
+                          accountID:(NSString *)accountID {
+    if ((self = [super initWithConsumerKey:consumerKey
+                            consumerSecret:consumerSecret
+                                     token:token
+                               tokenSecret:tokenSecret
+                                 accountID:accountID])) {
+        self.urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+                                                        delegate:self
+                                                   delegateQueue:nil];
         // Hat tip to AFNetworking
         self.acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
         self.downloadTaskIDToCIOTask = [NSMutableDictionary dictionary];
@@ -46,19 +56,29 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
     return self;
 }
 
-- (void)executeDictionaryRequest:(CIODictionaryRequest *)request success:(void (^)(NSDictionary *))success failure:(void (^)(NSError *))failure {
+- (void)executeDictionaryRequest:(CIODictionaryRequest *)request
+                         success:(void (^)(NSDictionary *))success
+                         failure:(void (^)(NSError *))failure {
     [self executeRequest:request success:success failure:failure];
 }
 
-- (void)executeArrayRequest:(CIOArrayRequest *)request success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
+- (void)executeArrayRequest:(CIOArrayRequest *)request
+                    success:(void (^)(NSArray *))success
+                    failure:(void (^)(NSError *))failure {
     [self executeRequest:request success:success failure:failure];
 }
 
-- (void)executeStringRequest:(CIOStringRequest *)request success:(void (^)(NSString *))success failure:(void (^)(NSError *))failure {
+- (void)executeStringRequest:(CIOStringRequest *)request
+                     success:(void (^)(NSString *))success
+                     failure:(void (^)(NSError *))failure {
     [self executeRequest:request success:success failure:failure];
 }
 
-- (void)downloadRequestToFile:(CIORequest *)request saveToURL:(NSURL *)saveToURL success:(void (^)())successBlock failure:(void (^)(NSError *))failureBlock progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
+- (void)downloadRequestToFile:(CIORequest *)request
+                    saveToURL:(NSURL *)saveToURL
+                      success:(void (^)())successBlock
+                      failure:(void (^)(NSError *))failureBlock
+                     progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
     NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:request.urlRequest];
     CIODownloadTask *cioTask = [CIODownloadTask new];
     cioTask.saveToURL = saveToURL;
@@ -66,8 +86,8 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
     cioTask.failureBlock = failureBlock;
     cioTask.progressBlock = progressBlock;
     [self.urlSession.delegateQueue addOperationWithBlock:^{
-        self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)] = cioTask;
-        [downloadTask resume];
+      self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)] = cioTask;
+      [downloadTask resume];
     }];
 }
 
@@ -77,7 +97,7 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
 - (void)_dispatchMain:(nullable void (^)(id param))block parameter:(id)parameter {
     if (block) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            block(parameter);
+          block(parameter);
         });
     }
 }
@@ -88,19 +108,20 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
         if ([responseObject[@"type"] isEqual:@"error"]) {
             errorString = responseObject[@"value"];
         } else if ([responseObject[@"success"] isEqual:@NO]) {
-            NSArray *responseValues = @[responseObject[@"feedback_code"] ?: @"", responseObject[@"connectionLog"] ?: @""];
+            NSArray *responseValues =
+                @[responseObject[@"feedback_code"] ?: @"", responseObject[@"connectionLog"] ?: @""];
             errorString = [responseValues componentsJoinedByString:@"\n"];
         }
     }
     if (!errorString) {
         NSInteger code = response.statusCode;
-        errorString = [NSString stringWithFormat:@"Invalid server response: %@ (%ld)", [NSHTTPURLResponse localizedStringForStatusCode:code], (long)code];
+        errorString = [NSString stringWithFormat:@"Invalid server response: %@ (%ld)",
+                                                 [NSHTTPURLResponse localizedStringForStatusCode:code], (long)code];
     }
-    return [NSError errorWithDomain:@"io.context.error.statuscode"
-                               code:NSURLErrorBadServerResponse
-                           userInfo:@{ NSLocalizedDescriptionKey: errorString,
-                                       CIOAPISessionURLResponseErrorKey: response
-                                       }];
+    return
+        [NSError errorWithDomain:@"io.context.error.statuscode"
+                            code:NSURLErrorBadServerResponse
+                        userInfo:@{NSLocalizedDescriptionKey: errorString, CIOAPISessionURLResponseErrorKey: response}];
 }
 
 - (id)parseResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError **)error {
@@ -116,34 +137,39 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
         } else {
             NSStringEncoding encoding = NSUTF8StringEncoding;
             if (response.textEncodingName) {
-                encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)response.textEncodingName));
+                encoding = CFStringConvertEncodingToNSStringEncoding(
+                    CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)response.textEncodingName));
             }
             responseObject = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         }
     }
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-        NSUInteger code = (NSUInteger)[(NSHTTPURLResponse*)response statusCode];
+        NSUInteger code = (NSUInteger)[(NSHTTPURLResponse *)response statusCode];
         if (![self.acceptableStatusCodes containsIndex:code]) {
-            *error = [self errorForResponse:(NSHTTPURLResponse*)response responseObject:responseObject];
+            *error = [self errorForResponse:(NSHTTPURLResponse *)response responseObject:responseObject];
             return responseObject;
         }
     }
     return responseObject;
 }
 
-- (void)executeRequest:(CIORequest *)request success:(void (^)(id responseObject))successBlock failure:(void (^)(NSError *error))failureBlock {
-    NSURLSessionDataTask *dataTask = [self.urlSession dataTaskWithRequest:request.urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            [self _dispatchMain:failureBlock parameter:error];
-            return;
-        }
-        id responseObject = [self parseResponse:response data:data error:&error];
-        if (error) {
-            [self _dispatchMain:failureBlock parameter:error];
-        } else {
-            [self _dispatchMain:successBlock parameter:responseObject];
-        }
-    }];
+- (void)executeRequest:(CIORequest *)request
+               success:(void (^)(id responseObject))successBlock
+               failure:(void (^)(NSError *error))failureBlock {
+    NSURLSessionDataTask *dataTask =
+        [self.urlSession dataTaskWithRequest:request.urlRequest
+                           completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                             if (error) {
+                                 [self _dispatchMain:failureBlock parameter:error];
+                                 return;
+                             }
+                             id responseObject = [self parseResponse:response data:data error:&error];
+                             if (error) {
+                                 [self _dispatchMain:failureBlock parameter:error];
+                             } else {
+                                 [self _dispatchMain:successBlock parameter:responseObject];
+                             }
+                           }];
     [dataTask resume];
 }
 
@@ -156,7 +182,7 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
             [self _dispatchMain:cioTask.failureBlock parameter:error];
         } else if (cioTask.successBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                cioTask.successBlock();
+              cioTask.successBlock();
             });
         }
         [self.downloadTaskIDToCIOTask removeObjectForKey:@(task.taskIdentifier)];
@@ -165,16 +191,22 @@ NSString * const CIOAPISessionURLResponseErrorKey = @"io.context.error.response"
 
 #pragma mark - NSURLSessionDownloadDelegate
 
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+- (void)URLSession:(NSURLSession *)session
+                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
+                 didWriteData:(int64_t)bytesWritten
+            totalBytesWritten:(int64_t)totalBytesWritten
+    totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     CIODownloadTask *cioTask = self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)];
     if (cioTask.progressBlock) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            cioTask.progressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+          cioTask.progressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
         });
     }
 }
 
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+- (void)URLSession:(NSURLSession *)session
+                 downloadTask:(NSURLSessionDownloadTask *)downloadTask
+    didFinishDownloadingToURL:(NSURL *)location {
     CIODownloadTask *cioTask = self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)];
     if (cioTask.saveToURL) {
         NSError *error = nil;
