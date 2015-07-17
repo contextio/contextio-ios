@@ -8,7 +8,6 @@ final class CIOAuthenticator {
     let delegate = WebViewDelegate()
     var session: CIOAPISession
     var window: NSWindow?
-    var webView: WKWebView?
 
     init(session: CIOAPISession) {
         self.session = session
@@ -20,33 +19,34 @@ final class CIOAuthenticator {
             app.setActivationPolicy(.Regular)
             let s = session
             delegate.tokenHandler = { token in
-                s.executeDictionaryRequest(s.fetchAccountWithConnectToken(token),
-                    success: { responseDict in
+                s.fetchAccountWithConnectToken(token).executeWithSuccess(
+                    { responseDict in
+                        self.window?.close()
+                        self.window = nil
                         s.completeLoginWithResponse(responseDict, saveCredentials: true)
                         block(s)
-                    },
-                    failure: { error in
+                    }, failure: { error in
                         println("token fetch failure: \(error)")
                 })
             }
-            let authRequest = s.beginAuthForProviderType(.Gmail, callbackURLString: "cio-api-auth://", params: nil)
-            s.executeDictionaryRequest(authRequest, success: { responseDict in
-                let redirectURL = s.redirectURLFromResponse(responseDict)
-                println("Redirect url: \(redirectURL)")
+            s.beginAuthForProviderType(.Gmail, callbackURLString: "cio-api-auth://", params: nil)
+                .executeWithSuccess({ responseDict in
+                    let redirectURL = s.redirectURLFromResponse(responseDict)
 
-                self.webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 400, height: 600))
-                let request = NSURLRequest(URL: redirectURL)
-                self.webView?.loadRequest(request)
-                self.webView?.navigationDelegate = self.delegate
+                    let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 400, height: 600))
+                    let window = NSWindow(contentRect: webView.bounds, styleMask: NSTitledWindowMask | NSClosableWindowMask, backing: .Buffered, defer: false)
 
-                self.window = NSWindow(contentRect: self.webView!.bounds, styleMask: NSTitledWindowMask | NSClosableWindowMask, backing: .Buffered, defer: false)
-                self.window?.title = "Authenticate With Context.IO"
-                self.window?.contentView.addSubview(self.webView!)
-                self.window?.makeKeyAndOrderFront(nil)
+                    let request = NSURLRequest(URL: redirectURL)
+                    webView.loadRequest(request)
+                    webView.navigationDelegate = self.delegate
 
-                }, failure: { error in
-                    println(error)
-            })
+                    window.title = "Authenticate With Context.IO"
+                    window.contentView.addSubview(webView)
+                    window.makeKeyAndOrderFront(nil)
+                    self.window = window
+                    }, failure: { error in
+                        println(error)
+                })
         } else {
             block(session)
         }
@@ -55,19 +55,24 @@ final class CIOAuthenticator {
 
 XCPSetExecutionShouldContinueIndefinitely(continueIndefinitely: true)
 
-assertionFailure("Please provide your consumer key and consumer secret and comment out this line.")
 let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
+//if s.valueForKey("OAuthConsumerKey") as? String == "" {
+//    assertionFailure("Please provide your consumer key and consumer secret.")
+//}
+
+// Uncomment this line and let the playground execute to clear credentials and authenticate with a new email account
+//s.clearCredentials()
 let authenticator = CIOAuthenticator(session: s)
 
 authenticator.withAuthentication() { session in
-    session.executeDictionaryRequest(session.getContactsWithParams(nil),
-        success: { responseDict in
+    let request = session.getContactsWithParams(nil)
+    request.executeWithSuccess({ responseDict in
+            println(responseDict)
             let contactsArray = responseDict["matches"] as! [[NSObject: AnyObject]]
             let names = contactsArray.map { $0["name"] as! String }
             names
         },
         failure: { error in
-            error
             println("\(error)")
     })
 }

@@ -61,13 +61,13 @@
 #pragma mark - Actions
 
 - (void)fetchContacts {
-    [self.APIClient executeDictionaryRequest:[self.APIClient getContactsWithParams:nil]
-                                     success:^(NSDictionary *responseDict) {
-                                         self.contactsArray = [responseDict valueForKey:@"matches"];
-                                         [self.tableView reloadData];
-                                     } failure:^(NSError *error) {
-                                         NSLog(@"error getting contacts: %@", error);
-                                     }];
+    [[self.APIClient getContactsWithParams:nil]
+     executeWithSuccess:^(NSDictionary *responseDict) {
+         self.contactsArray = [responseDict valueForKey:@"matches"];
+         [self.tableView reloadData];
+     } failure:^(NSError *error) {
+         NSLog(@"error getting contacts: %@", error);
+     }];
 }
 
 #pragma mark - Table view data source

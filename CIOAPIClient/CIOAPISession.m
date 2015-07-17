@@ -74,11 +74,11 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
     [self executeRequest:request success:success failure:failure];
 }
 
-- (void)downloadRequestToFile:(CIORequest *)request
-                    saveToURL:(NSURL *)saveToURL
-                      success:(void (^)())successBlock
-                      failure:(void (^)(NSError *))failureBlock
-                     progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
+- (void)downloadRequest:(CIORequest *)request
+              toFileURL:(NSURL *)saveToURL
+                success:(void (^)())successBlock
+                failure:(void (^)(NSError *))failureBlock
+               progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
     NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:request.urlRequest];
     CIODownloadTask *cioTask = [CIODownloadTask new];
     cioTask.saveToURL = saveToURL;
@@ -86,8 +86,8 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
     cioTask.failureBlock = failureBlock;
     cioTask.progressBlock = progressBlock;
     [self.urlSession.delegateQueue addOperationWithBlock:^{
-      self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)] = cioTask;
-      [downloadTask resume];
+        self.downloadTaskIDToCIOTask[@(downloadTask.taskIdentifier)] = cioTask;
+        [downloadTask resume];
     }];
 }
 
@@ -181,9 +181,7 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
         if (error) {
             [self _dispatchMain:cioTask.failureBlock parameter:error];
         } else if (cioTask.successBlock) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-              cioTask.successBlock();
-            });
+            dispatch_async(dispatch_get_main_queue(), cioTask.successBlock);
         }
         [self.downloadTaskIDToCIOTask removeObjectForKey:@(task.taskIdentifier)];
     }
@@ -216,6 +214,34 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
             [self.downloadTaskIDToCIOTask removeObjectForKey:@(downloadTask.taskIdentifier)];
         }
     }
+}
+
+@end
+
+
+@implementation CIODictionaryRequest (CIOAPISession)
+
+- (void)executeWithSuccess:(nullable void (^)(NSDictionary * __nonnull))success failure:(nullable void (^)(NSError * __nonnull))failure {
+    NSParameterAssert([self.client isKindOfClass:[CIOAPISession class]]);
+    [(CIOAPISession*)self.client executeDictionaryRequest:self success:success failure:failure];
+}
+
+@end
+
+@implementation CIOArrayRequest (CIOAPISession)
+
+- (void)executeWithSuccess:(nullable void (^)(NSArray * __nonnull))success failure:(nullable void (^)(NSError * __nonnull))failure {
+    NSParameterAssert([self.client isKindOfClass:[CIOAPISession class]]);
+    [(CIOAPISession*)self.client executeArrayRequest:self success:success failure:failure];
+}
+
+@end
+
+@implementation CIOStringRequest (CIOAPISession)
+
+- (void)executeWithSuccess:(nullable void (^)(NSString * __nonnull))success failure:(nullable void (^)(NSError * __nonnull))failure {
+    NSParameterAssert([self.client isKindOfClass:[CIOAPISession class]]);
+    [(CIOAPISession*)self.client executeStringRequest:self success:success failure:failure];
 }
 
 @end

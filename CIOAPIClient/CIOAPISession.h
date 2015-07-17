@@ -81,11 +81,11 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
  *  @param failureBlock  block to be called in the event of an error. No file will be written.
  *  @param progressBlock block to receive periodic progress updates during the file download
  */
-- (void)downloadRequestToFile:(CIORequest *)request
-                    saveToURL:(NSURL *)fileURL
-                      success:(nullable void (^)())successBlock
-                      failure:(nullable void (^)(NSError *error))failureBlock
-                     progress:(nullable CIOSessionDownloadProgressBlock)progressBlock;
+- (void)downloadRequest:(CIORequest *)request
+              toFileURL:(NSURL *)fileURL
+                success:(nullable void (^)())successBlock
+                failure:(nullable void (^)(NSError *error))failureBlock
+               progress:(nullable CIOSessionDownloadProgressBlock)progressBlock;
 
 #pragma mark -
 
@@ -94,5 +94,20 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
 - (nullable id)parseResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError **)error;
 
 @end
+
+
+@interface CIODictionaryRequest (CIOAPISession)
+- (void)executeWithSuccess:(nullable void (^)(NSDictionary *responseDict))success failure:(nullable void (^)(NSError *error))failure;
+@end
+
+@interface CIOArrayRequest (CIOAPISession)
+- (void)executeWithSuccess:(nullable void (^)(NSArray *responseArray))success failure:(nullable void (^)(NSError *error))failure;
+@end
+
+@interface CIOStringRequest (CIOAPISession)
+- (void)executeWithSuccess:(nullable void (^)(NSString *responseString))success failure:(nullable void (^)(NSError *error))failure;
+@end
+
+
 
 NS_ASSUME_NONNULL_END

@@ -56,7 +56,7 @@
 - (void)fetchMessages {
     
     CIOArrayRequest *messagesRequest = [self.APIClient getMessagesForContactWithEmail:self.contactEmailAddress params:nil];
-    [self.APIClient executeArrayRequest:messagesRequest success:^(NSArray *response) {
+    [messagesRequest executeWithSuccess:^(NSArray *response) {
         self.messagesArray = response;
         [self.tableView reloadData];
     } failure:^(NSError *error) {
@@ -103,29 +103,28 @@
     NSArray *files = message[@"files"];
     if ([files count] > 0) {
         NSDictionary *file = files.firstObject;
-        CIODownloadRequest *download = [self.APIClient downloadContentsOfFileWithID:file[@"file_id"]];
         NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         NSURL *fileURL = [documentsURL URLByAppendingPathComponent:file[@"file_name"]];
         if ([fileURL checkResourceIsReachableAndReturnError:nil]) {
             [[NSFileManager defaultManager] removeItemAtURL:fileURL error:nil];
         }
-        [self.APIClient downloadFileWithRequest:download
-                                     saveToURL:fileURL
-                                        success:^{
-                                            NSLog(@"File downloaded: %@", [fileURL path]);
-                                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Download Complete"
-                                                                                                message:nil
-                                                                                               delegate:nil
-                                                                                      cancelButtonTitle:@"OK"
-                                                                                      otherButtonTitles:nil];
-                                            [alertView show];
-                                        }
-                                        failure:^(NSError *error) {
-                                            NSLog(@"Download error: %@", error);
-                                        }
-                                       progress:^(int64_t bytesRead, int64_t totalBytesRead, int64_t totalBytesExpected){
-                                           NSLog(@"Download progress: %0.2f%%", ((double)totalBytesExpected / (double)totalBytesRead) * 100);
-                                       }];
+        [self.APIClient downloadRequest:[self.APIClient downloadContentsOfFileWithID:file[@"file_id"]]
+                              toFileURL:fileURL
+                                success:^{
+                                    NSLog(@"File downloaded: %@", [fileURL path]);
+                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Download Complete"
+                                                                                        message:nil
+                                                                                       delegate:nil
+                                                                              cancelButtonTitle:@"OK"
+                                                                              otherButtonTitles:nil];
+                                    [alertView show];
+                                }
+                                failure:^(NSError *error) {
+                                    NSLog(@"Download error: %@", error);
+                                }
+                               progress:^(int64_t bytesRead, int64_t totalBytesRead, int64_t totalBytesExpected){
+                                   NSLog(@"Download progress: %0.2f%%", ((double)totalBytesExpected / (double)totalBytesRead) * 100);
+                               }];
 
     }
 }

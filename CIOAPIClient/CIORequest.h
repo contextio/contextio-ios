@@ -10,11 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class CIOAPIClient;
+
 @interface CIORequest : NSObject
 
+@property (readonly, nonatomic) CIOAPIClient *client;
 @property (readonly, nonatomic) NSURLRequest *urlRequest;
 
-+ (instancetype)withURLRequest:(NSURLRequest *)URLrequest;
++ (instancetype)withURLRequest:(NSURLRequest *)URLrequest client:(CIOAPIClient *)client;
 
 @end
 

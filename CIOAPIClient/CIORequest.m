@@ -10,15 +10,17 @@
 
 @interface CIORequest ()
 
+@property (nonatomic) CIOAPIClient *client;
 @property (nonnull, nonatomic) NSURLRequest *urlRequest;
 
 @end
 
 @implementation CIORequest
 
-+ (instancetype)withURLRequest:(NSURLRequest *)URLrequest {
++ (instancetype)withURLRequest:(NSURLRequest *)URLrequest client:(CIOAPIClient *)client {
     CIORequest *request = [[self alloc] init];
     request.urlRequest = URLrequest;
+    request.client = client;
     return request;
 }
 
