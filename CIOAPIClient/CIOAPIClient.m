@@ -294,10 +294,10 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                    params:params];
 }
 
-- (CIODictionaryRequest *)getMessagesForContactWithEmail:(NSString *)email params:(NSDictionary *)params {
+- (CIOArrayRequest *)getMessagesForContactWithEmail:(NSString *)email params:(NSDictionary *)params {
     NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
     NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
-    return [self dictionaryRequestForPath:[contactURLPath stringByAppendingPathComponent:@"messages"]
+    return [self arrayRequestForPath:[contactURLPath stringByAppendingPathComponent:@"messages"]
                                    method:@"GET"
                                    params:params];
 }

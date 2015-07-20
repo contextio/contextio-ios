@@ -14,10 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CIORequest : NSObject
 
-@property (readonly, nonatomic) CIOAPIClient *client;
+@property (nullable, readonly, nonatomic) CIOAPIClient *client;
 @property (readonly, nonatomic) NSURLRequest *urlRequest;
 
-+ (instancetype)withURLRequest:(NSURLRequest *)URLrequest client:(CIOAPIClient *)client;
++ (instancetype)withURLRequest:(NSURLRequest *)URLrequest client:(nullable CIOAPIClient *)client;
+
+/**
+ *  Checks if a response returned by a 200 API call is a valid response.
+ *
+ *  @return nil if the response is valid, otherwise an NSError representing the response returned.
+ */
+- (nullable NSError *)validateResponseObject:(nullable id)response;
 
 @end
 
@@ -26,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  as its top level response object.
  */
 @interface CIODictionaryRequest : CIORequest
+
 @end
 
 /**

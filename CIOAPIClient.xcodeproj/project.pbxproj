@@ -11,6 +11,7 @@
 		FA1A50F31B5468870061DFC3 /* AuthorizationRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1A50F21B5468870061DFC3 /* AuthorizationRequestTests.m */; };
 		FA269DF61B546EB400CB7DB1 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = FA269DF51B546EB400CB7DB1 /* TestUtil.m */; };
 		FA2E564F1B4B039000AEF151 /* OAuthSigningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */; };
+		FA80B4511B5D7A8800101BC4 /* CIORequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA80B4501B5D7A8800101BC4 /* CIORequestTests.m */; };
 		FA9FD7EC1B5052F500143F09 /* CIORequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FD7EB1B5052F500143F09 /* CIORequest.m */; };
 		FAD8612C1B44C75B002A4407 /* libCIOAPIClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD861201B44C75B002A4407 /* libCIOAPIClient.a */; };
 		FAD8615D1B44C83C002A4407 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */; };
@@ -59,6 +60,7 @@
 		FA269E1D1B548F3400CB7DB1 /* CIOAPIClient.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = CIOAPIClient.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FA2E564C1B4B004200AEF151 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Tests/Info.plist; sourceTree = SOURCE_ROOT; };
 		FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OAuthSigningTests.m; path = Tests/OAuthSigningTests.m; sourceTree = SOURCE_ROOT; };
+		FA80B4501B5D7A8800101BC4 /* CIORequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIORequestTests.m; path = Tests/CIORequestTests.m; sourceTree = SOURCE_ROOT; };
 		FA9FD7EA1B5052F500143F09 /* CIORequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIORequest.h; path = CIOAPIClient/CIORequest.h; sourceTree = SOURCE_ROOT; };
 		FA9FD7EB1B5052F500143F09 /* CIORequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIORequest.m; path = CIOAPIClient/CIORequest.m; sourceTree = SOURCE_ROOT; };
 		FAD861201B44C75B002A4407 /* libCIOAPIClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCIOAPIClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -164,6 +166,7 @@
 				FA269DF41B546EB400CB7DB1 /* TestUtil.h */,
 				FA269DF51B546EB400CB7DB1 /* TestUtil.m */,
 				FADC96741B55928400A2CC66 /* CIOAPISessionTests.m */,
+				FA80B4501B5D7A8800101BC4 /* CIORequestTests.m */,
 			);
 			name = Tests;
 			path = "contextio-iosTests";
@@ -302,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA80B4511B5D7A8800101BC4 /* CIORequestTests.m in Sources */,
 				FA2E564F1B4B039000AEF151 /* OAuthSigningTests.m in Sources */,
 				FA269DF61B546EB400CB7DB1 /* TestUtil.m in Sources */,
 				FA1A50F31B5468870061DFC3 /* AuthorizationRequestTests.m in Sources */,
@@ -367,6 +371,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 42CCA8FADEAC5D3F8424A46D /* Pods.test.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				GCC_WARN_STRICT_SELECTOR_MATCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -468,6 +475,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B6CFF9A0B21F854A1A1DAEED /* Pods.debug.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				GCC_WARN_STRICT_SELECTOR_MATCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -477,6 +487,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9513E578FEC176F57F6108D2 /* Pods.release.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				GCC_WARN_STRICT_SELECTOR_MATCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

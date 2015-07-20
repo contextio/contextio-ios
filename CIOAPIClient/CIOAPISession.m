@@ -140,13 +140,15 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
                 encoding = CFStringConvertEncodingToNSStringEncoding(
                     CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)response.textEncodingName));
             }
-            responseObject = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            responseObject = [[NSString alloc] initWithData:data encoding:encoding];
         }
     }
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSUInteger code = (NSUInteger)[(NSHTTPURLResponse *)response statusCode];
         if (![self.acceptableStatusCodes containsIndex:code]) {
-            *error = [self errorForResponse:(NSHTTPURLResponse *)response responseObject:responseObject];
+            if (error) {
+                *error = [self errorForResponse:(NSHTTPURLResponse *)response responseObject:responseObject];
+            }
             return responseObject;
         }
     }
@@ -157,19 +159,24 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
                success:(void (^)(id responseObject))successBlock
                failure:(void (^)(NSError *error))failureBlock {
     NSURLSessionDataTask *dataTask =
-        [self.urlSession dataTaskWithRequest:request.urlRequest
-                           completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                             if (error) {
-                                 [self _dispatchMain:failureBlock parameter:error];
-                                 return;
-                             }
-                             id responseObject = [self parseResponse:response data:data error:&error];
-                             if (error) {
-                                 [self _dispatchMain:failureBlock parameter:error];
-                             } else {
-                                 [self _dispatchMain:successBlock parameter:responseObject];
-                             }
-                           }];
+    [self.urlSession dataTaskWithRequest:request.urlRequest
+                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                           if (error) {
+                               [self _dispatchMain:failureBlock parameter:error];
+                               return;
+                           }
+                           id responseObject = [self parseResponse:response data:data error:&error];
+                           if (error) {
+                               [self _dispatchMain:failureBlock parameter:error];
+                               return;
+                           }
+                           error = [request validateResponseObject:responseObject];
+                           if (error) {
+                               [self _dispatchMain:failureBlock parameter:error];
+                               return;
+                           }
+                           [self _dispatchMain:successBlock parameter:responseObject];
+                       }];
     [dataTask resume];
 }
 

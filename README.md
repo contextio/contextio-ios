@@ -61,7 +61,7 @@ Use `CIOAPISession` to construct and execute signed [`NSURLRequests`][nsurl] aga
 
 Initialize `CIOAPISession` with your API key consumer key and consumer secret:
 
-```objective-c
+``` objective-c
 CIOAPISession *session = [[CIOAPISession alloc] initWithConsumerKey:@"your-consumer-key"
                                                      consumerSecret:@"your-consumer-secret"];
 ```
@@ -73,42 +73,41 @@ CIOAPISession *session = [[CIOAPISession alloc] initWithConsumerKey:@"your-consu
 [cioauth]: https://github.com/contextio/contextio-ios/blob/master/Example/Classes/Controllers/CIOAuthViewController.m
 [ct]: https://context.io/docs/2.0/connect_tokens
 
-### Retrieving Contacts
-
-Once a user has completed authentication, retrieve information from their authenticated email account:
-
-``` objective-c
-[[session getContactsWithParams:nil]
- executeWithSuccess:^(NSDictionary *responseDict) {
-     NSArray *contactsArray = responseDict[@"matches"];
- } failure:^(NSError *error) {
-     NSLog(@"error getting contacts: %@", error);
- }];
-```
-
-### Retrieving Messages
+### [Retrieve Messages](https://context.io/docs/2.0/accounts/messages)
 
 ``` objective-c
 [[session getMessagesWithParams:nil]
  executeWithSuccess:^(NSArray *responseArray) {
-     NSArray *messagesArray = responseArray;
+     self.messagesArray = responseArray;
  } failure:^(NSError *error) {
      NSLog(@"error getting messages: %@", error);
  }];
 ```
 
-### Retrieving Messages for a Particular Contact
+### [Add a Message to an Existing Folder/Label](https://context.io/docs/2.0/accounts/messages/folders)
 
 ``` objective-c
-[[session getMessagesForContactWithEmail:@"example@example.com" params:nil]
- executeWithSuccess:^(NSArray *responseArray) {
-     NSArray *messagesArray = responseArray;
+[[session updateFoldersForMessageWithID:message[@"message_id"]
+                                 params:@{@"add": @"Test Label"}]
+ executeWithSuccess:^(NSDictionary *response) {
+     NSLog(@"Response: %@", response);
  } failure:^(NSError *error) {
-     NSLog(@"error getting messages: %@", error);
+     NSLog(@"error moving message: %@", error);
  }];
 ```
 
-### Downloading A Message Attachment
+### [List Folders/Labels For An Account](https://context.io/docs/2.0/accounts/sources/folders#get)
+```objective-c
+// 0 is an alias for the first source of an account
+[[session getFoldersForSourceWithLabel:@"0" params:nil]
+ executeWithSuccess:^void(NSArray *folders) {
+     NSLog(@"Folders: %@", folders);
+ } failure:^void(NSError *error) {
+     NSLog(@"Error getting folders: %@", error);
+ }];
+```
+
+### [Download A Message Attachment](https://context.io/docs/2.0/accounts/files/content)
 
 ``` objective-c
 NSDictionary *file = [message[@"files"] firstObject];
