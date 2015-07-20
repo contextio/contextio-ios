@@ -9,17 +9,16 @@ CIOAPIClient is an easy to use iOS and OS X library for communicating with the C
 
 ## Using [CocoaPods](https://cocoapods.org)
 
-To use `CIOAPIClient` in your application, add it to your [`podfile`][podfile]:
+To use `CIOAPIClient` in your project:
 
-* If you don't hav a podfile, run `pod init` to create one
+* If you don't have a podfile, run `pod init` to create one
 * Add the following to your `Podfile`:<br>
 
 ```ruby
 pod 'CIOAPIClient', '~> 0.9'
 ```
 
-* Run `pod install` to install `CIOAPIClient` and its dependencies, then make sure to open the `.xcworkdspace` file instead of `.xcodeproj` if you weren't already
-
+* Run `pod install` to install `CIOAPIClient` and its dependencies, then make sure to open the `.xcworkspace` file instead of `.xcodeproj` if you weren't using it already
 
 [podfile]: https://guides.cocoapods.org/using/the-podfile.html
 
@@ -35,20 +34,20 @@ To run the example application, you will need to insert your Context.IO consumer
 
 ## Exploring the API in a Playground
 
-There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swift 1.2) in the `CIOPlayground` directory. Playgrounds with dynamic library dependencies are slightly finicky with Xcode 6.4, follow these steps to get it working:
+There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swift 1.2) in the `CIOPlayground` directory. Playgrounds with library dependencies are slightly finicky with Xcode 6.4, follow these steps to get it working:
 
 * `cd CIOPlayground `
 * `pod install`
 * Open `CIOPlayground.xcworkspace`
-* Select the `Pods-CIOAPIClient` Scheme in the Xcode scheme selection dropdown
+* Select the `CIOAPIClient` Scheme in the Xcode scheme selection dropdown (it should have a dynamic framework yellow toolbox icon)
 * Build the scheme (⌘B)
-* Select `CIOPlayground.playground` in the Project navigator left sidebar
-* Supply your consumer key and consumer secret in the line
+* Select `CIOPlayground.playground` from the `CIOPlayground` project in the Project navigator left sidebar
+* Add your consumer key and consumer secret to the line
 ```swift
 let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
 ```
 * At this point the playground will execute and an authentication WebView will appear in the bottom left corner of your screen
-* Authorize an email account using the Conext.IO auth flow in the WebView
+* Authorize an email account using the Context.IO auth flow in the WebView
     - The first time the code executes after authentication it may fail. Edit the playground to try again.
 * Add any code you wish to try to the `authenticator.withAuthentication() { session in` block in the playground
 
@@ -61,15 +60,17 @@ Use `CIOAPISession` to construct and execute signed [`NSURLRequests`][nsurl] aga
 ### Beginning an API Session
 
 Initialize `CIOAPISession` with your API key consumer key and consumer secret:
-``` objective-c
+
+```objective-c
 CIOAPISession *session = [[CIOAPISession alloc] initWithConsumerKey:@"your-consumer-key"
                                                      consumerSecret:@"your-consumer-secret"];
 ```
 
 ### Authentication
 
-`CIOAPISession` uses [Connect Tokens][ct] to authorize individual user's email accounts. Please see the example application for an overview of the authentication process. Feel free to re-use or subclass `CIOAuthViewController` in your own projects - it takes care of the details of authentication and should work out of the box for most purposes.
+`CIOAPISession` uses [Connect Tokens][ct] to authorize individual user's email accounts. Please see the example application for an overview of the authentication process. Feel free to re-use or subclass [`CIOAuthViewController`][cioauth] in your own project - it takes care of the details of authentication and should work out of the box for most purposes.
 
+[cioauth]: https://github.com/contextio/contextio-ios/blob/master/Example/Classes/Controllers/CIOAuthViewController.m
 [ct]: https://context.io/docs/2.0/connect_tokens
 
 ### Retrieving Contacts
