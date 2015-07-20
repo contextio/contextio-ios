@@ -1,21 +1,56 @@
 CIOAPIClient is an easy to use iOS and OS X library for communicating with the Context.IO 2.0 API. It is built upon [NSURLSession](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSURLSession_class/index.html) and provides convenient asynchronous block based methods for interacting with the API.
+
 ## Getting Started
 
-- Sign up for a developer account at [Context.IO](http://context.io).
-- [Submit a request](http://support.context.io/hc/en-us/requests/new) for a 3-legged OAuth Token. This library only supports 3-legged tokens to ensure end-users of your application can only access their own account.
-- [Download CIOAPIClient](https://github.com/contextio/contextio-ios) and check out the included iOS example app. It is also available as a [CocoaPod](http://cocoapods.org/) to make it even easier to add to your project.
-- View the full [Context.IO API documentation](http://context.io/docs/2.0) to better familiarize yourself with the API.
+* Sign up for a developer account at [Context.IO](http://context.io)
+* [Submit a request](http://support.context.io/hc/en-us/requests/new) for a 3-legged OAuth Token. This library only supports 3-legged tokens to ensure end-users of your application can only access their own account
+* [Download CIOAPIClient](https://github.com/contextio/contextio-ios) and check out the included iOS example app. It is also available as a [CocoaPod](http://cocoapods.org/) to make it even easier to add to your project
+* View the full [Context.IO API documentation](http://context.io/docs/2.0) to better familiarize yourself with the API
 
-## Building
+## Using [CocoaPods](https://cocoapods.org)
+
+To use `CIOAPIClient` in your application, add it to your [`podfile`][podfile]:
+
+* If you don't hav a podfile, run `pod init` to create one
+* Add the following to your `Podfile`:<br>
+
+```ruby
+pod 'CIOAPIClient', '~> 0.9'
+```
+
+* Run `pod install` to install `CIOAPIClient` and its dependencies, then make sure to open the `.xcworkdspace` file instead of `.xcodeproj` if you weren't already
+
+
+[podfile]: https://guides.cocoapods.org/using/the-podfile.html
+
+## Building the Example App
 
 After cloning the git repository, make sure to install cocoapods used by the example app:
 
-```
-cd <repository path>/Example
-pod install
-```
+* `cd <repository path>/Example`
+* `pod install`
+* `open "Context.IO iOS Example App.xcworkspace"`
 
 To run the example application, you will need to insert your Context.IO consumer key and secret in `CIOAppDelegate.m`.
+
+## Exploring the API in a Playground
+
+There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swift 1.2) in the `CIOPlayground` directory. Playgrounds with dynamic library dependencies are slightly finicky with Xcode 6.4, follow these steps to get it working:
+
+* `cd CIOPlayground `
+* `pod install`
+* Open `CIOPlayground.xcworkspace`
+* Select the `Pods-CIOAPIClient` Scheme in the Xcode scheme selection dropdown
+* Build the scheme (⌘B)
+* Select `CIOPlayground.playground` in the Project navigator left sidebar
+* Supply your consumer key and consumer secret in the line
+```swift
+let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
+```
+* At this point the playground will execute and an authentication WebView will appear in the bottom left corner of your screen
+* Authorize an email account using the Conext.IO auth flow in the WebView
+    - The first time the code executes after authentication it may fail. Edit the playground to try again.
+* Add any code you wish to try to the `authenticator.withAuthentication() { session in` block in the playground
 
 ## Example Usage
 
@@ -98,11 +133,11 @@ NSURL *fileURL = [documentsURL URLByAppendingPathComponent:file[@"file_name"]];
 
 ## Requirements
 
-`CIOAPIClient` requires either iOS 7.0 and above, or Mac OS 10.9.
+`CIOAPIClient` requires either iOS 7.0 and above or Mac OS 10.9 or above.
 
 ## Acknowledgements
 
-Thanks to [Kevin Lord](https://github.com/lordkev) who wrote the original version of thislibrary, [Sam Soffes](https://github.com/soffes) for [sskeychain](https://github.com/soffes/sskeychain), and TweetDeck for [TDOAuth](https://github.com/tweetdeck/tdoauth) which is used for the OAuth signature generation in CIOAPIClient.
+Thanks to [Kevin Lord](https://github.com/lordkev) who wrote the original version of this library, [Sam Soffes](https://github.com/soffes) for [sskeychain](https://github.com/soffes/sskeychain), and TweetDeck for [TDOAuth](https://github.com/tweetdeck/tdoauth) which is used for the OAuth signature generation in CIOAPIClient.
 
 ## License
 

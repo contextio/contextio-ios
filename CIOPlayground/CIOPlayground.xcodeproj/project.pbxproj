@@ -18,7 +18,7 @@
 		FA0948D31B56BD5100AAF55E /* Dummy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Dummy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA0948D61B56BD5100AAF55E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA0948D71B56BD5100AAF55E /* Dummy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dummy.h; sourceTree = "<group>"; };
-		FADC967F1B55E1ED00A2CC66 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		FADC967F1B55E1ED00A2CC66 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FADC96801B55E20400A2CC66 /* CIOPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = CIOPlayground.playground; sourceTree = "<group>"; };
 		FADC968A1B55E23C00A2CC66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FADC968B1B55E23C00A2CC66 /* Dummy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dummy.h; sourceTree = "<group>"; };

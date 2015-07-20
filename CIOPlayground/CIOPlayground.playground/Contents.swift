@@ -56,11 +56,12 @@ final class CIOAuthenticator {
 XCPSetExecutionShouldContinueIndefinitely(continueIndefinitely: true)
 
 let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
-//if s.valueForKey("OAuthConsumerKey") as? String == "" {
-//    assertionFailure("Please provide your consumer key and consumer secret.")
-//}
+if s.valueForKey("OAuthConsumerKey") as? String == "" {
+    assertionFailure("Please provide your consumer key and consumer secret.")
+}
 
-// Uncomment this line and let the playground execute to clear credentials and authenticate with a new email account
+// Uncomment this line and let the playground execute to clear previous
+// credentials and authenticate with a new email account:
 //s.clearCredentials()
 let authenticator = CIOAuthenticator(session: s)
 
