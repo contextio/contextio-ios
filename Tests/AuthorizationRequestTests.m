@@ -33,7 +33,7 @@
     XCTAssertEqualObjects(params[@"callback_url"], @"cio-test-url");
 }
 
-- (void)textExtractRedirectURL {
+- (void)testExtractRedirectURL {
     NSDictionary *response = @{
                                @"access_token": @"access_token",
                                @"access_token_secret": @"access_token_secret",
