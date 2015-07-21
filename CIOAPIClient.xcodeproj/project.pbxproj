@@ -212,9 +212,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA58A3801B5ECBC000A04A4A /* CIOAPISession.h in Headers */,
 				FA58A37E1B5ECBBB00A04A4A /* CIOAPIClient.h in Headers */,
 				FA58A37F1B5ECBBE00A04A4A /* CIORequest.h in Headers */,
-				FA58A3801B5ECBC000A04A4A /* CIOAPISession.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

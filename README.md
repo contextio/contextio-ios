@@ -1,3 +1,5 @@
+Build awesome things with email! We take the pain out of syncing email data with your app so you can focus on what makes your product great.
+
 CIOAPIClient is an easy to use iOS and OS X library for communicating with the Context.IO 2.0 API. It is built upon [NSURLSession](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSURLSession_class/index.html) and provides convenient asynchronous block based methods for interacting with the API.
 
 ## Getting Started

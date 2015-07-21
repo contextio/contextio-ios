@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Context.io. All rights reserved.
 //
 
-#import "CIOAPISession.h"
+#import <CIOAPIClient/CIOAPISession.h>
 #import <XCTest/XCTest.h>
 
 @interface CIOAPISessionTests : XCTestCase
