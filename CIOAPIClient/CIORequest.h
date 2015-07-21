@@ -12,11 +12,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class CIOAPIClient;
 
+/**
+    A single request against the Context.IO API.
+ */
 @interface CIORequest : NSObject
 
+/**
+ *  The `CIOAPIClient` or `CIOAPISession` used to construct this request.
+ */
 @property (nullable, readonly, nonatomic) CIOAPIClient *client;
+
+/**
+ *  The underlying `NSURLRequest` that will be made against the Context.IO API.
+ */
 @property (readonly, nonatomic) NSURLRequest *urlRequest;
 
+/**
+ *  Creates a new `CIORequest` around an `NSURLRequest.
+ *
+ *  @param URLrequest the HTTP request against the Context.IO API
+ *  @param client     The `CIOAPIClient` used to generate the request
+ *
+ *  @return a new `CIORequest`
+ */
 + (instancetype)withURLRequest:(NSURLRequest *)URLrequest client:(nullable CIOAPIClient *)client;
 
 /**

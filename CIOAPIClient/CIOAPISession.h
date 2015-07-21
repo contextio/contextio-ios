@@ -95,19 +95,41 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
 
 @end
 
-
 @interface CIODictionaryRequest (CIOAPISession)
-- (void)executeWithSuccess:(nullable void (^)(NSDictionary *responseDict))success failure:(nullable void (^)(NSError *error))failure;
+
+/**
+ *  Execute this request in the `CIOAPISession` which constructed it. It is an error to call
+ *  this on a `CIODictionaryRequest` which was not created with a `CIOAPISession`.
+ *
+ *  @param success callback which takes an API response `NSDictionary`
+ *  @param failure an error block, see the description of `CIOAPISession` for more details about the error returned
+ */
+- (void)executeWithSuccess:(nullable void (^)(NSDictionary *responseDict))success
+                   failure:(nullable void (^)(NSError *error))failure;
 @end
 
+/**
+ *  Execute this request in the `CIOAPISession` which constructed it. It is an error to call
+ *  this on a `CIOArrayRequest` which was not created with a `CIOAPISession`.
+ *
+ *  @param success callback which takes an API response `NSArray`
+ *  @param failure an error block, see the description of `CIOAPISession` for more details about the error returned
+ */
 @interface CIOArrayRequest (CIOAPISession)
-- (void)executeWithSuccess:(nullable void (^)(NSArray *responseArray))success failure:(nullable void (^)(NSError *error))failure;
+- (void)executeWithSuccess:(nullable void (^)(NSArray *responseArray))success
+                   failure:(nullable void (^)(NSError *error))failure;
 @end
 
+/**
+ *  Execute this request in the `CIOAPISession` which constructed it. It is an error to call
+ *  this on a `CIOStringRequest` which was not created with a `CIOAPISession`.
+ *
+ *  @param success callback which takes an API response `NSString`
+ *  @param failure an error block, see the description of `CIOAPISession` for more details about the error returned
+ */
 @interface CIOStringRequest (CIOAPISession)
-- (void)executeWithSuccess:(nullable void (^)(NSString *responseString))success failure:(nullable void (^)(NSError *error))failure;
+- (void)executeWithSuccess:(nullable void (^)(NSString *responseString))success
+                   failure:(nullable void (^)(NSError *error))failure;
 @end
-
-
 
 NS_ASSUME_NONNULL_END
