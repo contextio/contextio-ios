@@ -4,9 +4,9 @@ Pod::Spec.new do |s|
   s.summary      = "API Client for Context.IO."
   s.homepage     = "https://github.com/contextio/contextio-ios"
   s.license      = 'MIT'
-  s.author       = { 'Kevin Lord' => 'kevinlord@otherinbox.com' }
+  s.author       = { 'Context.IO' => 'support@context.io' }
   s.source       = { :git => "https://github.com/contextio/contextio-ios.git", :tag => '0.9.0' }
-  s.source_files = 'CIOAPIClient', 'CIOAPIClient/OAuth', 'CIOAPIClient/OAuth/Crypto'
+  s.source_files = 'CIOAPIClient'
   s.requires_arc = true
 
   s.ios.deployment_target = '7.0'

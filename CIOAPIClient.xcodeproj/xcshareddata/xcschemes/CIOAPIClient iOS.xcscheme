@@ -14,23 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FAD8611F1B44C75B002A4407"
-               BuildableName = "libCIOAPIClient.a"
-               BlueprintName = "CIOAPIClient"
+               BlueprintIdentifier = "FA58A32F1B5EBEAD00A04A4A"
+               BuildableName = "CIOAPIClient.framework"
+               BlueprintName = "CIOAPIClient iOS"
                ReferencedContainer = "container:CIOAPIClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FAD8612A1B44C75B002A4407"
-               BuildableName = "CIOAPIClientTests.xctest"
-               BlueprintName = "CIOAPIClientTests"
+               BlueprintIdentifier = "FA58A3391B5EBEAD00A04A4A"
+               BuildableName = "CIOAPIClient iOS Tests.xctest"
+               BlueprintName = "CIOAPIClient iOS Tests"
                ReferencedContainer = "container:CIOAPIClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,9 +46,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FAD8612A1B44C75B002A4407"
-               BuildableName = "CIOAPIClientTests.xctest"
-               BlueprintName = "CIOAPIClientTests"
+               BlueprintIdentifier = "FA58A3391B5EBEAD00A04A4A"
+               BuildableName = "CIOAPIClient iOS Tests.xctest"
+               BlueprintName = "CIOAPIClient iOS Tests"
                ReferencedContainer = "container:CIOAPIClient.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -56,9 +56,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FAD8611F1B44C75B002A4407"
-            BuildableName = "libCIOAPIClient.a"
-            BlueprintName = "CIOAPIClient"
+            BlueprintIdentifier = "FA58A32F1B5EBEAD00A04A4A"
+            BuildableName = "CIOAPIClient.framework"
+            BlueprintName = "CIOAPIClient iOS"
             ReferencedContainer = "container:CIOAPIClient.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -75,9 +75,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FAD8611F1B44C75B002A4407"
-            BuildableName = "libCIOAPIClient.a"
-            BlueprintName = "CIOAPIClient"
+            BlueprintIdentifier = "FA58A32F1B5EBEAD00A04A4A"
+            BuildableName = "CIOAPIClient.framework"
+            BlueprintName = "CIOAPIClient iOS"
             ReferencedContainer = "container:CIOAPIClient.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -93,9 +93,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FAD8611F1B44C75B002A4407"
-            BuildableName = "libCIOAPIClient.a"
-            BlueprintName = "CIOAPIClient"
+            BlueprintIdentifier = "FA58A32F1B5EBEAD00A04A4A"
+            BuildableName = "CIOAPIClient.framework"
+            BlueprintName = "CIOAPIClient iOS"
             ReferencedContainer = "container:CIOAPIClient.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

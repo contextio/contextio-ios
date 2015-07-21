@@ -1,5 +1,5 @@
 PODS:
-  - OMGHTTPURLRQ/UserAgent (2.1.3)
+  - OMGHTTPURLRQ/UserAgent (3.0.0)
   - SSKeychain (1.2.3)
   - TDOAuth (1.1.0):
     - OMGHTTPURLRQ/UserAgent
@@ -9,7 +9,7 @@ DEPENDENCIES:
   - TDOAuth (~> 1.1)
 
 SPEC CHECKSUMS:
-  OMGHTTPURLRQ: c4268dea4295b585d711055dbcd87bfa82badd5f
+  OMGHTTPURLRQ: 45cd892e5643206a5a359307621df7678625ebec
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   TDOAuth: efb25d45d5062b9cfb41c14c54f74c7b6c7a1abc
 
