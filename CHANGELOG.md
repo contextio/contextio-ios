@@ -1,5 +1,11 @@
 # CIOAPIClient CHANGELOG
 
+## 0.9.1
+
+* Documentation improvements
+* Carthage support
+* Improved cocoapods metadata
+
 ## 0.9.0
 
 * SDK redesign

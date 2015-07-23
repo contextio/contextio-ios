@@ -78,6 +78,7 @@
 		FA80B4501B5D7A8800101BC4 /* CIORequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIORequestTests.m; path = Tests/CIORequestTests.m; sourceTree = SOURCE_ROOT; };
 		FA9FD7EA1B5052F500143F09 /* CIORequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIORequest.h; path = CIOAPIClient/CIORequest.h; sourceTree = SOURCE_ROOT; };
 		FA9FD7EB1B5052F500143F09 /* CIORequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIORequest.m; path = CIOAPIClient/CIORequest.m; sourceTree = SOURCE_ROOT; };
+		FAD672011B619D5500809B84 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		FAD8615A1B44C83C002A4407 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAPIClient.h; path = CIOAPIClient/CIOAPIClient.h; sourceTree = SOURCE_ROOT; };
 		FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAPIClient.m; path = CIOAPIClient/CIOAPIClient.m; sourceTree = SOURCE_ROOT; };
 		FADC96711B55768700A2CC66 /* CIOAPISession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAPISession.h; path = CIOAPIClient/CIOAPISession.h; sourceTree = SOURCE_ROOT; };
@@ -156,6 +157,7 @@
 				FADC96771B55D8EA00A2CC66 /* .clang-format */,
 				FA269E1D1B548F3400CB7DB1 /* CIOAPIClient.podspec */,
 				FADC96761B55C8DE00A2CC66 /* README.md */,
+				FAD672011B619D5500809B84 /* CHANGELOG.md */,
 				FAD861221B44C75B002A4407 /* CIOAPIClient */,
 				FAD8612F1B44C75B002A4407 /* Tests */,
 				FAD861211B44C75B002A4407 /* Products */,
