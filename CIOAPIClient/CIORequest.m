@@ -8,18 +8,27 @@
 
 #import "CIORequest.h"
 
+#import <objc/runtime.h>
+
 @interface CIORequest ()
 
 @property (nonatomic) CIOAPIClient *client;
 @property (nonnull, nonatomic) NSURLRequest *urlRequest;
 
+@property (nonatomic) NSMutableDictionary *internalParameters;
+@property (nonatomic) NSString *path;
+@property (nonatomic) NSString *method;
+
+
 @end
 
 @implementation CIORequest
 
-+ (instancetype)withURLRequest:(NSURLRequest *)URLrequest client:(CIOAPIClient *)client {
++ (instancetype)requestWithPath:(NSString *)path method:(NSString *)method parameters:(nullable NSDictionary *)params client:(nullable CIOAPIClient *)client {
     CIORequest *request = [[self alloc] init];
-    request.urlRequest = URLrequest;
+    request.internalParameters = [params mutableCopy] ?: [NSMutableDictionary dictionary];
+    request.path = path;
+    request.method = method;
     request.client = client;
     return request;
 }
@@ -47,6 +56,55 @@
                                userInfo:@{NSLocalizedDescriptionKey: errorString}];
     }
     return nil;
+}
+
+#pragma mark - KVC Parameter Generation
+
+- (NSDictionary *)parameters {
+    NSMutableDictionary *parameters = [[self dictionaryWithValuesForKeys:[self.class propertyNames]] mutableCopy];
+    [parameters addEntriesFromDictionary:self.internalParameters];
+    for (NSString *key in [parameters copy]) {
+        if (parameters[key] == [NSNull null]) {
+            [parameters removeObjectForKey:key];
+        } else if ([parameters[key] isKindOfClass:[NSDate class]]) {
+            parameters[key] = @([(NSDate*)parameters[key] timeIntervalSince1970]);
+        }/* else if ([parameters[key] isKindOfClass:[NSNumber class]] && [parameters[key] integerValue] == 0 && ![key isEqualToString:@"file_size_max"]) {
+            [parameters removeObjectForKey:key]; */
+        else if ([parameters[key] isKindOfClass:[NSArray class]]) {
+            parameters[key] = [(NSArray *)parameters[key] componentsJoinedByString:@","];
+        } else if ([key isEqualToString:@"sort_order"] && [parameters[key] isKindOfClass:[NSNumber class]]) {
+            CIOSortOrder order = [(NSNumber*)parameters[key] integerValue];
+            if (order == CIOSortOrderAscending) {
+                parameters[key] = @"asc";
+            } else if (order == CIOSortOrderDescending) {
+                parameters[key] = @"desc";
+            } else {
+                [parameters removeObjectForKey:key];
+            }
+        }
+    }
+    return parameters;
+}
+
++ (NSArray *)propertyNames {
+    unsigned int count = 0;
+    objc_property_t *properties = NULL;
+    Class currentClass = self;
+    NSMutableArray *propertyNames = [NSMutableArray array];
+    while (currentClass != nil && currentClass != [CIORequest class]) {
+        @try {
+            properties = class_copyPropertyList(currentClass, &count);
+            for (int i = 0; i < count; i++) {
+                objc_property_t property = properties[i];
+                NSString *propertyName = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+                [propertyNames addObject:propertyName];
+            }
+        } @finally {
+            free(properties);
+        }
+        currentClass = [currentClass superclass];
+    }
+    return propertyNames;
 }
 
 @end
@@ -83,6 +141,17 @@
         return error;
     }
     return [self _validateResponse:response ofType:[NSString class]];
+}
+
+@end
+
+@implementation CIOConnectTokenRequest
+
++ (instancetype)requestWithToken:(NSString *)token client:(nullable CIOAPIClient *)client {
+    return [self requestWithPath:[@"connect_tokens" stringByAppendingPathComponent:token]
+                          method:@"GET"
+                      parameters:nil
+                          client:client];
 }
 
 @end

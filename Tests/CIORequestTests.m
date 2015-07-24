@@ -16,8 +16,7 @@
 @implementation CIORequestTests
 
 - (void)testValidateGenericResponse {
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.context.io/account/messages"]];
-    CIORequest *request = [CIORequest withURLRequest:urlRequest client:nil];
+    CIORequest *request = [CIORequest requestWithPath:@"account/messages" method:@"GET" parameters:nil client:nil];
     XCTAssertNil([request validateResponseObject:@{}]);
     XCTAssertNil([request validateResponseObject:@[]]);
     XCTAssertNil([request validateResponseObject:@""]);
@@ -27,8 +26,7 @@
 }
 
 - (void)testValidateArrayResponse {
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.context.io/account/messages"]];
-    CIOArrayRequest *request = [CIOArrayRequest withURLRequest:urlRequest client:nil];
+    CIOArrayRequest *request = [CIOArrayRequest requestWithPath:@"account/messages" method:@"GET" parameters:nil client:nil];
     XCTAssertNil([request validateResponseObject:@[]]);
     XCTAssertNotNil([request validateResponseObject:@""]);
     XCTAssertNotNil([request validateResponseObject:@{}]);
@@ -38,8 +36,7 @@
 }
 
 - (void)testValidateDictionaryResponse {
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.context.io/account/messages"]];
-    CIODictionaryRequest *request = [CIODictionaryRequest withURLRequest:urlRequest client:nil];
+    CIODictionaryRequest *request = [CIODictionaryRequest requestWithPath:@"account/messages" method:@"GET" parameters:nil client:nil];
     XCTAssertNil([request validateResponseObject:@{}]);
     XCTAssertNotNil([request validateResponseObject:@[]]);
     XCTAssertNotNil([request validateResponseObject:@""]);
@@ -49,8 +46,7 @@
 }
 
 - (void)testValidateStringResponse {
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.context.io/account/messages"]];
-    CIOStringRequest *request = [CIOStringRequest withURLRequest:urlRequest client:nil];
+    CIOStringRequest *request = [CIOStringRequest requestWithPath:@"account/messages" method:@"GET" parameters:nil client:nil];
     XCTAssertNotNil([request validateResponseObject:@{}]);
     XCTAssertNotNil([request validateResponseObject:@[]]);
     XCTAssertNotNil([request validateResponseObject:nil]);

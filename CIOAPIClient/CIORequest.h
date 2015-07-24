@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, CIOSortOrder) {
+    CIOSortOrderUnspecified = 0,
+    CIOSortOrderAscending,
+    CIOSortOrderDescending
+};
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class CIOAPIClient;
@@ -22,20 +29,26 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nullable, readonly, nonatomic) CIOAPIClient *client;
 
+@property (readonly, nonatomic) NSDictionary *parameters;
+@property (readonly, nonatomic) NSString *path;
+@property (readonly, nonatomic) NSString *method;
 /**
- *  The underlying `NSURLRequest` that will be made against the Context.IO API.
+ A few API calls allow an arbitrary JSON body. If this is set, `parameters` will be ignored, and instead `requestBody` will be realized to json and sent as `Content-Type: application/json`.
  */
-@property (readonly, nonatomic) NSURLRequest *urlRequest;
+@property (nonatomic) id requestBody;
+
 
 /**
- *  Creates a new `CIORequest` around an `NSURLRequest.
+ *  Creates a new `CIORequest` representing a single API call against the Context.IO API.
  *
- *  @param URLrequest the HTTP request against the Context.IO API
- *  @param client     The `CIOAPIClient` used to generate the request
+ *  @param path   API path, e.g. "2.0/accounts/<id>/messages"
+ *  @param params Parameters added to API call
+ *  @param method HTTP method to use
+ *  @param client optional client to be retained with this request for later execution
  *
- *  @return a new `CIORequest`
+ *  @return a new CIOAPIRequest for a specific endpoint
  */
-+ (instancetype)withURLRequest:(NSURLRequest *)URLrequest client:(nullable CIOAPIClient *)client;
++ (instancetype)requestWithPath:(NSString *)path method:(NSString *)method parameters:(nullable NSDictionary *)params client:(nullable CIOAPIClient *)client;
 
 /**
  *  Checks if a response returned by a 200 API call is a valid response.
@@ -59,6 +72,16 @@ NS_ASSUME_NONNULL_BEGIN
  *  as its top level response object.
  */
 @interface CIOArrayRequest : CIORequest
+
+/**
+ *  The maximum number of results to return. The maximum limit is `100`.
+ */
+@property (nonatomic) NSInteger limit;
+/**
+ *  Start the list at this offset (zero-based).
+ */
+@property (nonatomic) NSInteger offset;
+
 @end
 
 /**
@@ -66,6 +89,10 @@ NS_ASSUME_NONNULL_BEGIN
     in its response.
  */
 @interface CIOStringRequest : CIORequest
+@end
+
+@interface CIOConnectTokenRequest : CIODictionaryRequest
++ (instancetype)requestWithToken:(NSString *)token client:(nullable CIOAPIClient *)client;
 @end
 
 NS_ASSUME_NONNULL_END

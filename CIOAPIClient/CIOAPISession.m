@@ -79,7 +79,8 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
                 success:(void (^)())successBlock
                 failure:(void (^)(NSError *))failureBlock
                progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
-    NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:request.urlRequest];
+    NSURLRequest *urlRequest = [self requestForCIORequest:request];
+    NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:urlRequest];
     CIODownloadTask *cioTask = [CIODownloadTask new];
     cioTask.saveToURL = saveToURL;
     cioTask.successBlock = successBlock;
@@ -158,8 +159,9 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
 - (void)executeRequest:(CIORequest *)request
                success:(void (^)(id responseObject))successBlock
                failure:(void (^)(NSError *error))failureBlock {
+    NSURLRequest *URLRequest = [self requestForCIORequest:request];
     NSURLSessionDataTask *dataTask =
-    [self.urlSession dataTaskWithRequest:request.urlRequest
+    [self.urlSession dataTaskWithRequest:URLRequest
                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                            if (error) {
                                [self _dispatchMain:failureBlock parameter:error];

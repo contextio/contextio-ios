@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "CIOAPIClient.h"
+#import "CIOAPIClientHeader.h"
 #import "TestUtil.h"
 
 @interface OAuthSigningTests : XCTestCase
@@ -47,6 +47,22 @@
     NSString *signature = [TestUtil OAuthSignature:authHeader];
     XCTAssertNotNil(signature);
     XCTAssertEqualObjects(signature, @"M71dKyk6LLpHEYQNXEEBn8NCCIQ%3D");
+}
+
+- (void)testJSONBody {
+    CIODictionaryRequest *request = [CIODictionaryRequest
+                                     requestWithPath:@"accounts/anAccountId/messages/aMessageID/folders"
+                                     method:@"PUT"
+                                     parameters:nil
+                                     client:self.client];
+    request.requestBody = @[@{@"name": @"my personal label"},
+                            @{@"name": @"parent folder/child folder"},
+                            @{@"symbolic_name": @"\\Starred"}
+                            ];
+    NSURLRequest *urlRequest = [self.client requestForCIORequest:request];
+    XCTAssertEqualObjects(urlRequest.HTTPBody, [NSJSONSerialization dataWithJSONObject:request.requestBody options:0 error:nil]);
+    XCTAssertEqualObjects([urlRequest valueForHTTPHeaderField:@"Content-Type"], @"application/json");
+    XCTAssertEqualObjects(urlRequest.URL, [NSURL URLWithString:@"https://api.context.io/2.0/accounts/anAccountId/messages/aMessageID/folders"]);
 }
 
 @end

@@ -6,7 +6,7 @@
 //
 //
 
-#import "CIOAPIClient.h"
+#import "CIOAPIClientHeader.h"
 
 #import <SSKeychain/SSKeychain.h>
 #import <TDOAuth/TDOAuth.h>
@@ -130,14 +130,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 }
 
 - (CIODictionaryRequest *)fetchAccountWithConnectToken:(NSString *)connectToken {
-    // This method is a bit of a one off due to the use of the temporary token/secret
-    NSString *connectTokenPath = [@"connect_tokens" stringByAppendingPathComponent:connectToken];
-    NSURLRequest *URLRequest = [self signedRequestForPath:connectTokenPath
-                                                   method:@"GET"
-                                               parameters:nil
-                                                    token:_tmpOAuthToken
-                                              tokenSecret:_tmpOAuthTokenSecret];
-    return [CIODictionaryRequest withURLRequest:URLRequest client:self];
+    return [CIOConnectTokenRequest requestWithToken:connectToken client:self];
 }
 
 - (BOOL)completeLoginWithResponse:(NSDictionary *)responseObject saveCredentials:(BOOL)saveCredentials {
@@ -153,6 +146,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
         _OAuthTokenSecret = OAuthTokenSecret;
         _accountID = accountID;
 
+        _isAuthorized = YES;
         if (saveCredentials) {
             [self saveCredentials];
         }
@@ -235,35 +229,84 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 }
 
 - (NSString *)accountPath {
-    return [@"accounts" stringByAppendingPathComponent:_accountID];
+    return [@"accounts" stringByAppendingPathComponent:self.accountID];
 }
 
 #pragma mark -
 
 - (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
-    NSString *token = _isAuthorized ? _OAuthToken : nil;
-    NSString *tokenSecret = _isAuthorized ? _OAuthTokenSecret : nil;
+    NSString *token = self.isAuthorized ? _OAuthToken : nil;
+    NSString *tokenSecret = self.isAuthorized ? _OAuthTokenSecret : nil;
     return [self signedRequestForPath:path method:method parameters:params token:token tokenSecret:tokenSecret];
+}
+
+- (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method body:(id)body {
+    // TDOAuth does not support JSON encoded body for GETs
+    NSParameterAssert(![method isEqualToString:@"GET"]);
+    NSString *token = self.isAuthorized ? _OAuthToken : nil;
+    NSString *tokenSecret = self.isAuthorized ? _OAuthTokenSecret : nil;
+    NSMutableURLRequest *signedRequest = [[TDOAuth URLRequestForPath:[self.basePath stringByAppendingPathComponent:path]
+                                                          parameters:body
+                                                                host:self.baseURL.host
+                                                         consumerKey:_OAuthConsumerKey
+                                                      consumerSecret:_OAuthTokenSecret
+                                                         accessToken:token
+                                                         tokenSecret:tokenSecret
+                                                              scheme:@"https"
+                                                       requestMethod:method
+                                                        dataEncoding:TDOAuthContentTypeJsonObject
+                                                        headerValues:@{
+                                                                       @"Accept": @"application/json"
+                                                                       }
+                                                     signatureMethod:TDOAuthSignatureMethodHmacSha1] mutableCopy];
+    signedRequest.timeoutInterval = self.timeoutInterval;
+    return signedRequest;
+}
+
+- (NSURLRequest *)requestForCIORequest:(CIORequest *)request {
+    if ([request isKindOfClass:[CIOConnectTokenRequest class]]) {
+        // This is a special case due to the use of the temporary token/secret during auth
+        return [self signedRequestForPath:request.path method:request.method parameters:request.parameters token:_tmpOAuthToken tokenSecret:_tmpOAuthTokenSecret];
+    } else if (request.requestBody != nil) {
+        return [self requestForPath:request.path method:request.method body:request.requestBody];
+    } else {
+        return [self requestForPath:request.path method:request.method params:request.parameters];
+    }
 }
 
 - (CIODictionaryRequest *)dictionaryRequestForPath:(NSString *)path
                                             method:(NSString *)method
                                             params:(NSDictionary *)params {
-    return [CIODictionaryRequest withURLRequest:[self requestForPath:path method:method params:params] client:self];
+    return [CIODictionaryRequest requestWithPath:path method:method parameters:params client:self];
 }
 
 - (CIOArrayRequest *)arrayRequestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
-    return [CIOArrayRequest withURLRequest:[self requestForPath:path method:method params:params] client:self];
+    return [CIOArrayRequest requestWithPath:path method:method parameters:params client:self];
 }
+
+- (CIOArrayRequest *)arrayGetRequestWithAccountComponents:(NSArray *)pathComponents {
+    NSArray *finalPath = [@[self.accountPath] arrayByAddingObjectsFromArray:pathComponents];
+    return [self arrayRequestForPath:[NSString pathWithComponents:finalPath]
+                              method:@"GET"
+                              params:nil];
+}
+
 
 #pragma mark - Account
 
-- (CIODictionaryRequest *)getAccountWithParams:(NSDictionary *)params {
-    return [self dictionaryRequestForPath:self.accountPath method:@"GET" params:params];
+- (CIODictionaryRequest *)getAccount {
+    return [self dictionaryRequestForPath:self.accountPath method:@"GET" params:nil];
 }
 
-- (CIODictionaryRequest *)updateAccountWithParams:(NSDictionary *)params {
-    return [self dictionaryRequestForPath:self.accountPath method:@"POST" params:params];
+- (CIODictionaryRequest *)updateAccountWithFirstName:(NSString *)firstName lastName:(NSString *)lastName {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (firstName) {
+        params[@"first_name"] = firstName;
+    }
+    if (lastName ) {
+        params[@"last_name"] = lastName;
+    }
+    return [self dictionaryRequestForPath:self.accountPath method:@"PUT" params:params];
 }
 
 - (CIODictionaryRequest *)deleteAccount {
@@ -272,81 +315,49 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark Contacts
 
-- (CIODictionaryRequest *)getContactsWithParams:(NSDictionary *)params {
-    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"contacts"]
-                                   method:@"GET"
-                                   params:params];
+- (CIOContactsRequest *)getContacts {
+    return [CIOContactsRequest requestWithPath:[self.accountPath stringByAppendingPathComponent:@"contacts"]
+                                        method:@"GET"
+                                    parameters:nil
+                                        client:self];
 }
 
-- (CIODictionaryRequest *)getContactWithEmail:(NSString *)email params:(NSDictionary *)params {
+- (CIODictionaryRequest *)getContactWithEmail:(NSString *)email {
     NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
     return [self dictionaryRequestForPath:[contactsURLPath stringByAppendingPathComponent:email]
                                    method:@"GET"
-                                   params:params];
+                                   params:nil];
 }
 
-- (CIODictionaryRequest *)getFilesForContactWithEmail:(NSString *)email params:(NSDictionary *)params {
-
-    NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
-    NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
-    return [self dictionaryRequestForPath:[contactURLPath stringByAppendingPathComponent:@"files"]
-                                   method:@"GET"
-                                   params:params];
+- (CIOArrayRequest *)getFilesForContactWithEmail:(NSString *)email{
+    return [self arrayGetRequestWithAccountComponents:@[@"contacts", email, @"files"]];
 }
 
-- (CIOArrayRequest *)getMessagesForContactWithEmail:(NSString *)email params:(NSDictionary *)params {
-    NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
-    NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
-    return [self arrayRequestForPath:[contactURLPath stringByAppendingPathComponent:@"messages"]
-                              method:@"GET"
-                              params:params];
+- (CIOArrayRequest *)getMessagesForContactWithEmail:(NSString *)email {
+    return [self arrayGetRequestWithAccountComponents:@[@"contacts", email, @"messages"]];
 }
 
-- (CIODictionaryRequest *)getThreadsForContactWithEmail:(NSString *)email params:(NSDictionary *)params {
-
-    NSString *contactsURLPath = [self.accountPath stringByAppendingPathComponent:@"contacts"];
-    NSString *contactURLPath = [contactsURLPath stringByAppendingPathComponent:email];
-
-    return [self dictionaryRequestForPath:[contactURLPath stringByAppendingPathComponent:@"threads"]
-                                   method:@"GET"
-                                   params:params];
+- (CIOArrayRequest *)getThreadsForContactWithEmail:(NSString *)email {
+    return [self arrayGetRequestWithAccountComponents:@[@"contacts", email, @"threads"]];
 }
 
 #pragma mark - Email Addresses
 
-- (CIOArrayRequest *)getEmailAddressesWithParams:(NSDictionary *)params {
-
-    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"email_addresses"]
-                              method:@"GET"
-                              params:params];
+- (CIOArrayRequest *)getEmailAddresses {
+    return [self arrayGetRequestWithAccountComponents:@[@"email_addresses"]];
 }
 
-- (CIODictionaryRequest *)createEmailAddressWithEmail:(NSString *)email params:(NSDictionary *)params {
-
-    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    mutableParams[@"email_address"] = email;
-
+- (CIODictionaryRequest *)addEmailAddress:(NSString *)email {
     return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"email_addresses"]
                                    method:@"POST"
-                                   params:[NSDictionary dictionaryWithDictionary:mutableParams]];
+                                   params:@{@"email_address": email}];
 }
 
-- (CIODictionaryRequest *)getEmailAddressWithEmail:(NSString *)email params:(NSDictionary *)params {
-
-    NSString *emailAddressesURLPath = [self.accountPath stringByAppendingPathComponent:@"email_addresses"];
-
-    return [self dictionaryRequestForPath:[emailAddressesURLPath stringByAppendingPathComponent:email]
-                                   method:@"GET"
-                                   params:params];
-}
-
-- (CIODictionaryRequest *)updateEmailAddressWithEmail:(NSString *)email params:(NSDictionary *)params {
-
-    NSString *emailAddressesURLPath = [self.accountPath stringByAppendingPathComponent:@"email_addresses"];
-
-    return [self dictionaryRequestForPath:[emailAddressesURLPath stringByAppendingPathComponent:email]
+- (CIODictionaryRequest *)updateEmailAddressWithEmail:(NSString *)email primary:(BOOL)primary {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"email_addresses", email]];
+    return [self dictionaryRequestForPath:path
                                    method:@"POST"
-                                   params:params];
+                                   params:@{@"primary": @(primary)}];
 }
 
 - (CIODictionaryRequest *)deleteEmailAddressWithEmail:(NSString *)email {
@@ -360,94 +371,80 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark - Files
 
-- (CIOArrayRequest *)getFilesWithParams:(NSDictionary *)params {
-
-    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"files"]
-                              method:@"GET"
-                              params:params];
+- (CIOFilesRequest *)getFiles {
+    return [CIOFilesRequest requestWithPath:[self.accountPath stringByAppendingPathComponent:@"files"]
+                                     method:@"GET"
+                                 parameters:nil
+                                     client:self];
 }
 
-- (CIODictionaryRequest *)getFileWithID:(NSString *)fileID params:(NSDictionary *)params {
-
-    NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
-
-    return [self dictionaryRequestForPath:[filesURLPath stringByAppendingPathComponent:fileID]
+- (CIODictionaryRequest *)getDetailsOfFileWithID:(NSString *)fileID {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"files", fileID]];
+    return [self dictionaryRequestForPath:path
                                    method:@"GET"
-                                   params:params];
+                                   params:nil];
 }
 
-- (CIOArrayRequest *)getChangesForFileWithID:(NSString *)fileID params:(NSDictionary *)params {
-
-    NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
-    NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
-
-    return
-        [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"changes"] method:@"GET" params:params];
+- (CIOArrayRequest *)getChangesForFileWithID:(NSString *)fileID {
+    return [self arrayGetRequestWithAccountComponents:@[@"files", fileID, @"changes"]];
 }
 
-- (CIOStringRequest *)getContentsURLForFileWithID:(NSString *)fileID params:(NSDictionary *)params {
+- (CIOStringRequest *)getContentsURLForFileWithID:(NSString *)fileID {
 
     NSString *requestPath = [NSString pathWithComponents:@[self.accountPath, @"files", fileID, @"content"]];
-    NSMutableDictionary *mutableParams = [params ?: @{} mutableCopy];
-    mutableParams[@"as_link"] = @YES;
-    return [CIOStringRequest withURLRequest:[self requestForPath:requestPath method:@"GET" params:mutableParams] client:self];
+    return [CIOStringRequest requestWithPath:requestPath
+                                      method:@"GET" 
+                                  parameters:@{@"as_link": @YES}
+                                      client:self];
 }
 
 - (CIORequest *)downloadContentsOfFileWithID:(NSString *)fileID {
 
     NSString *path = [NSString pathWithComponents:@[self.accountPath, @"files", fileID, @"content"]];
-    return [CIORequest withURLRequest:[self requestForPath:path method:@"GET" params:nil] client:self];
+    return [CIORequest requestWithPath:path method:@"GET" parameters:nil client:self];
 }
 
-- (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID params:(NSDictionary *)params {
+- (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID {
 
     NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
     NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
 
     return
-        [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"related"] method:@"GET" params:params];
+        [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"related"] method:@"GET" params:nil];
 }
 
-- (CIOArrayRequest *)getRevisionsForFileWithID:(NSString *)fileID params:(NSDictionary *)params {
+- (CIOArrayRequest *)getRevisionsForFileWithID:(NSString *)fileID {
 
     NSString *filesURLPath = [self.accountPath stringByAppendingPathComponent:@"files"];
     NSString *fileURLPath = [filesURLPath stringByAppendingPathComponent:fileID];
 
     return [self arrayRequestForPath:[fileURLPath stringByAppendingPathComponent:@"revisions"]
                               method:@"GET"
-                              params:params];
+                              params:nil];
 }
 
 #pragma mark - Messages
 
-- (CIOArrayRequest *)getMessagesWithParams:(NSDictionary *)params {
+- (CIOMessagesRequest *)getMessages {
 
-    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"messages"]
-                              method:@"GET"
-                              params:params];
+    return [CIOMessagesRequest requestForAccountId:self.accountID client:self];
 }
 
-- (CIODictionaryRequest *)getMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-
-    return [self dictionaryRequestForPath:[messagesURLPath stringByAppendingPathComponent:messageID]
-                                   method:@"GET"
-                                   params:params];
+- (CIOMessageRequest *)getMessageWithID:(NSString *)messageID {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID]];
+    return [CIOMessageRequest requestWithPath:path
+                                       method:@"GET"
+                                   parameters:nil
+                                       client:self];
 }
 
-- (CIODictionaryRequest *)updateMessageWithID:(NSString *)messageID
-                            destinationFolder:(NSString *)destinationFolder
-                                       params:(NSDictionary *)params {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-
-    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    mutableParams[@"dst_folder"] = destinationFolder;
-
-    return [self dictionaryRequestForPath:[messagesURLPath stringByAppendingPathComponent:messageID]
-                                   method:@"POST"
-                                   params:mutableParams];
+- (CIOMessageUpdateRequest *)updateMessageWithID:(NSString *)messageID
+                            destinationFolder:(NSString *)destinationFolder {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID]];
+    return [CIOMessageUpdateRequest requestWithPath:path
+                                             method:@"POST"
+                                         parameters:@{@"dst_folder": destinationFolder}
+                                             client:self];
 }
 
 - (CIODictionaryRequest *)deleteMessageWithID:(NSString *)messageID {
@@ -459,95 +456,118 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                    params:nil];
 }
 
-- (CIODictionaryRequest *)getBodyForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
+- (CIOArrayRequest *)getBodyForMessageWithID:(NSString *)messageID type:(nullable NSString *)type {
 
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-
-    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"body"]
+    NSDictionary *params = nil;
+    if (type) {
+        params = @{@"type": type};
+    }
+    return [self arrayRequestForPath:[messageURLPath stringByAppendingPathComponent:@"body"]
                                    method:@"GET"
                                    params:params];
 }
 
-- (CIODictionaryRequest *)getFlagsForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
+#pragma mark Flags
+
+- (CIODictionaryRequest *)getFlagsForMessageWithID:(NSString *)messageID {
 
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
 
     return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"flags"]
                                    method:@"GET"
-                                   params:params];
+                                   params:nil];
 }
 
-- (CIODictionaryRequest *)updateFlagsForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
+- (CIODictionaryRequest *)updateFlagsForMessageWithID:(NSString *)messageID flags:(CIOMessageFlags *)flags {
 
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
 
     return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"flags"]
                                    method:@"POST"
-                                   params:params];
+                                   params:[flags asDictionary]];
 }
 
-- (CIOArrayRequest *)getFoldersForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
+- (CIOArrayRequest *)getFoldersForMessageWithID:(NSString *)messageID {
 
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
 
     return [self arrayRequestForPath:[messageURLPath stringByAppendingPathComponent:@"folders"]
                               method:@"GET"
-                              params:params];
+                              params:nil];
 }
 
-- (CIODictionaryRequest *)updateFoldersForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-
-    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"folders"]
+- (CIODictionaryRequest *)updateFoldersForMessageWithID:(NSString *)messageID addToFolder:(nullable NSString *)addFolder removeFromFolder:(nullable NSString *)removeFolder {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"folders"]];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (addFolder) {
+        params[@"add"] = addFolder;
+    }
+    if (removeFolder) {
+        params[@"remove"] = removeFolder;
+    }
+    return [self dictionaryRequestForPath:path
                                    method:@"POST"
                                    params:params];
 }
 
-- (CIODictionaryRequest *)setFoldersForMessageWithID:(NSString *)messageID folders:(NSDictionary *)folders {
+- (CIODictionaryRequest *)setFoldersForMessageWithID:(NSString *)messageID folderNames:(NSArray *)folderNames symbolicFolderNames:(NSArray *)symbolicFolderNames {
 
     NSString *folderPath = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"folders"]];
-    return [self dictionaryRequestForPath:folderPath method:@"PUT" params:nil];
+    CIODictionaryRequest *request = [self dictionaryRequestForPath:folderPath method:@"PUT" params:nil];
+    NSMutableArray *requestBody = [NSMutableArray array];
+    for (NSString *name in folderNames) {
+        [requestBody addObject:@{@"name": name}];
+    }
+    for (NSString *symbolicName in symbolicFolderNames) {
+        [requestBody addObject:@{@"symbolic_name": symbolicName}];
+    }
+    request.requestBody = requestBody;
+    return request;
 }
 
-- (CIODictionaryRequest *)getHeadersForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-
-    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"headers"]
+- (CIODictionaryRequest *)getHeadersForMessageWithID:(NSString *)messageID {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"headers"]];
+    return [self dictionaryRequestForPath:path
                                    method:@"GET"
-                                   params:params];
+                                   params:nil];
 }
 
-- (CIOStringRequest *)getSourceForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
+- (CIOStringRequest *)getRawHeadersForMessageWithID:(NSString *)messageID {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"headers"]];
+    return [CIOStringRequest requestWithPath:path
+                                      method:@"GET"
+                                  parameters:@{@"raw": @YES}
+                                      client:self];
+}
+
+- (CIORequest *)getSourceForMessageWithID:(NSString *)messageID {
 
     NSString *requestPath = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"source"]];
-    return [CIOStringRequest withURLRequest:[self requestForPath:requestPath method:@"GET" params:params] client:self];
+    return [CIORequest requestWithPath:requestPath method:@"GET" parameters:nil client:self];
 }
 
-- (CIODictionaryRequest *)getThreadForMessageWithID:(NSString *)messageID params:(NSDictionary *)params {
+- (CIOThreadRequest *)getThreadForMessageWithID:(NSString *)messageID {
 
     NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
     NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-
-    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"thread"]
-                                   method:@"GET"
-                                   params:params];
+    return [CIOThreadRequest requestWithPath:[messageURLPath stringByAppendingPathComponent:@"thread"]
+                                      method:@"GET"
+                                  parameters:nil
+                                      client:self];
 }
 
 #pragma mark - Source
 
-- (CIOArrayRequest *)getSourcesWithParams:(NSDictionary *)params {
-
-    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
-                              method:@"GET"
-                              params:params];
+- (CIOArrayRequest *)getSources {
+    return [CIOSourcesRequest requestWithPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
+                                       method:@"GET"
+                                   parameters:nil
+                                       client:self];
 }
 
 - (CIODictionaryRequest *)createSourceWithEmail:(NSString *)email
@@ -555,38 +575,38 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                        username:(NSString *)username
                                          useSSL:(BOOL)useSSL
                                            port:(NSInteger)port
-                                           type:(NSString *)type
-                                         params:(NSDictionary *)params {
+                                           type:(NSString *)type {
 
-    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    mutableParams[@"email"] = email;
-    mutableParams[@"server"] = server;
-    mutableParams[@"username"] = username;
-    mutableParams[@"use_ssl"] = @(useSSL);
-    mutableParams[@"port"] = @(port);
-    mutableParams[@"type"] = type;
+    NSDictionary *params = @{
+                             @"email": email,
+                             @"server": server,
+                             @"username": username,
+                             @"use_ssl": @(useSSL),
+                             @"port": @(port),
+                             @"type": type};
 
-    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
-                                   method:@"GET"
-                                   params:mutableParams];
+    return [CIOSourceCreateRequest requestWithPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
+
+                                            method:@"POST"
+                                        parameters:params
+                                            client:self];
 }
 
-- (CIODictionaryRequest *)getSourceWithLabel:(NSString *)sourceLabel params:(NSDictionary *)params {
+- (CIODictionaryRequest *)getSourceWithLabel:(NSString *)sourceLabel {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel]];
 
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-
-    return [self dictionaryRequestForPath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel]
+    return [self dictionaryRequestForPath:path
                                    method:@"GET"
-                                   params:params];
+                                   params:nil];
 }
 
-- (CIODictionaryRequest *)updateSourceWithLabel:(NSString *)sourceLabel params:(NSDictionary *)params {
+- (CIOSourceModifyRequest *)updateSourceWithLabel:(NSString *)sourceLabel {
 
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-
-    return [self dictionaryRequestForPath:[sourcesURLPath stringByAppendingPathComponent:sourceLabel]
-                                   method:@"POST"
-                                   params:params];
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel]];
+    return [CIOSourceModifyRequest requestWithPath:path
+                                            method:@"POST"
+                                        parameters:nil
+                                            client:self];
 }
 
 - (CIODictionaryRequest *)deleteSourceWithLabel:(NSString *)sourceLabel {
@@ -598,27 +618,40 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                    params:nil];
 }
 
-- (CIOArrayRequest *)getFoldersForSourceWithLabel:(NSString *)sourceLabel params:(NSDictionary *)params {
-
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-    NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
-
-    return [self arrayRequestForPath:[sourceURLPath stringByAppendingPathComponent:@"folders"]
-                              method:@"GET"
-                              params:params];
+- (CIOArrayRequest *)getFoldersForSourceWithLabel:(NSString *)sourceLabel
+                            includeExtendedCounts:(BOOL)includeExtendedCounts
+                                          noCache:(BOOL)noCache {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel, @"folders"]];
+    NSDictionary *params = @{@"include_extended_counts": @(includeExtendedCounts),
+                             @"no_cache": @(noCache)};
+    return [self arrayRequestForPath:path method:@"GET" params:params];
 }
 
 - (CIODictionaryRequest *)getFolderWithPath:(NSString *)folderPath
                                 sourceLabel:(NSString *)sourceLabel
-                                     params:(NSDictionary *)params {
-
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-    NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
-    NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
-
-    return [self dictionaryRequestForPath:[foldersURLPath stringByAppendingPathComponent:folderPath]
+                      includeExtendedCounts:(BOOL)includeExtendedCounts
+                                      delim:(nullable NSString *)delim {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel, @"folders", folderPath]];
+    NSMutableDictionary *params = [@{@"include_extended_counts": @(includeExtendedCounts)} mutableCopy];
+    if (delim) {
+        params[@"delim"] = delim;
+    }
+    return [self dictionaryRequestForPath:path
                                    method:@"GET"
                                    params:params];
+}
+
+- (CIODictionaryRequest *)createFolderWithPath:(NSString *)folderPath
+                                   sourceLabel:(NSString *)sourceLabel
+                                         delim:(nullable NSString *)delim {
+
+    NSString *foldersURLPath =
+    [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel, @"folders", folderPath]];
+    NSDictionary *params = nil;
+    if (delim) {
+        params = @{@"delim": delim};
+    }
+    return [self dictionaryRequestForPath:foldersURLPath method:@"PUT" params:params];
 }
 
 - (CIODictionaryRequest *)deleteFolderWithPath:(NSString *)folderPath sourceLabel:(NSString *)sourceLabel {
@@ -632,62 +665,59 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                    params:nil];
 }
 
-- (CIODictionaryRequest *)createFolderWithPath:(NSString *)folderPath
-                                   sourceLabel:(NSString *)sourceLabel
-                                        params:(NSDictionary *)params {
-
-    NSString *foldersURLPath =
-        [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel, @"folders", folderPath]];
-    return [self dictionaryRequestForPath:foldersURLPath method:@"PUT" params:params];
-}
-
 - (CIODictionaryRequest *)expungeFolderWithPath:(NSString *)folderPath
-                                    sourceLabel:(NSString *)sourceLabel
-                                         params:(NSDictionary *)params {
+                                    sourceLabel:(NSString *)sourceLabel {
 
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-    NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
-    NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
-    NSString *folderURLPath = [foldersURLPath stringByAppendingPathComponent:folderPath];
-
-    return [self dictionaryRequestForPath:[folderURLPath stringByAppendingPathComponent:@"expunge"]
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"sources", sourceLabel, @"folders", folderPath, @"expunge"]];
+    return [self dictionaryRequestForPath:path
                                    method:@"POST"
-                                   params:params];
+                                   params:nil];
+}
+- (CIOFolderMessagesRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
+                                               sourceLabel:(NSString *)sourceLabel {
+
+    NSString *path = [NSString pathWithComponents:@[self.accountPath,
+                                                    @"sources", sourceLabel, @"folders", folderPath, @"messages"]];
+    return [CIOFolderMessagesRequest requestWithPath:path
+                                              method:@"GET"
+                                          parameters:nil
+                                              client:self];
 }
 
-- (CIOArrayRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
-                                      sourceLabel:(NSString *)sourceLabel
-                                           params:(NSDictionary *)params {
-
-    NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
-    NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
-    NSString *foldersURLPath = [sourceURLPath stringByAppendingPathComponent:@"folders"];
-    NSString *folderURLPath = [foldersURLPath stringByAppendingPathComponent:folderPath];
-
-    return [self arrayRequestForPath:[folderURLPath stringByAppendingPathComponent:@"messages"]
-                              method:@"GET"
-                              params:params];
-}
-
-- (CIODictionaryRequest *)getSyncStatusForSourceWithLabel:(NSString *)sourceLabel params:(NSDictionary *)params {
+- (CIODictionaryRequest *)getSyncStatusForSourceWithLabel:(NSString *)sourceLabel {
 
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
 
     return [self dictionaryRequestForPath:[sourceURLPath stringByAppendingPathComponent:@"sync"]
                                    method:@"GET"
-                                   params:params];
+                                   params:nil];
 }
 
-- (CIODictionaryRequest *)forceSyncForSourceWithLabel:(NSString *)sourceLabel params:(NSDictionary *)params {
+- (CIODictionaryRequest *)forceSyncForSourceWithLabel:(NSString *)sourceLabel {
 
     NSString *sourcesURLPath = [self.accountPath stringByAppendingPathComponent:@"sources"];
     NSString *sourceURLPath = [sourcesURLPath stringByAppendingPathComponent:sourceLabel];
 
     return [self dictionaryRequestForPath:[sourceURLPath stringByAppendingPathComponent:@"sync"]
                                    method:@"POST"
-                                   params:params];
+                                   params:nil];
 }
+
+#pragma mark Sync
+
+- (CIODictionaryRequest *)getSyncStatusForAllSources {
+    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"sync"]
+                                   method:@"GET"
+                                   params:nil];
+}
+
+- (CIODictionaryRequest *)forceSyncForAllSources {
+    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"sync"]
+                                   method:@"POST"
+                                   params:nil];
+}
+
 
 #pragma mark - Threads
 

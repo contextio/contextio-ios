@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Context.io. All rights reserved.
 //
 
-#import "CIOAPIClient.h"
+#import "CIOAPIClientHeader.h"
 #import "CIORequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
