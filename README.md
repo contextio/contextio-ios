@@ -36,22 +36,25 @@ To run the example application, you will need to insert your Context.IO consumer
 
 ## Exploring the API in a Playground
 
-There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swift 1.2) in the `CIOPlayground` directory. Playgrounds with library dependencies are slightly finicky with Xcode 6.4, follow these steps to get it working:
+There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swift 1.2) included in the main library `xcworkspace`. Playgrounds with library dependencies are slightly finicky with Xcode 6.4, follow these steps to get it working:
 
-* `cd CIOPlayground `
+* `git clone https://github.com/contextio/contextio-ios.git`
+* `cd contextio-ios`
 * `pod install`
-* Open `CIOPlayground.xcworkspace`
-* Select the `CIOAPIClient` Scheme in the Xcode scheme selection dropdown (it should have a dynamic framework yellow toolbox icon)
+* `open CIOAPIClient.xcworkspace`
+* Select the `CIOAPIClient Mac` Scheme in the Xcode scheme selection dropdown (it should have a dynamic framework yellow toolbox icon)
 * Build the scheme (⌘B)
-* Select `CIOPlayground.playground` from the `CIOPlayground` project in the Project navigator left sidebar
+* Select `CIOPlayground.playground` from the `CIOAPIClient` project in the Project navigator left sidebar
 * Add your consumer key and consumer secret to the line
 ```swift
 let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
 ```
+* You may need to increase the Playground execution time from the default of 30 seconds by adjusting the value in the bottom right corner of the window
 * At this point the playground will execute and an authentication WebView will appear in the bottom left corner of your screen
 * Authorize an email account using the Context.IO auth flow in the WebView
     - The first time the code executes after authentication it may fail. Edit the playground to try again.
 * Add any code you wish to try to the `authenticator.withAuthentication() { session in` block in the playground
+* Subsequent launches may ask your permission to access Keychain, this is because the library saves your Context.IO authorization credentials to the local mac keychain.
 
 ## Example Usage
 
@@ -77,20 +80,27 @@ CIOAPISession *session = [[CIOAPISession alloc] initWithConsumerKey:@"your-consu
 
 ### [Retrieve Messages](https://context.io/docs/2.0/accounts/messages)
 
+Get messages in Inbox with an attachment and subject matching a regular expression:
+
 ``` objective-c
-[[session getMessagesWithParams:nil]
- executeWithSuccess:^(NSArray *responseArray) {
-     self.messagesArray = responseArray;
- } failure:^(NSError *error) {
-     NSLog(@"error getting messages: %@", error);
- }];
+CIOMessagesRequest *request = [session getMessages];
+request.subject = @"/.*presentation.*/i";
+request.file_name = @"*";
+request.folder = @"Inbox";
+[request executeWithSuccess:^(NSArray *responseArray) {
+    NSLog(@"%@", responseArray);
+} failure:^(NSError *error) {
+    NSLog(@"error getting messages: %@", error);
+}];
+
 ```
 
 ### [Add a Message to an Existing Folder/Label](https://context.io/docs/2.0/accounts/messages/folders)
 
 ``` objective-c
 [[session updateFoldersForMessageWithID:message[@"message_id"]
-                                 params:@{@"add": @"Test Label"}]
+                            addToFolder:@"Test Folder"
+                       removeFromFolder:nil]
  executeWithSuccess:^(NSDictionary *response) {
      NSLog(@"Response: %@", response);
  } failure:^(NSError *error) {
@@ -101,7 +111,7 @@ CIOAPISession *session = [[CIOAPISession alloc] initWithConsumerKey:@"your-consu
 ### [List Folders/Labels For An Account](https://context.io/docs/2.0/accounts/sources/folders#get)
 ```objective-c
 // 0 is an alias for the first source of an account
-[[session getFoldersForSourceWithLabel:@"0" params:nil]
+[[session getFoldersForSourceWithLabel:@"0" includeExtendedCounts:NO noCache:NO]
  executeWithSuccess:^void(NSArray *folders) {
      NSLog(@"Folders: %@", folders);
  } failure:^void(NSError *error) {

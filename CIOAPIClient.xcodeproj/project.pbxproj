@@ -95,6 +95,7 @@
 		F73E5C8846ABA9C8336A4AA4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA1067DB1B6317620004A2C8 /* CIOSourceRequests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOSourceRequests.h; sourceTree = "<group>"; };
 		FA1067DC1B6317620004A2C8 /* CIOSourceRequests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOSourceRequests.m; sourceTree = "<group>"; };
+		FA1067E11B66BC290004A2C8 /* CIOPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = CIOPlayground.playground; sourceTree = "<group>"; };
 		FA1A50F21B5468870061DFC3 /* AuthorizationRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthorizationRequestTests.m; path = Tests/AuthorizationRequestTests.m; sourceTree = SOURCE_ROOT; };
 		FA269DF41B546EB400CB7DB1 /* TestUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestUtil.h; path = Tests/TestUtil.h; sourceTree = SOURCE_ROOT; };
 		FA269DF51B546EB400CB7DB1 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestUtil.m; path = Tests/TestUtil.m; sourceTree = SOURCE_ROOT; };
@@ -124,7 +125,6 @@
 		FAD6720B1B62AB7F00809B84 /* CIOMessagesRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOMessagesRequestTests.m; path = Tests/CIOMessagesRequestTests.m; sourceTree = SOURCE_ROOT; };
 		FAD8615A1B44C83C002A4407 /* CIOAPIClientHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAPIClientHeader.h; path = CIOAPIClient/CIOAPIClientHeader.h; sourceTree = SOURCE_ROOT; };
 		FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIOAPIClient.m; path = CIOAPIClient/CIOAPIClient.m; sourceTree = SOURCE_ROOT; };
-		FAD9AF501B62EC4500F88660 /* CIOPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = CIOPlayground.playground; path = CIOPlayground/CIOPlayground.playground; sourceTree = "<group>"; };
 		FAD9AF511B62F1B600F88660 /* CIOMessageFlags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOMessageFlags.h; sourceTree = "<group>"; };
 		FAD9AF521B62F1B600F88660 /* CIOMessageFlags.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOMessageFlags.m; sourceTree = "<group>"; };
 		FADC96711B55768700A2CC66 /* CIOAPISession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIOAPISession.h; path = CIOAPIClient/CIOAPISession.h; sourceTree = SOURCE_ROOT; };
@@ -204,7 +204,7 @@
 				FA269E1D1B548F3400CB7DB1 /* CIOAPIClient.podspec */,
 				FADC96761B55C8DE00A2CC66 /* README.md */,
 				FAD672011B619D5500809B84 /* CHANGELOG.md */,
-				FAD9AF501B62EC4500F88660 /* CIOPlayground.playground */,
+				FA1067E11B66BC290004A2C8 /* CIOPlayground.playground */,
 				FAD861221B44C75B002A4407 /* CIOAPIClient */,
 				FAD8612F1B44C75B002A4407 /* Tests */,
 				FAD861211B44C75B002A4407 /* Products */,

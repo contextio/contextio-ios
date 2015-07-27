@@ -55,7 +55,7 @@
 
 - (void)fetchMessages {
     
-    CIOArrayRequest *messagesRequest = [self.APIClient getMessagesForContactWithEmail:self.contactEmailAddress params:nil];
+    CIOArrayRequest *messagesRequest = [self.APIClient getMessagesForContactWithEmail:self.contactEmailAddress];
     [messagesRequest executeWithSuccess:^(NSArray *response) {
         self.messagesArray = response;
         [self.tableView reloadData];

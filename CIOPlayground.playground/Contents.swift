@@ -66,12 +66,11 @@ if s.valueForKey("OAuthConsumerKey") as? String == "" {
 let authenticator = CIOAuthenticator(session: s)
 
 authenticator.withAuthentication() { session in
-    let request = session.getContactsWithParams(nil)
-    request.executeWithSuccess({ responseDict in
+    session.getContacts().executeWithSuccess({ responseDict in
             println(responseDict)
             let contactsArray = responseDict["matches"] as! [[NSObject: AnyObject]]
             let names = contactsArray.map { $0["name"] as! String }
-            names
+            String(format: "Contacts: %@", ", ".join(names))
         },
         failure: { error in
             println("\(error)")

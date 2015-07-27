@@ -61,7 +61,7 @@
 #pragma mark - Actions
 
 - (void)fetchContacts {
-    [[self.APIClient getContactsWithParams:nil]
+    [[self.APIClient getContacts]
      executeWithSuccess:^(NSDictionary *responseDict) {
          self.contactsArray = [responseDict valueForKey:@"matches"];
          [self.tableView reloadData];
