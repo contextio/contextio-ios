@@ -68,9 +68,7 @@
             [parameters removeObjectForKey:key];
         } else if ([parameters[key] isKindOfClass:[NSDate class]]) {
             parameters[key] = @([(NSDate*)parameters[key] timeIntervalSince1970]);
-        }/* else if ([parameters[key] isKindOfClass:[NSNumber class]] && [parameters[key] integerValue] == 0 && ![key isEqualToString:@"file_size_max"]) {
-            [parameters removeObjectForKey:key]; */
-        else if ([parameters[key] isKindOfClass:[NSArray class]]) {
+        } else if ([parameters[key] isKindOfClass:[NSArray class]]) {
             parameters[key] = [(NSArray *)parameters[key] componentsJoinedByString:@","];
         } else if ([key isEqualToString:@"sort_order"] && [parameters[key] isKindOfClass:[NSNumber class]]) {
             CIOSortOrder order = [(NSNumber*)parameters[key] integerValue];

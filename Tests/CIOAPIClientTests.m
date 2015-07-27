@@ -38,6 +38,16 @@
         XCTAssertEqualObjects(_req.method, (requestMethod)); \
     } while (0)
 
+#pragma mark Account
+
+- (void)testGetAccount {
+    AssertRequestPathTypeMethod([self.client getAccount], @"accounts/anAccountId", CIODictionaryRequest, @"GET");
+}
+
+- (void)testDeleteAccount {
+    AssertRequestPathTypeMethod([self.client deleteAccount], @"accounts/anAccountId", CIODictionaryRequest, @"DELETE");
+}
+
 - (void)testAccountUpdateRequest {
     CIODictionaryRequest *request = [self.client updateAccountWithFirstName:@"Joe" lastName:@"Bob"];
     AssertRequestPathTypeMethod(request, @"accounts/anAccountId", CIODictionaryRequest, @"PUT");
@@ -47,6 +57,10 @@
 }
 
 #pragma mark Contacts
+
+- (void)testGetContacts {
+    AssertRequestPathTypeMethod([self.client getContacts], @"accounts/anAccountId/contacts", CIODictionaryRequest, @"GET");
+}
 
 - (void)testGetContactsWithEmail {
     AssertRequestPathTypeMethod([self.client getContactWithEmail:@"joe@example.com"],
@@ -300,6 +314,20 @@
                                 @"accounts/anAccountId/sources",
                                 CIOSourcesRequest,
                                 @"GET");
+}
+
+- (void)testGetSource {
+    AssertRequestPathTypeMethod([self.client getSourceWithLabel:@"aSourceLabel"],
+                                @"accounts/anAccountId/sources/aSourceLabel",
+                                CIODictionaryRequest,
+                                @"GET");
+}
+
+- testDeleteSourceWithLabel {
+    AssertRequestPathTypeMethod([self.client deleteSourceWithLabel:@"aSourceLabel"],
+                                @"accounts/anAccountId/sources/aSourceLabel",
+                                CIODictionaryRequest,
+                                @"DELETE");
 }
 
 - (void)testCreateSource {

@@ -79,6 +79,8 @@ extern NSString *const CIOAPIBaseURLString;
                         tokenSecret:(nullable NSString *)tokenSecret
                           accountID:(nullable NSString *)accountID NS_DESIGNATED_INITIALIZER;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 /**
  *  Create a signed `NSURLRequest` for the context.io API using current OAuth credentials
  *

@@ -43,6 +43,12 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 @implementation CIOAPIClient
 
+- (instancetype)init {
+    [NSException raise:NSInternalInconsistencyException
+                format:@"%@ must be constructed with a consumer key and secret.", NSStringFromClass(self.class)];
+    return nil;
+}
+
 - (instancetype)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
     self = [self initWithConsumerKey:consumerKey consumerSecret:consumerSecret token:nil tokenSecret:nil accountID:nil];
     return self;
