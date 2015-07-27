@@ -19,7 +19,7 @@
 
  You can set more than one parameter when doing this call. Multiple parameters are treated as an `AND` combination.
  */
-@interface CIOMessagesRequest : CIOSearchRequest
+@interface CIOMessagesRequest : CIOFileDataRequest
 
 /**
  *  Get messages whose subject matches this search string. To use regular expressions instead of simple string matching, make sure the string starts and ends with `/`.
@@ -69,9 +69,9 @@
 @end
 
 /**
- Encapsulates the parameters allowed in https://context.io/docs/2.0/accounts/messages/thread
+ A request for a single message in an account.
  */
-@interface CIOThreadRequest : CIODictionaryRequest
+@interface CIOMessageRequest : CIODictionaryRequest
 
 /**
  *  Set to `YES` to include message bodies in the result. Since message bodies must be retrieved from the IMAP server, expect a performance hit when setting this parameter.
@@ -93,33 +93,35 @@
  */
 @property (nullable, nonatomic) NSString *body_type;
 
-/**
- The maximum number of messages to include in the messages property of the response. The maximum limit is `100`.
- */
-@property (nonatomic) NSInteger limit;
 
 /**
- 	Start the list of messages at this offset (zero-based).
+ *  Set to `YES` to include message sources in the result. Since message sources must be retrieved from the IMAP server, expect a performance hit when setting this parameter.
  */
-@property (nonatomic) NSInteger offset;
-
-
-@end
-
-/**
- A request for a single message in an account. The `limit` and `offset` parameters are ignored.
- */
-@interface CIOMessageRequest : CIOThreadRequest
+@property (nonatomic) BOOL include_source;
 
 /**
  *  Set to `YES` to include thread size in the result.
  */
 @property (nonatomic) BOOL include_thread_size;
 
+@end
+
+
 /**
- *  Set to `YES` to include message sources in the result. Since message sources must be retrieved from the IMAP server, expect a performance hit when setting this parameter.
+ Encapsulates the parameters allowed in https://context.io/docs/2.0/accounts/messages/thread
+ This shares almost the same parameters as a request for a single message, except the `include_thread_size` parameter from `CIOMessageRequest` is ignored.
  */
-@property (nonatomic) BOOL include_source;
+@interface CIOThreadRequest : CIOMessageRequest
+
+/**
+ The maximum number of messages to include in the messages property of the response. The maximum limit is `100`.
+ */
+@property (nonatomic) NSInteger limit;
+
+/**
+ Start the list of messages at this offset (zero-based).
+ */
+@property (nonatomic) NSInteger offset;
 
 @end
 

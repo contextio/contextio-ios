@@ -9,14 +9,9 @@
 #import "CIORequest.h"
 
 /**
- Base set of request parameters used in Message and File searches: `CIOMessagesRequest` and `CIOFilesRequest`
+ Base set of request parameters used in Message, File, and Thread searches: `CIOMessagesRequest` and `CIOFilesRequest`
  */
 @interface CIOSearchRequest : CIOArrayRequest
-
-/**
- *  Filter messages by the account source label.
- */
-@property (nullable, nonatomic) NSString *source;
 
 /**
  *  Email address or top level domain of the contact for whom you want the latest messages exchanged with. By "exchanged
@@ -46,6 +41,80 @@
 @property (nullable, nonatomic) id bcc;
 
 /**
+ *  Only include messages indexed before a given date. This is not the same as the date of the email, it is the time
+ * Context.IO indexed this message.
+ */
+@property (nullable, nonatomic) NSDate *indexed_before;
+
+/**
+ *  Only include messages indexed after a given date. This is not the same as the date of the email, it is the time
+ * Context.IO indexed this message.
+ */
+@property (nullable, nonatomic) NSDate *indexed_after;
+
+/**
+ *  The sort order of the returned results.
+ */
+@property (nonatomic) CIOSortOrder sort_order;
+
+@end
+
+/**
+ A request for a search of message threads.
+ */
+@interface CIOThreadsRequest : CIOSearchRequest
+
+/**
+ *  Get messages whose subject matches this search string. To use regular expressions instead of simple string matching,
+ * make sure the string starts and ends with `/`.
+ */
+@property (nullable, nonatomic) NSString *subject;
+
+/**
+ *  Filter messages by the folder (or Gmail label). This parameter can be the complete folder name with the appropriate
+ * hierarchy delimiter for the mail server being queried (eg. `Inbox/My folder`) or the "symbolic name" of the folder
+ * (eg. `\Starred`). The symbolic name refers to attributes used to refer to special use folders in a
+ * language-independent way. See [RFC-6154](http://tools.ietf.org/html/rfc6154).
+ */
+@property (nullable, nonatomic) NSString *folder;
+
+/**
+ Get threads with at least one message dated before this timestamp. The value this filter is applied to is the `Date:`
+ header of the message which refers to the time the message is sent from the origin.
+ */
+@property (nullable, nonatomic) NSDate *active_before;
+
+/**
+ Get threads with at least one message dated after this timestamp. The value this filter is applied to is the `Date:`
+ header of the message which refers to the time the message is sent from the origin.
+ */
+@property (nullable, nonatomic) NSDate *active_after;
+
+/**
+ Get threads whose first message is dated before this timestamp. The value this filter is applied to is the `Date:`
+ header of the message which refers to the time the message is sent from the origin.
+ */
+@property (nullable, nonatomic) NSDate *started_before;
+
+/**
+ Get threads whose first message is dated after this timestamp. The value this filter is applied to is the `Date:`
+ header of the message which refers to the time the message is sent from the origin.
+ */
+@property (nullable, nonatomic) NSDate *started_after;
+
+@end
+
+/**
+ A search request which includes data about file attachment filtering.
+ */
+@interface CIOFileDataRequest : CIOSearchRequest
+
+/**
+ *  Filter messages by the account source label.
+ */
+@property (nullable, nonatomic) NSString *source;
+
+/**
  *  Search for files based on their name. You can filter names using typical shell wildcards such as `*`, `?` and `[]`
  * or regular expressions by enclosing the search expression in a leading `/` and trailing `/`. For example, `*.pdf`
  * would give you all PDF files while `/\.jpe?g$/` would return all files whose name ends with .jpg or .jpeg
@@ -73,22 +142,5 @@
  * which refers to the time the message is sent from the origin.
  */
 @property (nullable, nonatomic) NSDate *date_after;
-
-/**
- *  Only include messages indexed before a given date. This is not the same as the date of the email, it is the time
- * Context.IO indexed this message.
- */
-@property (nullable, nonatomic) NSDate *indexed_before;
-
-/**
- *  Only include messages indexed after a given date. This is not the same as the date of the email, it is the time
- * Context.IO indexed this message.
- */
-@property (nullable, nonatomic) NSDate *indexed_after;
-
-/**
- *  The sort order of the returned results.
- */
-@property (nonatomic) CIOSortOrder sort_order;
 
 @end

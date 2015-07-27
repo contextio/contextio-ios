@@ -11,3 +11,11 @@
 @implementation CIOSearchRequest
 
 @end
+
+@implementation CIOFileDataRequest
+
+@end
+
+@implementation CIOThreadsRequest
+
+@end

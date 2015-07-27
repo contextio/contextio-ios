@@ -418,6 +418,51 @@
                                 @"POST");
 }
 
+#pragma mark Threads
+
+- (void)testListThreads {
+    AssertRequestPathTypeMethod([self.client getThreads],
+                                @"accounts/anAccountId/threads",
+                                CIOThreadsRequest,
+                                @"GET");
+}
+
+
+- (void)testGetThread {
+    AssertRequestPathTypeMethod([self.client getThreadWithID:@"threadID"],
+                                @"accounts/anAccountId/threads/threadID",
+                                CIOThreadRequest,
+                                @"GET");
+}
+
+- (void)testDeleteThread {
+    AssertRequestPathTypeMethod([self.client deleteThreadWithID:@"threadID"],
+                                @"accounts/anAccountId/threads/threadID",
+                                CIODictionaryRequest,
+                                @"DELETE");
+}
+
+- (void)testUpdateThreadFolders {
+    CIORequest *request = [self.client updateFoldersForThreadWithID:@"aThreadID" addToFolder:@"todo" removeFromFolder:nil];
+    AssertRequestPathTypeMethod(request,
+                                @"accounts/anAccountId/threads/aThreadID/folders",
+                                CIODictionaryRequest,
+                                @"POST");
+    XCTAssertEqualObjects(request.parameters, @{@"add": @"todo"});
+}
+
+- (void)testSetThreadFolders {
+    CIORequest *request = [self.client setFoldersForThreadWithID:@"aThreadID"
+                                                     folderNames:@[@"my personal label", @"parent folder/child folder"]
+                                             symbolicFolderNames:@[@"\\Starred"]];
+    AssertRequestPathTypeMethod(request,
+                                @"accounts/anAccountId/threads/aThreadID/folders",
+                                CIODictionaryRequest,
+                                @"PUT");
+    XCTAssertEqualObjects(request.requestBody, (@[@{@"name": @[@"my personal label", @"parent folder/child folder"]},
+                                                  @{@"symbolic_name": @[@"\\Starred"]}
+                                                  ]));
+}
 
 
 @end

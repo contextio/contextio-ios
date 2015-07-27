@@ -727,6 +727,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A55C482A8013DAC538750300 /* Pods-CIOAPIClient Mac.debug.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -755,6 +756,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FEBEEB93BCE72E64ABE0B33A /* Pods-CIOAPIClient Mac.test.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -778,6 +780,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7FE1CAFCE5418C52F42A7090 /* Pods-CIOAPIClient Mac.release.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;

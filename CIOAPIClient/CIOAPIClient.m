@@ -469,7 +469,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                    params:params];
 }
 
-#pragma mark Flags
+#pragma mark Messages/Flags
 
 - (CIODictionaryRequest *)getFlagsForMessageWithID:(NSString *)messageID {
 
@@ -490,6 +490,8 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                    method:@"POST"
                                    params:[flags asDictionary]];
 }
+
+#pragma mark Messages/Folders
 
 - (CIOArrayRequest *)getFoldersForMessageWithID:(NSString *)messageID {
 
@@ -530,6 +532,8 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return request;
 }
 
+#pragma mark Messages/Headers
+
 - (CIODictionaryRequest *)getHeadersForMessageWithID:(NSString *)messageID {
     NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"headers"]];
     return [self dictionaryRequestForPath:path
@@ -545,11 +549,15 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                       client:self];
 }
 
+#pragma mark Messages/Source
+
 - (CIORequest *)getSourceForMessageWithID:(NSString *)messageID {
 
     NSString *requestPath = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"source"]];
     return [CIORequest requestWithPath:requestPath method:@"GET" parameters:nil client:self];
 }
+
+#pragma mark Messages/Thread
 
 - (CIOThreadRequest *)getThreadForMessageWithID:(NSString *)messageID {
 
@@ -561,7 +569,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                       client:self];
 }
 
-#pragma mark - Source
+#pragma mark - Sources
 
 - (CIOArrayRequest *)getSources {
     return [CIOSourcesRequest requestWithPath:[self.accountPath stringByAppendingPathComponent:@"sources"]
@@ -721,30 +729,65 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark - Threads
 
-- (CIOArrayRequest *)getThreadsWithParams:(NSDictionary *)params {
-
-    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"threads"]
-                              method:@"GET"
-                              params:params];
+- (CIOThreadsRequest *)getThreads {
+    return [CIOThreadsRequest requestWithPath:[self.accountPath stringByAppendingPathComponent:@"threads"]
+                                       method:@"GET"
+                                   parameters:nil
+                                       client:self];
 }
 
-- (CIODictionaryRequest *)getThreadWithID:(NSString *)threadID params:(NSDictionary *)params {
+- (CIOThreadRequest *)getThreadWithID:(NSString *)threadID {
 
-    NSString *threadsURLPath = [self.accountPath stringByAppendingPathComponent:@"threads"];
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"threads", threadID]];
+    return [CIOThreadRequest requestWithPath:path method:@"GET" parameters:nil client:self];
+}
 
-    return [self dictionaryRequestForPath:[threadsURLPath stringByAppendingPathComponent:threadID]
-                                   method:@"GET"
+- (CIODictionaryRequest * __nonnull)deleteThreadWithID:(NSString * __nonnull)threadID {
+
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"threads", threadID]];
+    return [self dictionaryRequestForPath:path
+                                   method:@"DELETE"
+                                   params:nil];
+}
+
+- (CIODictionaryRequest * __nonnull)updateFoldersForThreadWithID:(NSString * __nonnull)threadID addToFolder:(nullable NSString *)addFolder removeFromFolder:(nullable NSString *)removeFolder {
+    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"threads", threadID, @"folders"]];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (addFolder) {
+        params[@"add"] = addFolder;
+    }
+    if (removeFolder) {
+        params[@"remove"] = removeFolder;
+    }
+    return [self dictionaryRequestForPath:path
+                                   method:@"POST"
                                    params:params];
+
+}
+
+- (CIODictionaryRequest *)setFoldersForThreadWithID:(NSString *)threadID folderNames:(NSArray *)folderNames symbolicFolderNames:(NSArray *)symbolicFolderNames {
+    NSString *folderPath = [NSString pathWithComponents:@[self.accountPath, @"threads", threadID, @"folders"]];
+    CIODictionaryRequest *request = [self dictionaryRequestForPath:folderPath method:@"PUT" params:nil];
+    NSMutableArray *requestBody = [NSMutableArray array];
+    if (folderNames) {
+        [requestBody addObject:@{@"name": folderNames}];
+    }
+    if (symbolicFolderNames) {
+        [requestBody addObject:@{@"symbolic_name": symbolicFolderNames}];
+    }
+    request.requestBody = requestBody;
+    return request;
+
 }
 
 #pragma mark - Webhooks
 // TODO: Is there a practical reason to make webhooks API available to iOS apps?
 
-- (CIOArrayRequest *)getWebhooksWithParams:(NSDictionary *)params {
+- (CIOArrayRequest *)getWebhooks {
 
     return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"webhooks"]
                               method:@"GET"
-                              params:params];
+                              params:nil];
 }
 
 - (CIODictionaryRequest *)createWebhookWithCallbackURLString:(NSString *)callbackURLString

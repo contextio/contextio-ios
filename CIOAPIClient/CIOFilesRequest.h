@@ -8,7 +8,7 @@
 
 #import "CIOSearchRequest.h"
 
-@interface CIOFilesRequest : CIOSearchRequest
+@interface CIOFilesRequest : CIOFileDataRequest
 
 /**
  If set to `YES`, the list will do an intelligent grouping of files to reflect occurrences of the same document. The

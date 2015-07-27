@@ -95,6 +95,7 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
 
 @end
 
+
 @interface CIODictionaryRequest (CIOAPISession)
 
 /**
@@ -108,6 +109,9 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
                    failure:(nullable void (^)(NSError *error))failure;
 @end
 
+
+@interface CIOArrayRequest (CIOAPISession)
+
 /**
  *  Execute this request in the `CIOAPISession` which constructed it. It is an error to call
  *  this on a `CIOArrayRequest` which was not created with a `CIOAPISession`.
@@ -115,10 +119,12 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
  *  @param success callback which takes an API response `NSArray`
  *  @param failure an error block, see the description of `CIOAPISession` for more details about the error returned
  */
-@interface CIOArrayRequest (CIOAPISession)
 - (void)executeWithSuccess:(nullable void (^)(NSArray *responseArray))success
                    failure:(nullable void (^)(NSError *error))failure;
 @end
+
+
+@interface CIOStringRequest (CIOAPISession)
 
 /**
  *  Execute this request in the `CIOAPISession` which constructed it. It is an error to call
@@ -127,7 +133,6 @@ typedef void (^CIOSessionDownloadProgressBlock)(int64_t bytesRead, int64_t total
  *  @param success callback which takes an API response `NSString`
  *  @param failure an error block, see the description of `CIOAPISession` for more details about the error returned
  */
-@interface CIOStringRequest (CIOAPISession)
 - (void)executeWithSuccess:(nullable void (^)(NSString *responseString))success
                    failure:(nullable void (^)(NSError *error))failure;
 @end

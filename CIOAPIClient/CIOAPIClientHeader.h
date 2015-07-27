@@ -116,8 +116,7 @@ extern NSString *const CIOAPIBaseURLString;
  Uses the connect token received from the API to complete the authentication process and optionally save the credentials
  to the keychain.
 
- @param connectToken The connect token returned by the API after the user successfully authenticates an email account.
- This is returned as a query parameter appended to the callback URL that the API uses as a final redirect.
+ @param responseObject The full response object returned by the API after calling `fetchAccountWithConnectToken:` with a valid connect token.
  @param saveCredentials This determines if credentials are saved to the device's keychain.
  */
 - (BOOL)completeLoginWithResponse:(NSDictionary *)responseObject saveCredentials:(BOOL)saveCredentials;
@@ -130,17 +129,14 @@ extern NSString *const CIOAPIBaseURLString;
 #pragma mark - Working With Accounts
 
 /**
- *   Retrieves an account's details.
- *
- *  @param accountId Unique id of an account accessible through your API key
+ *   Retrieves the current account's details.
  *
  */
 - (CIODictionaryRequest *)getAccount;
 
 /**
- *  Modify an account's info.
+ *  Modify the current account's info.
  *
- *  @param accountId Unique id of an account accessible through your API key
  *  @param firstName new first name, optional
  *  @param lastName  new last name, optional
  *
@@ -150,20 +146,17 @@ extern NSString *const CIOAPIBaseURLString;
 
 
 /**
- *  Deletes an account with the specified ID
+ *  Deletes the current account.
  *
- *  @param identifier Unique id of an account accessible through your API key
  *
  */
 - (CIODictionaryRequest *)deleteAccount;
 
-#pragma mark - Working With Contacts and Related Resources
+#pragma mark - Contacts
 
 /**
  Retrieves the account's contacts.
 
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
  */
 - (CIOContactsRequest *)getContacts;
 
@@ -173,6 +166,8 @@ extern NSString *const CIOAPIBaseURLString;
  @param email The email address of the contact you would like to retrieve.
  */
 - (CIODictionaryRequest *)getContactWithEmail:(NSString *)email;
+
+#pragma mark Contacts/Files
 
 /**
  List files exchanged with a contact.
@@ -185,6 +180,8 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIOArrayRequest *)getFilesForContactWithEmail:(NSString *)email;
 
+#pragma mark Contacts/Messages
+
 /**
  Listing messages where a contact is present
 
@@ -195,6 +192,8 @@ extern NSString *const CIOAPIBaseURLString;
  @param email Email address of a contact
  */
 - (CIOArrayRequest *)getMessagesForContactWithEmail:(NSString *)email;
+
+#pragma mark Contacts/Threads
 
 /**
  Listing threads where a contact is present
@@ -207,7 +206,7 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIOArrayRequest *)getThreadsForContactWithEmail:(NSString *)email;
 
-#pragma mark - Working With Email Address Aliases
+#pragma mark - Email Addresses
 
 /**
  List of email addressed used by an account
@@ -238,7 +237,7 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)deleteEmailAddressWithEmail:(NSString *)email;
 
-#pragma mark - Working With Files and Related Resources
+#pragma mark - Files
 
 /**
  
@@ -257,6 +256,8 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)getDetailsOfFileWithID:(NSString *)fileID;
 
+#pragma mark Files/Changes
+
 /**
  List of files that can be compared with a given file
 
@@ -264,12 +265,12 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIOArrayRequest *)getChangesForFileWithID:(NSString *)fileID;
 
+#pragma mark Files/Content
+
 /**
  Retrieves a public facing URL that can be used to download a particular file.
 
  @param fileID The id of the file that you would like to download.
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
  */
 - (CIOStringRequest *)getContentsURLForFileWithID:(NSString *)fileID;
 
@@ -277,9 +278,10 @@ extern NSString *const CIOAPIBaseURLString;
  Retrieves the contents of a particular file.
 
  @param fileID The id of the file that you would like to download.
- @param saveToPath The local file path where you would like to save the contents of the file.
  */
 - (CIORequest *)downloadContentsOfFileWithID:(NSString *)fileID;
+
+#pragma mark Files/Related
 
 /**
  Retrieves other files associated with a particular file.
@@ -289,6 +291,8 @@ extern NSString *const CIOAPIBaseURLString;
  @param fileID The id of the file for which you would like to retrieve associated files.
  */
 - (CIOArrayRequest *)getRelatedForFileWithID:(NSString *)fileID;
+
+#pragma mark Files/Revisions
 
 /**
  Retrieves the revisions of a particular file.
@@ -301,7 +305,7 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIOArrayRequest *)getRevisionsForFileWithID:(NSString *)fileID;
 
-#pragma mark - Working With Messages and Related Resources
+#pragma mark - Messages
 
 /**
  List email messages for an account.
@@ -359,6 +363,8 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)deleteMessageWithID:(NSString *)messageID;
 
+#pragma mark Messages/Body
+
 /**
  Fetch the message body of a given email.
  
@@ -378,6 +384,8 @@ extern NSString *const CIOAPIBaseURLString;
  @param type Many emails are sent with both rich text and plain text versions in the message body and by default, the response of this call will include both. It is possible to only get either the plain or rich text version by setting the `type` parameter to `text/plain` or `text/html` respectively.
  */
 - (CIOArrayRequest *)getBodyForMessageWithID:(NSString *)messageID type:(nullable NSString *)type;
+
+#pragma mark Messages/Flags
 
 /**
  Retrieves the flags for a particular message.
@@ -403,6 +411,9 @@ extern NSString *const CIOAPIBaseURLString;
  @param flags A `CIOMessageFlags` object which defines which flags to add or remove from the message
  */
 - (CIODictionaryRequest *)updateFlagsForMessageWithID:(NSString *)messageID flags:(CIOMessageFlags *)flags;
+
+#pragma mark Messages/Folders
+
 /**
  Retrieves the folders for a particular message.
 
@@ -419,9 +430,11 @@ extern NSString *const CIOAPIBaseURLString;
 
  While you can copy/move a message in a given folder with the POST method on a given message, this allows a more flexible way to add or remove folder(s) a message should appear in.
  
- @note This SDK does not currently support adding or removing more than one folder in a single API call.
+ @warning This SDK does not currently support adding or removing more than one folder in a single API call.
 
  @param messageID Unique id of a message. This can be the message_id or email_message_id property of the message. The gmail_message_id (prefixed with gm-) can also be used.
+ @param addFolder    New folder this thread should appear in.
+ @param removeFolder Folder this thread should be removed from.
  */
 - (CIODictionaryRequest *)updateFoldersForMessageWithID:(NSString *)messageID addToFolder:(nullable NSString *)addFolder removeFromFolder:(nullable NSString *)removeFolder;
 
@@ -435,6 +448,8 @@ extern NSString *const CIOAPIBaseURLString;
  @param symbolicFolderNames Array of 'Special-use attribute of a folder (if and only if the server supports it and applicable to this folder)'
  */
 - (CIODictionaryRequest *)setFoldersForMessageWithID:(NSString *)messageID folderNames:(NSArray *)folderNames symbolicFolderNames:(NSArray *)symbolicFolderNames;
+
+#pragma mark Messages/Headers
 
 /**
  Complete headers of a given email message
@@ -462,12 +477,16 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIOStringRequest *)getRawHeadersForMessageWithID:(NSString *)messageID;
 
+#pragma mark Messages/Source
+
 /**
  Returns the raw RFC-822 message source for the message (including attachments) with no parsing or decoding to any portions of the message.
 
  @param messageID The id of the message for which you would like to retrieve the source.
  */
 - (CIORequest *)getSourceForMessageWithID:(NSString *)messageID;
+
+#pragma mark Messages/Thread
 
 /**
  List other messages in the same thread as a given message
@@ -478,7 +497,7 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIOThreadRequest *)getThreadForMessageWithID:(NSString *)messageID;
 
-#pragma mark - Working With Sources and Related Resources
+#pragma mark - Sources
 
 /**
  List IMAP sources assigned for an account.
@@ -491,8 +510,6 @@ extern NSString *const CIOAPIBaseURLString;
 
  If you want to be able to query IMAP sources separately, create two accounts (one for each IMAP source)
 
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
  */
 - (CIOSourcesRequest *)getSources;
 
@@ -537,6 +554,8 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)deleteSourceWithLabel:(NSString *)sourceLabel;
 
+#pragma mark Sources/Folders
+
 /**
  Returns folders existing in a given IMAP account.
 
@@ -548,7 +567,6 @@ extern NSString *const CIOAPIBaseURLString;
 - (CIOArrayRequest *)getFoldersForSourceWithLabel:(NSString *)sourceLabel
                             includeExtendedCounts:(BOOL)includeExtendedCounts
                                           noCache:(BOOL)noCache;
-
 
 /**
  Returns information about a given folder. This call exposes IMAP related attributes and other information for a given folder.
@@ -602,6 +620,7 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)deleteFolderWithPath:(NSString *)folderPath sourceLabel:(NSString *)sourceLabel;
 
+#pragma mark Sources/Folders/Expunge
 
 /**
  Runs an `EXPUNGE` command on the email server. With this call, you can explicitly tell the email server to remove messages that are flagged for deletion. This will delete them permanently.
@@ -612,6 +631,8 @@ extern NSString *const CIOAPIBaseURLString;
 - (CIODictionaryRequest *)expungeFolderWithPath:(NSString *)folderPath
                                     sourceLabel:(NSString *)sourceLabel;
 
+#pragma mark Sources/Folders/Messages
+
 /**
  This call returns the same message data as the messages resource but instead of returning whatever is available from the metadata index we maintain, it checks the IMAP server for new messages and includes thoses in the response.
 
@@ -619,7 +640,7 @@ extern NSString *const CIOAPIBaseURLString;
  
  @see `CIOFolderMessagesRequest` for more optional parameters with this request.
  
- @warn This call will synchronously check the IMAP server for new emails and fetch them to update the index before sending the response. Don't expect to get a response in less than 1 second.
+ @warning This call will synchronously check the IMAP server for new emails and fetch them to update the index before sending the response. Don't expect to get a response in less than 1 second.
 
  @param folderPath  The full folder path using `/` as the path hierarchy delimiter.
  @param sourceLabel The label property of the source instance. You can use `@"0"` as an alias for the first source of an account.
@@ -627,7 +648,7 @@ extern NSString *const CIOAPIBaseURLString;
 - (CIOFolderMessagesRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
                                                sourceLabel:(NSString *)sourceLabel;
 
-#pragma Source Sync
+#pragma mark Sources/Sync
 
 /**
  Sync status of a data source. This returns timestamps for the last time the source has been synced with the origin mailbox.
@@ -643,7 +664,7 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)forceSyncForSourceWithLabel:(NSString *)sourceLabel;
 
-#pragma Sync
+#pragma mark - Sync
 
 /**
  Sync status for all sources of the account. This returns timestamps for the last time a source has been synced with the origin mailbox.
@@ -656,38 +677,75 @@ extern NSString *const CIOAPIBaseURLString;
 - (CIODictionaryRequest *)forceSyncForAllSources;
 
 
-#pragma mark - Working With Sources and Related Resources
+#pragma mark - Threads
 
 /**
- Retrieves the account's threads.
+ List threads on an account.
 
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
  */
-- (CIOArrayRequest *)getThreadsWithParams:(nullable NSDictionary *)params;
+- (CIOThreadsRequest *)getThreads;
 
 /**
- Retrieves the thread with the specified id.
+ Returns files, contacts and messages on a given thread
 
- @param threadID The id of the thread you would like to retrieve.
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
+ The purpose of this call is to allow Gmail extensions to easily retrieve data when users's load a conversation in the Gmail UI. Hence, threads are identified by the value of their Gmail thread prefixed with "gm-".
+ 
+ For example, if the URL of a conversation in the Gmail UI is https://mail.google.com/mail/u/0/#mbox/13119ab37f00b826, you would obtain the details about this thread by calling `[client getThreadWithId:@"gm-13119ab37f00b826"];`.
+ 
+ <h3>What about threads on non-Gmail mailboxes?</h3>
+
+ You can retrieve thread information for any message using `getThreadForMessageWithID:`.
+
+ @param threadID A `gmail_thread_id` prefixed with `gm-`
  */
-- (CIODictionaryRequest *)getThreadWithID:(NSString *)threadID params:(nullable NSDictionary *)params;
+- (CIOThreadRequest *)getThreadWithID:(NSString *)threadID;
 
-#pragma mark - Working With Webhooks and Related Resources
+/**
+ Delete a thread
+
+ @param threadID A `gmail_thread_id` prefixed with `gm-`
+ */
+- (CIODictionaryRequest *)deleteThreadWithID:(NSString *)threadID;
+
+#pragma mark Threads/Folders
+
+/**
+ Add/remove thread to/from a folder
+
+ You can add or remove a thread to or from a folder (or a gmail label) with this call. It does not impact the other folders that the thread is in.
+ 
+ @see https://context.io/docs/2.0/accounts/threads/folders
+
+ @param threadID    A `gmail_thread_id` prefixed with `gm-`
+ @param addFolder    New folder this thread should appear in.
+ @param removeFolder Folder this thread should be removed from.
+ */
+- (CIODictionaryRequest *)updateFoldersForThreadWithID:(NSString *)threadID addToFolder:(nullable NSString *)addFolder removeFromFolder:(nullable NSString *)removeFolder;
+
+/**
+ Sets folders that should be applied to this thread
+ 
+ Sets the folders (or Gmail labels) that should be applied to this thread. Unlike the POST call which allows you to remove the thread from a given folder or add it to another without impacting other folders, this overwrites current folder assignation of the thread with what you set.
+
+ TODO: This is currently getting OAuth signing errors. Needs more investigation.
+
+ @param threadID    A `gmail_thread_id` prefixed with `gm-`
+ @param folderNames         Array of Gmail Label names folder names
+ @param symbolicFolderNames Array of 'Special-use attribute of a folder (if and only if the server supports it and applicable to this folder)'
+ */
+- (CIODictionaryRequest *)setFoldersForThreadWithID:(NSString *)threadID folderNames:(nullable NSArray *)folderNames symbolicFolderNames:(nullable NSArray *)symbolicFolderNames;
+
+#pragma mark - Webhooks
 
 /**
  Retrieves the account's webhooks.
-
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
  */
-
-- (CIOArrayRequest *)getWebhooksWithParams:(nullable NSDictionary *)params;
+- (CIOArrayRequest *)getWebhooks;
 
 /**
  Creates a new webhook.
+ 
+ @see https://context.io/docs/2.0/accounts/webhooks#post
 
  @param callbackURLString A string representing the callback URL for the new webhook.
  @param failureNotificationURLString A string representing the failure notification URL for the new webhook.
