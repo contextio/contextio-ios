@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "CIOAPIClientHeader.h"
+#import "CIOV2Client.h"
 #import "TestUtil.h"
 
 @interface AuthorizationRequestTests : XCTestCase
@@ -20,7 +20,7 @@
 
 - (void)setUp {
     [super setUp];
-    self.client = [[CIOAPIClient alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
+    self.client = [[CIOV2Client alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
 }
 
 - (void)tearDown {
@@ -98,7 +98,7 @@
                                    };
     XCTAssertTrue([self.client completeLoginWithResponse:testResponse saveCredentials:YES]);
     XCTAssertTrue(self.client.isAuthorized);
-    CIOAPIClient *newClient = [[CIOAPIClient alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
+    CIOAPIClient *newClient = [[CIOV2Client alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
     XCTAssertTrue(newClient.isAuthorized);
 }
 

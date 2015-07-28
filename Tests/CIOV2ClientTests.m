@@ -6,20 +6,20 @@
 //  Copyright (c) 2015 Context.io. All rights reserved.
 //
 
-#import "CIOAPIClientHeader.h"
+#import "CIOV2Client.h"
 #import <XCTest/XCTest.h>
 
-@interface CIOAPIClientTests : XCTestCase
+@interface CIOV2ClientTests : XCTestCase
 
-@property (nonatomic) CIOAPIClient *client;
+@property (nonatomic) CIOV2Client *client;
 
 @end
 
-@implementation CIOAPIClientTests
+@implementation CIOV2ClientTests
 
 - (void)setUp {
     [super setUp];
-    self.client = [[CIOAPIClient alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
+    self.client = [[CIOV2Client alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
     [self.client setValue:@"anAccountId" forKey:@"accountID"];
 }
 

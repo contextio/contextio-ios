@@ -10,7 +10,7 @@
 
 @interface CIOAuthViewController ()
 
-@property (nonatomic, strong) CIOAPISession *APIClient;
+@property (nonatomic, strong) CIOV2Client *APIClient;
 @property (nonatomic, assign) BOOL allowCancel;
 @property (nonatomic, assign) NSInteger selectedProviderType;
 @property (nonatomic, strong) UILabel *instructionsTextView;
@@ -34,7 +34,7 @@
 @synthesize yahooButton = _yahooButton;
 @synthesize aolButton = _aolButton;
 
-- (id)initWithAPIClient:(CIOAPISession *)APIClient allowCancel:(BOOL)allowCancel {
+- (id)initWithAPIClient:(CIOV2Client *)APIClient allowCancel:(BOOL)allowCancel {
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {

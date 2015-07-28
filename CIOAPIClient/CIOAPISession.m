@@ -36,16 +36,8 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
 
 @implementation CIOAPISession
 
-- (instancetype)initWithConsumerKey:(NSString *)consumerKey
-                     consumerSecret:(NSString *)consumerSecret
-                              token:(NSString *)token
-                        tokenSecret:(NSString *)tokenSecret
-                          accountID:(NSString *)accountID {
-    if ((self = [super initWithConsumerKey:consumerKey
-                            consumerSecret:consumerSecret
-                                     token:token
-                               tokenSecret:tokenSecret
-                                 accountID:accountID])) {
+- (instancetype)init {
+    if ((self = [super init])) {
         self.urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                         delegate:self
                                                    delegateQueue:nil];
@@ -56,31 +48,12 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
     return self;
 }
 
-- (void)executeDictionaryRequest:(CIODictionaryRequest *)request
-                         success:(void (^)(NSDictionary *))success
-                         failure:(void (^)(NSError *))failure {
-    [self executeRequest:request success:success failure:failure];
-}
-
-- (void)executeArrayRequest:(CIOArrayRequest *)request
-                    success:(void (^)(NSArray *))success
-                    failure:(void (^)(NSError *))failure {
-    [self executeRequest:request success:success failure:failure];
-}
-
-- (void)executeStringRequest:(CIOStringRequest *)request
-                     success:(void (^)(NSString *))success
-                     failure:(void (^)(NSError *))failure {
-    [self executeRequest:request success:success failure:failure];
-}
-
-- (void)downloadRequest:(CIORequest *)request
+- (void)downloadRequest:(NSURLRequest *)request
               toFileURL:(NSURL *)saveToURL
                 success:(void (^)())successBlock
                 failure:(void (^)(NSError *))failureBlock
                progress:(void (^)(int64_t, int64_t, int64_t))progressBlock {
-    NSURLRequest *urlRequest = [self requestForCIORequest:request];
-    NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:urlRequest];
+    NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithRequest:request];
     CIODownloadTask *cioTask = [CIODownloadTask new];
     cioTask.saveToURL = saveToURL;
     cioTask.successBlock = successBlock;
@@ -156,23 +129,17 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
     return responseObject;
 }
 
-- (void)executeRequest:(CIORequest *)request
+- (void)executeRequest:(NSURLRequest *)request
                success:(void (^)(id responseObject))successBlock
                failure:(void (^)(NSError *error))failureBlock {
-    NSURLRequest *URLRequest = [self requestForCIORequest:request];
     NSURLSessionDataTask *dataTask =
-    [self.urlSession dataTaskWithRequest:URLRequest
+    [self.urlSession dataTaskWithRequest:request
                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                            if (error) {
                                [self _dispatchMain:failureBlock parameter:error];
                                return;
                            }
                            id responseObject = [self parseResponse:response data:data error:&error];
-                           if (error) {
-                               [self _dispatchMain:failureBlock parameter:error];
-                               return;
-                           }
-                           error = [request validateResponseObject:responseObject];
                            if (error) {
                                [self _dispatchMain:failureBlock parameter:error];
                                return;
@@ -227,30 +194,3 @@ NSString *const CIOAPISessionURLResponseErrorKey = @"io.context.error.response";
 
 @end
 
-
-@implementation CIODictionaryRequest (CIOAPISession)
-
-- (void)executeWithSuccess:(nullable void (^)(NSDictionary * __nonnull))success failure:(nullable void (^)(NSError * __nonnull))failure {
-    NSParameterAssert([self.client isKindOfClass:[CIOAPISession class]]);
-    [(CIOAPISession*)self.client executeDictionaryRequest:self success:success failure:failure];
-}
-
-@end
-
-@implementation CIOArrayRequest (CIOAPISession)
-
-- (void)executeWithSuccess:(nullable void (^)(NSArray * __nonnull))success failure:(nullable void (^)(NSError * __nonnull))failure {
-    NSParameterAssert([self.client isKindOfClass:[CIOAPISession class]]);
-    [(CIOAPISession*)self.client executeArrayRequest:self success:success failure:failure];
-}
-
-@end
-
-@implementation CIOStringRequest (CIOAPISession)
-
-- (void)executeWithSuccess:(nullable void (^)(NSString * __nonnull))success failure:(nullable void (^)(NSError * __nonnull))failure {
-    NSParameterAssert([self.client isKindOfClass:[CIOAPISession class]]);
-    [(CIOAPISession*)self.client executeStringRequest:self success:success failure:failure];
-}
-
-@end

@@ -19,7 +19,7 @@
 
 - (void)setUp {
     [super setUp];
-    self.session = [[CIOAPISession alloc] initWithConsumerKey:@"consumer_key" consumerSecret:@"consumer_secret"];
+    self.session = [[CIOAPISession alloc] init];
 }
 
 - (void)testParseResponse {

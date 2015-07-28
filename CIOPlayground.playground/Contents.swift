@@ -4,16 +4,16 @@ import CIOAPIClient
 import XCPlayground
 import WebKit
 
-final class CIOAuthenticator {
+final class CIOAuthenticator<Client: CIOAPIClient> {
     let delegate = WebViewDelegate()
-    var session: CIOAPISession
+    var session: Client
     var window: NSWindow?
 
-    init(session: CIOAPISession) {
+    init(session: Client) {
         self.session = session
     }
 
-    func withAuthentication(block: CIOAPISession -> Void) {
+    func withAuthentication(block: Client -> Void) {
         if !session.isAuthorized {
             let app = NSApplication.sharedApplication()
             app.setActivationPolicy(.Regular)
@@ -55,7 +55,7 @@ final class CIOAuthenticator {
 
 XCPSetExecutionShouldContinueIndefinitely(continueIndefinitely: true)
 
-let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
+let s = CIOV2Client(consumerKey: "", consumerSecret: "")
 if s.valueForKey("OAuthConsumerKey") as? String == "" {
     assertionFailure("Please provide your consumer key and consumer secret.")
 }
@@ -76,4 +76,3 @@ authenticator.withAuthentication() { session in
             println("\(error)")
     })
 }
-

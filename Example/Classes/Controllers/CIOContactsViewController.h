@@ -11,6 +11,6 @@
 
 @interface CIOContactsViewController : UITableViewController <CIOAuthViewController>
 
-@property (nonnull) CIOAPISession *APIClient;
+@property (nonnull) CIOV2Client *APIClient;
 
 @end

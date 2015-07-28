@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <CIOAPIClient/CIOAPISession.h>
+#import <CIOAPIClient/CIOAPIClient.h>
 
 @protocol CIOAuthViewController <NSObject>
 - (void)userCompletedLogin;
@@ -19,6 +19,6 @@
 
 @property (nonatomic, assign) NSObject<CIOAuthViewController> *delegate;
 
-- (id)initWithAPIClient:(CIOAPISession *)APIClient allowCancel:(BOOL)allowCancel;
+- (id)initWithAPIClient:(CIOV2Client *)APIClient allowCancel:(BOOL)allowCancel;
 
 @end
