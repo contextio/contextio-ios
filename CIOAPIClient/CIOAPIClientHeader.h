@@ -497,7 +497,7 @@ extern NSString *const CIOAPIBaseURLString;
 
  @param messageID The id of the message for which you would like to retrieve the thread.
  */
-- (CIOThreadRequest *)getThreadForMessageWithID:(NSString *)messageID;
+- (CIOMessageThreadRequest *)getThreadForMessageWithID:(NSString *)messageID;
 
 #pragma mark - Sources
 
@@ -737,51 +737,26 @@ extern NSString *const CIOAPIBaseURLString;
  */
 - (CIODictionaryRequest *)setFoldersForThreadWithID:(NSString *)threadID folderNames:(nullable NSArray *)folderNames symbolicFolderNames:(nullable NSArray *)symbolicFolderNames;
 
-#pragma mark - Webhooks
+#pragma mark - Discovery
 
 /**
- Retrieves the account's webhooks.
- */
-- (CIOArrayRequest *)getWebhooks;
-
-/**
- Creates a new webhook.
+ Attempts to discover IMAP settings for a given email address
  
- @see https://context.io/docs/2.0/accounts/webhooks#post
+ https://context.io/docs/2.0/discovery
 
- @param callbackURLString A string representing the callback URL for the new webhook.
- @param failureNotificationURLString A string representing the failure notification URL for the new webhook.
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
+ This is useful when you want to add an email account under your API key and you'd like to make the settings easier to fill by the user with pre-populated data.
+
+ This will also figure out if OAuth2 over IMAP is available.
+ 
+ @see https://developers.google.com/gmail/oauth_overview?csw=1
+
+ @param sourceType The type of source you want to discover settings for. Right now, the only supported source type is `IMAP`.
+ @param email      An email address you want to discover IMAP settings for. Make sure `source_type` is set to `IMAP`.
  */
-- (CIODictionaryRequest *)createWebhookWithCallbackURLString:(NSString *)callbackURLString
-                                failureNotificationURLString:(NSString *)failureNotificationURLString
-                                                      params:(nullable NSDictionary *)params;
+- (CIODictionaryRequest *)getSettingsForSourceType:(NSString *)sourceType email:(NSString *)email;
 
-/**
- Retrieves the webhook with the specified id.
+#pragma mark - OAuth Providers
 
- @param webhookID The id of the webhook you would like to retrieve.
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
- */
-- (CIODictionaryRequest *)getWebhookWithID:(NSString *)webhookID params:(nullable NSDictionary *)params;
-
-/**
- Updates the webhook with the specified id.
-
- @param webhookID The id of the webhook you would like to update.
- @param params A dictionary of parameters to be sent with the request. See the API documentation for possible
- parameters.
- */
-- (CIODictionaryRequest *)updateWebhookWithID:(NSString *)webhookID params:(nullable NSDictionary *)params;
-
-/**
- Deletes the webhook with the specified id.
-
- @param webhookID The id of the webhook you would like to delete.
- */
-- (CIODictionaryRequest *)deleteWebhookWithID:(NSString *)webhookID;
 
 @end
 

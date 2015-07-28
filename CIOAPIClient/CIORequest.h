@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, CIOSortOrder) {
+/**
+ Sort order for requests which allow ascending or descending results.
+ */
+typedef NS_ENUM(NSInteger, CIOSortOrder){
     CIOSortOrderUnspecified = 0,
     CIOSortOrderAscending,
     CIOSortOrderDescending
@@ -29,11 +32,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nullable, readonly, nonatomic) CIOAPIClient *client;
 
-@property (readonly, nonatomic) NSDictionary *parameters;
-@property (readonly, nonatomic) NSString *path;
-@property (readonly, nonatomic) NSString *method;
 /**
- A few API calls allow an arbitrary JSON body. If this is set, `parameters` will be ignored, and instead `requestBody` will be realized to json and sent as `Content-Type: application/json`.
+ Parameters that will be sent when this request is executed. Will be sent as URL parameters with GET requests, otherwise will be sent as a form body request.
+ */
+@property (readonly, nonatomic) NSDictionary *parameters;
+
+/**
+ Path in the Context.IO API that will be used
+ */
+@property (readonly, nonatomic) NSString *path;
+
+/**
+ HTTP method used for this request
+ */
+@property (readonly, nonatomic) NSString *method;
+
+/**
+ A few API calls allow an arbitrary JSON body. If this is set, `parameters` will be ignored, and instead `requestBody` will be serialized to json and sent as `Content-Type: application/json`.
  */
 @property (nonatomic) id requestBody;
 
@@ -41,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Creates a new `CIORequest` representing a single API call against the Context.IO API.
  *
- *  @param path   API path, e.g. "2.0/accounts/<id>/messages"
+ *  @param path   API path, e.g. "accounts/<id>/messages"
  *  @param params Parameters added to API call
  *  @param method HTTP method to use
  *  @param client optional client to be retained with this request for later execution

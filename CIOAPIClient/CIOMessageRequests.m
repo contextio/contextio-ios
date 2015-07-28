@@ -8,22 +8,19 @@
 
 #import "CIOMessageRequests.h"
 
+@implementation CIOMessageRequestBase
+@end
+
 @implementation CIOMessagesRequest
+@end
 
-+ (instancetype)requestForAccountId:(NSString *)accountID client:(CIOAPIClient *)client {
-    return [self requestWithPath:[NSString pathWithComponents:@[@"accounts", accountID, @"messages"]]
-                          method:@"GET"
-                      parameters:nil
-                          client:client];
-}
-
+@implementation CIOMessageThreadRequest
 @end
 
 @implementation CIOThreadRequest
 @end
 
 @implementation CIOMessageRequest
-
 @end
 
 @implementation CIOMessageUpdateRequest
@@ -48,5 +45,4 @@
 @end
 
 @implementation CIOFolderMessagesRequest
-
 @end

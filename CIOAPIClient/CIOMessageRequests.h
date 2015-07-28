@@ -56,22 +56,12 @@
  */
 @property (nonatomic) BOOL include_source;
 
-/**
- *  A request to fetch messages for a given account.
- *
- *  @param accountID The account ID to fetch messages for
- *  @param client    optional CIOAPIClient to execute this request
- *
- *  @return a new CIOMessagesRequest
- */
-+ (nonnull instancetype)requestForAccountId:(nonnull NSString *)accountID client:(nullable CIOAPIClient *)client;
-
 @end
 
 /**
- A request for a single message in an account.
+ A request for a single message in an account. Its parameters are shared in subclasses `CIOMessageRequest`, `CIOMessageThreadRequest`, and `CIOThreadRequest`.
  */
-@interface CIOMessageRequest : CIODictionaryRequest
+@interface CIOMessageRequestBase : CIODictionaryRequest
 
 /**
  *  Set to `YES` to include message bodies in the result. Since message bodies must be retrieved from the IMAP server, expect a performance hit when setting this parameter.
@@ -93,6 +83,14 @@
  */
 @property (nullable, nonatomic) NSString *body_type;
 
+@end
+
+
+/**
+ File, contact and other information about a given email message
+ @see https://context.io/docs/2.0/accounts/messages#id-get
+ */
+@interface CIOMessageRequest : CIOMessageRequestBase
 
 /**
  *  Set to `YES` to include message sources in the result. Since message sources must be retrieved from the IMAP server, expect a performance hit when setting this parameter.
@@ -108,10 +106,12 @@
 
 
 /**
- Encapsulates the parameters allowed in https://context.io/docs/2.0/accounts/messages/thread
- This shares almost the same parameters as a request for a single message, except the `include_thread_size` parameter from `CIOMessageRequest` is ignored.
+ List other messages in the same thread as a given message
+
+ @see https://context.io/docs/2.0/accounts/messages/thread#get
  */
-@interface CIOThreadRequest : CIOMessageRequest
+
+@interface CIOMessageThreadRequest: CIOMessageRequestBase
 
 /**
  The maximum number of messages to include in the messages property of the response. The maximum limit is `100`.
@@ -122,6 +122,19 @@
  Start the list of messages at this offset (zero-based).
  */
 @property (nonatomic) NSInteger offset;
+
+@end
+
+/**
+ Returns files, contacts and messages on a given thread
+ @see https://context.io/docs/2.0/accounts/threads#id-get
+ */
+@interface CIOThreadRequest : CIOMessageThreadRequest
+
+/**
+ *  Set to `YES` to include message sources in the result. Since message sources must be retrieved from the IMAP server, expect a performance hit when setting this parameter.
+ */
+@property (nonatomic) BOOL include_source;
 
 @end
 

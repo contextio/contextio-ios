@@ -303,7 +303,7 @@
 - (void)testGetMessageThread {
     AssertRequestPathTypeMethod([self.client getThreadForMessageWithID:@"aMessageID"],
                                 @"accounts/anAccountId/messages/aMessageID/thread",
-                                CIOThreadRequest,
+                                CIOMessageThreadRequest,
                                 @"GET");
 }
 

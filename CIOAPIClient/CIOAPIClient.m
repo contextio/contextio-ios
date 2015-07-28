@@ -417,14 +417,23 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 #pragma mark - Messages
 
-- (CIOMessagesRequest *)getMessages {
+- (NSString *)pathForMessageID:(nullable NSString *)messageID {
+    if (messageID) {
+        return [NSString pathWithComponents:@[self.accountPath, @"messages", messageID]];
+    } else {
+        return [self.accountPath stringByAppendingPathComponent:@"messages"];
+    }
+}
 
-    return [CIOMessagesRequest requestForAccountId:self.accountID client:self];
+- (CIOMessagesRequest *)getMessages {
+    return [CIOMessagesRequest requestWithPath:[self pathForMessageID:nil]
+                                        method:@"GET"
+                                    parameters:nil
+                                        client:self];
 }
 
 - (CIOMessageRequest *)getMessageWithID:(NSString *)messageID {
-    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID]];
-    return [CIOMessageRequest requestWithPath:path
+    return [CIOMessageRequest requestWithPath:[self pathForMessageID:messageID]
                                        method:@"GET"
                                    parameters:nil
                                        client:self];
@@ -432,31 +441,24 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 - (CIOMessageUpdateRequest *)updateMessageWithID:(NSString *)messageID
                             destinationFolder:(NSString *)destinationFolder {
-    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID]];
-    return [CIOMessageUpdateRequest requestWithPath:path
+    return [CIOMessageUpdateRequest requestWithPath:[self pathForMessageID:messageID]
                                              method:@"POST"
                                          parameters:@{@"dst_folder": destinationFolder}
                                              client:self];
 }
 
 - (CIODictionaryRequest *)deleteMessageWithID:(NSString *)messageID {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-
-    return [self dictionaryRequestForPath:[messagesURLPath stringByAppendingPathComponent:messageID]
+    return [self dictionaryRequestForPath:[self pathForMessageID:messageID]
                                    method:@"DELETE"
                                    params:nil];
 }
 
 - (CIOArrayRequest *)getBodyForMessageWithID:(NSString *)messageID type:(nullable NSString *)type {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
     NSDictionary *params = nil;
     if (type) {
         params = @{@"type": type};
     }
-    return [self arrayRequestForPath:[messageURLPath stringByAppendingPathComponent:@"body"]
+    return [self arrayRequestForPath:[[self pathForMessageID:messageID] stringByAppendingPathComponent:@"body"]
                                    method:@"GET"
                                    params:params];
 }
@@ -464,21 +466,13 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 #pragma mark Messages/Flags
 
 - (CIODictionaryRequest *)getFlagsForMessageWithID:(NSString *)messageID {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-
-    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"flags"]
+    return [self dictionaryRequestForPath:[[self pathForMessageID:messageID] stringByAppendingPathComponent:@"flags"]
                                    method:@"GET"
                                    params:nil];
 }
 
 - (CIODictionaryRequest *)updateFlagsForMessageWithID:(NSString *)messageID flags:(CIOMessageFlags *)flags {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-
-    return [self dictionaryRequestForPath:[messageURLPath stringByAppendingPathComponent:@"flags"]
+    return [self dictionaryRequestForPath:[[self pathForMessageID:messageID] stringByAppendingPathComponent:@"flags"]
                                    method:@"POST"
                                    params:[flags asDictionary]];
 }
@@ -486,17 +480,13 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 #pragma mark Messages/Folders
 
 - (CIOArrayRequest *)getFoldersForMessageWithID:(NSString *)messageID {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-
-    return [self arrayRequestForPath:[messageURLPath stringByAppendingPathComponent:@"folders"]
+    return [self arrayRequestForPath:[[self pathForMessageID:messageID] stringByAppendingPathComponent:@"folders"]
                               method:@"GET"
                               params:nil];
 }
 
 - (CIODictionaryRequest *)updateFoldersForMessageWithID:(NSString *)messageID addToFolder:(nullable NSString *)addFolder removeFromFolder:(nullable NSString *)removeFolder {
-    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"folders"]];
+    NSString *path = [[self pathForMessageID:messageID] stringByAppendingPathComponent:@"folders"];
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     if (addFolder) {
         params[@"add"] = addFolder;
@@ -511,8 +501,8 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 - (CIODictionaryRequest *)setFoldersForMessageWithID:(NSString *)messageID folderNames:(NSArray *)folderNames symbolicFolderNames:(NSArray *)symbolicFolderNames {
 
-    NSString *folderPath = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"folders"]];
-    CIODictionaryRequest *request = [self dictionaryRequestForPath:folderPath method:@"PUT" params:nil];
+    NSString *path = [[self pathForMessageID:messageID] stringByAppendingPathComponent:@"folders"];
+    CIODictionaryRequest *request = [self dictionaryRequestForPath:path method:@"PUT" params:nil];
     NSMutableArray *requestBody = [NSMutableArray array];
     for (NSString *name in folderNames) {
         [requestBody addObject:@{@"name": name}];
@@ -527,14 +517,14 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 #pragma mark Messages/Headers
 
 - (CIODictionaryRequest *)getHeadersForMessageWithID:(NSString *)messageID {
-    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"headers"]];
+    NSString *path = [[self pathForMessageID:messageID] stringByAppendingPathComponent:@"headers"];
     return [self dictionaryRequestForPath:path
                                    method:@"GET"
                                    params:nil];
 }
 
 - (CIOStringRequest *)getRawHeadersForMessageWithID:(NSString *)messageID {
-    NSString *path = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"headers"]];
+    NSString *path = [[self pathForMessageID:messageID] stringByAppendingPathComponent:@"headers"];
     return [CIOStringRequest requestWithPath:path
                                       method:@"GET"
                                   parameters:@{@"raw": @YES}
@@ -544,18 +534,14 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 #pragma mark Messages/Source
 
 - (CIORequest *)getSourceForMessageWithID:(NSString *)messageID {
-
-    NSString *requestPath = [NSString pathWithComponents:@[self.accountPath, @"messages", messageID, @"source"]];
+    NSString *requestPath = [[self pathForMessageID:messageID] stringByAppendingPathComponent:@"source"];
     return [CIORequest requestWithPath:requestPath method:@"GET" parameters:nil client:self];
 }
 
 #pragma mark Messages/Thread
 
-- (CIOThreadRequest *)getThreadForMessageWithID:(NSString *)messageID {
-
-    NSString *messagesURLPath = [self.accountPath stringByAppendingPathComponent:@"messages"];
-    NSString *messageURLPath = [messagesURLPath stringByAppendingPathComponent:messageID];
-    return [CIOThreadRequest requestWithPath:[messageURLPath stringByAppendingPathComponent:@"thread"]
+- (CIOMessageThreadRequest *)getThreadForMessageWithID:(NSString *)messageID {
+    return [CIOMessageThreadRequest requestWithPath:[[self pathForMessageID:messageID] stringByAppendingPathComponent:@"thread"]
                                       method:@"GET"
                                   parameters:nil
                                       client:self];
@@ -769,57 +755,15 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     }
     request.requestBody = requestBody;
     return request;
-
 }
 
-#pragma mark - Webhooks
-// TODO: Is there a practical reason to make webhooks API available to iOS apps?
+#pragma mark - Discovery
 
-- (CIOArrayRequest *)getWebhooks {
-
-    return [self arrayRequestForPath:[self.accountPath stringByAppendingPathComponent:@"webhooks"]
-                              method:@"GET"
-                              params:nil];
-}
-
-- (CIODictionaryRequest *)createWebhookWithCallbackURLString:(NSString *)callbackURLString
-                                failureNotificationURLString:(NSString *)failureNotificationURLString
-                                                      params:(NSDictionary *)params {
-
-    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    mutableParams[@"callback_url"] = callbackURLString;
-    mutableParams[@"failure_notif_url"] = failureNotificationURLString;
-
-    return [self dictionaryRequestForPath:[self.accountPath stringByAppendingPathComponent:@"webhooks"]
-                                   method:@"POST"
-                                   params:[NSDictionary dictionaryWithDictionary:mutableParams]];
-}
-
-- (CIODictionaryRequest *)getWebhookWithID:(NSString *)webhookID params:(NSDictionary *)params {
-
-    NSString *webhooksURLPath = [self.accountPath stringByAppendingPathComponent:@"webhooks"];
-
-    return [self dictionaryRequestForPath:[webhooksURLPath stringByAppendingPathComponent:webhookID]
-                                   method:@"GET"
-                                   params:params];
-}
-
-- (CIODictionaryRequest *)updateWebhookWithID:(NSString *)webhookID params:(NSDictionary *)params {
-
-    NSString *webhooksURLPath = [self.accountPath stringByAppendingPathComponent:@"webhooks"];
-
-    return [self dictionaryRequestForPath:[webhooksURLPath stringByAppendingPathComponent:webhookID]
-                                   method:@"POST"
-                                   params:params];
-}
-
-- (CIODictionaryRequest *)deleteWebhookWithID:(NSString *)webhookID {
-
-    NSString *webhooksURLPath = [self.accountPath stringByAppendingPathComponent:@"webhooks"];
-
-    return [self dictionaryRequestForPath:[webhooksURLPath stringByAppendingPathComponent:webhookID]
-                                   method:@"DELETE"
-                                   params:nil];
+- (CIODictionaryRequest * __nonnull)getSettingsForSourceType:(NSString * __nonnull)sourceType email:(NSString * __nonnull)email {
+    return [CIODictionaryRequest requestWithPath:@"discovery"
+                                          method:@"GET"
+                                      parameters:@{@"source_type": sourceType, @"email": email}
+                                          client:self];
 }
 
 @end

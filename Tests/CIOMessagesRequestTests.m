@@ -15,14 +15,8 @@
 
 @implementation CIOMessagesRequestTests
 
-- (void)testBasicInstance {
-    CIOMessagesRequest *request = [CIOMessagesRequest requestForAccountId:@"12AB" client:nil];
-    XCTAssertEqualObjects(request.path, @"accounts/12AB/messages");
-    XCTAssertEqualObjects(request.method, @"GET");
-}
-
 - (void)testParameters {
-    CIOMessagesRequest *request = [CIOMessagesRequest requestForAccountId:@"12AB" client:nil];
+    CIOMessagesRequest *request = [CIOMessagesRequest requestWithPath:@"accounts/id/messages" method:@"GET" parameters:nil client:nil];
     request.subject = @"puppies";
     XCTAssertEqualObjects(request.subject, @"puppies");
     request.file_size_min = @100;
