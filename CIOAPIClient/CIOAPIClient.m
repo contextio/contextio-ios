@@ -214,7 +214,8 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                 method:(NSString *)method
                             parameters:(NSDictionary *)params
                                  token:(NSString *)token
-                           tokenSecret:(NSString *)tokenSecret {
+                           tokenSecret:(NSString *)tokenSecret
+                           contentType:(TDOAuthContentType)contentType {
 
     NSMutableURLRequest *signedRequest = [[TDOAuth URLRequestForPath:[self.basePath stringByAppendingPathComponent:path]
                                                           parameters:params
@@ -225,7 +226,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
                                                          tokenSecret:tokenSecret
                                                               scheme:@"https"
                                                        requestMethod:method
-                                                        dataEncoding:TDOAuthContentTypeUrlEncodedForm
+                                                        dataEncoding:contentType
                                                         headerValues:@{
                                                             @"Accept": @"application/json"
                                                         }
@@ -243,7 +244,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 - (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method params:(NSDictionary *)params {
     NSString *token = self.isAuthorized ? _OAuthToken : nil;
     NSString *tokenSecret = self.isAuthorized ? _OAuthTokenSecret : nil;
-    return [self signedRequestForPath:path method:method parameters:params token:token tokenSecret:tokenSecret];
+    return [self signedRequestForPath:path method:method parameters:params token:token tokenSecret:tokenSecret contentType:TDOAuthContentTypeUrlEncodedForm];
 }
 
 - (NSURLRequest *)requestForPath:(NSString *)path method:(NSString *)method body:(id)body {
@@ -251,28 +252,13 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     NSParameterAssert(![method isEqualToString:@"GET"]);
     NSString *token = self.isAuthorized ? _OAuthToken : nil;
     NSString *tokenSecret = self.isAuthorized ? _OAuthTokenSecret : nil;
-    NSMutableURLRequest *signedRequest = [[TDOAuth URLRequestForPath:[self.basePath stringByAppendingPathComponent:path]
-                                                          parameters:body
-                                                                host:self.baseURL.host
-                                                         consumerKey:_OAuthConsumerKey
-                                                      consumerSecret:_OAuthTokenSecret
-                                                         accessToken:token
-                                                         tokenSecret:tokenSecret
-                                                              scheme:@"https"
-                                                       requestMethod:method
-                                                        dataEncoding:TDOAuthContentTypeJsonObject
-                                                        headerValues:@{
-                                                                       @"Accept": @"application/json"
-                                                                       }
-                                                     signatureMethod:TDOAuthSignatureMethodHmacSha1] mutableCopy];
-    signedRequest.timeoutInterval = self.timeoutInterval;
-    return signedRequest;
+    return [self signedRequestForPath:path method:method parameters:body token:token tokenSecret:tokenSecret contentType:TDOAuthContentTypeJsonObject];
 }
 
 - (NSURLRequest *)requestForCIORequest:(CIORequest *)request {
     if ([request isKindOfClass:[CIOConnectTokenRequest class]]) {
         // This is a special case due to the use of the temporary token/secret during auth
-        return [self signedRequestForPath:request.path method:request.method parameters:request.parameters token:_tmpOAuthToken tokenSecret:_tmpOAuthTokenSecret];
+        return [self signedRequestForPath:request.path method:request.method parameters:request.parameters token:_tmpOAuthToken tokenSecret:_tmpOAuthTokenSecret contentType:TDOAuthContentTypeUrlEncodedForm];
     } else if (request.requestBody != nil) {
         return [self requestForPath:request.path method:request.method body:request.requestBody];
     } else {

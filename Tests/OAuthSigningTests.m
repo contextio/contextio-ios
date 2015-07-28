@@ -50,6 +50,10 @@
 }
 
 - (void)testJSONBody {
+    [self.client setValue:@"oauth_token" forKey:@"OAuthToken"];
+    [self.client setValue:@"oauth_token_secret" forKey:@"OAuthTokenSecret"];
+    [self.client setValue:@YES forKey:@"isAuthorized"];
+
     CIODictionaryRequest *request = [CIODictionaryRequest
                                      requestWithPath:@"accounts/anAccountId/messages/aMessageID/folders"
                                      method:@"PUT"
@@ -63,6 +67,9 @@
     XCTAssertEqualObjects(urlRequest.HTTPBody, [NSJSONSerialization dataWithJSONObject:request.requestBody options:0 error:nil]);
     XCTAssertEqualObjects([urlRequest valueForHTTPHeaderField:@"Content-Type"], @"application/json");
     XCTAssertEqualObjects(urlRequest.URL, [NSURL URLWithString:@"https://api.context.io/2.0/accounts/anAccountId/messages/aMessageID/folders"]);
+    NSString *oAuthHeader = [urlRequest valueForHTTPHeaderField:@"Authorization"];
+    NSString *signature = [TestUtil OAuthSignature:oAuthHeader];
+    XCTAssertEqualObjects(signature, @"yv8jEu2vhhcW5nozDaoNQ86EHhc%3D");
 }
 
 @end
