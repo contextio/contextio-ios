@@ -10,8 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *const CIOV2APIBaseURLString;
-
 @interface CIOV2Client : CIOAPIClient
 
 /**
@@ -43,6 +41,33 @@ extern NSString *const CIOV2APIBaseURLString;
                               token:(nullable NSString *)token
                         tokenSecret:(nullable NSString *)tokenSecret
                           accountID:(nullable NSString *)accountID;
+
+#pragma mark - Working With Accounts
+
+/**
+ *   Retrieves the current account's details.
+ *
+ */
+- (CIODictionaryRequest *)getAccount;
+
+/**
+ *  Modify the current account's info.
+ *
+ *  @param firstName new first name, optional
+ *  @param lastName  new last name, optional
+ *
+ *  @return request to modify the account
+ */
+- (CIODictionaryRequest *)updateAccountWithFirstName:(nullable NSString *)firstName lastName:(nullable NSString *)lastName;
+
+
+/**
+ *  Deletes the current account.
+ *
+ *
+ */
+- (CIODictionaryRequest *)deleteAccount;
+
 
 #pragma mark - Contacts
 

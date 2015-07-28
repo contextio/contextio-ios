@@ -8,16 +8,6 @@
 
 #import "CIORequest.h"
 
-typedef NS_ENUM(NSInteger, CIOAccountStatus) {
-    CIOAccountStatusNull,
-    CIOAccountStatusInvalidCredentials,
-    CIOAccountStatusConnectionImpossible,
-    CIOAccountStatusNoAccessToAllMail,
-    CIOAccountStatusOK,
-    CIOAccountStatusTempDisabled,
-    CIOAccountStatusDisabled
-};
-
 /**
  *  A request to fetch a list of sources in an account.
  

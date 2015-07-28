@@ -47,7 +47,7 @@ There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swif
 * Select `CIOPlayground.playground` from the `CIOAPIClient` project in the Project navigator left sidebar
 * Add your consumer key and consumer secret to the line
 ```swift
-let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
+let s = CIOV2Client(consumerKey: "", consumerSecret: "")
 ```
 * You may need to increase the Playground execution time from the default of 30 seconds by adjusting the value in the bottom right corner of the window
 * At this point the playground will execute and an authentication WebView will appear in the bottom left corner of your screen
@@ -58,22 +58,24 @@ let s: CIOAPISession = CIOAPISession(consumerKey: "", consumerSecret: "")
 
 ## Example Usage
 
-Use `CIOAPISession` to construct and execute signed [`NSURLRequests`][nsurl] against the Context.IO API.
+Use `CIOV2Client` to construct and execute signed [`NSURLRequests`][nsurl] against the [Context.IO 2.0 API](https://context.io/docs/2.0).
+Use `CIOLiteClient` for the [Context.IO Lite API](https://context.io/docs/lite).
+
 
 [nsurl]: https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSURLRequest_Class/index.html
 
 ### Beginning an API Session
 
-Initialize `CIOAPISession` with your API key consumer key and consumer secret:
+Initialize `CIOV2Client` with your API key consumer key and consumer secret:
 
 ``` objective-c
-CIOAPISession *session = [[CIOAPISession alloc] initWithConsumerKey:@"your-consumer-key"
-                                                     consumerSecret:@"your-consumer-secret"];
+CIOV2Client *session = [[CIOV2Client alloc] initWithConsumerKey:@"your-consumer-key"
+                                                 consumerSecret:@"your-consumer-secret"];
 ```
 
 ### Authentication
 
-`CIOAPISession` uses [Connect Tokens][ct] to authorize individual user's email accounts. Please see the example application for an overview of the authentication process. Feel free to re-use or subclass [`CIOAuthViewController`][cioauth] in your own project - it takes care of the details of authentication and should work out of the box for most purposes.
+`CIO*Client` uses [Connect Tokens][ct] to authorize individual user's email accounts. Please see the example application for an overview of the authentication process. Feel free to re-use or subclass [`CIOAuthViewController`][cioauth] in your own project - it takes care of the details of authentication and should work out of the box for most purposes.
 
 [cioauth]: https://github.com/contextio/contextio-ios/blob/master/Example/Classes/Controllers/CIOAuthViewController.m
 [ct]: https://context.io/docs/2.0/connect_tokens

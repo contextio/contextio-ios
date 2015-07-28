@@ -55,24 +55,35 @@ final class CIOAuthenticator<Client: CIOAPIClient> {
 
 XCPSetExecutionShouldContinueIndefinitely(continueIndefinitely: true)
 
-let s = CIOV2Client(consumerKey: "", consumerSecret: "")
-if s.valueForKey("OAuthConsumerKey") as? String == "" {
-    assertionFailure("Please provide your consumer key and consumer secret.")
-}
+//let s = CIOV2Client(consumerKey: "", consumerSecret: "")
+//if s.valueForKey("OAuthConsumerKey") as? String == "" {
+//    assertionFailure("Please provide your consumer key and consumer secret.")
+//}
+//
+//// Uncomment this line and let the playground execute to clear previous
+//// credentials and authenticate with a new email account:
+////s.clearCredentials()
+//let authenticator = CIOAuthenticator(session: s)
+//
+//authenticator.withAuthentication() { session in
+//    session.getContacts().executeWithSuccess({ responseDict in
+//            println(responseDict)
+//            let contactsArray = responseDict["matches"] as! [[NSObject: AnyObject]]
+//            let names = contactsArray.map { $0["name"] as! String }
+//            String(format: "Contacts: %@", ", ".join(names))
+//        },
+//        failure: { error in
+//            println("\(error)")
+//    })
+//}
 
-// Uncomment this line and let the playground execute to clear previous
-// credentials and authenticate with a new email account:
-//s.clearCredentials()
-let authenticator = CIOAuthenticator(session: s)
+let liteSession = CIOLiteClient(consumerKey: "", consumerSecret: "")
 
-authenticator.withAuthentication() { session in
-    session.getContacts().executeWithSuccess({ responseDict in
-            println(responseDict)
-            let contactsArray = responseDict["matches"] as! [[NSObject: AnyObject]]
-            let names = contactsArray.map { $0["name"] as! String }
-            String(format: "Contacts: %@", ", ".join(names))
-        },
-        failure: { error in
-            println("\(error)")
+CIOAuthenticator(session: liteSession).withAuthentication() { session in
+    session.getEmailAccounts().executeWithSuccess({ (response) -> Void in
+        println(response)
+    }, failure: { (error) -> Void in
+        println(error)
     })
+
 }

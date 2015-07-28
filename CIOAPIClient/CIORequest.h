@@ -17,6 +17,15 @@ typedef NS_ENUM(NSInteger, CIOSortOrder){
     CIOSortOrderDescending
 };
 
+typedef NS_ENUM(NSInteger, CIOAccountStatus) {
+    CIOAccountStatusNull,
+    CIOAccountStatusInvalidCredentials,
+    CIOAccountStatusConnectionImpossible,
+    CIOAccountStatusNoAccessToAllMail,
+    CIOAccountStatusOK,
+    CIOAccountStatusTempDisabled,
+    CIOAccountStatusDisabled
+};
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,6 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)requestWithPath:(NSString *)path method:(NSString *)method parameters:(nullable NSDictionary *)params client:(nullable CIOAPIClient *)client;
 
++ (NSString *)nameForAccountStatus:(CIOAccountStatus)status;
 /**
  *  Checks if a response returned by a 200 API call is a valid response.
  *

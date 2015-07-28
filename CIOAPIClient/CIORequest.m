@@ -33,6 +33,26 @@
     return request;
 }
 
++ (NSString *)nameForAccountStatus:(CIOAccountStatus)status {
+    switch (status) {
+        case CIOAccountStatusInvalidCredentials:
+            return @"INVALID_CREDENTIALS";
+        case CIOAccountStatusConnectionImpossible:
+            return @"CONNECTION_IMPOSSIBLE";
+        case CIOAccountStatusNoAccessToAllMail:
+            return @"NO_ACCESS_TO_ALL_MAIL";
+        case CIOAccountStatusOK:
+            return @"OK";
+        case CIOAccountStatusTempDisabled:
+            return @"TEMP_DISABLED";
+        case CIOAccountStatusDisabled:
+            return @"DISABLED";
+        case CIOAccountStatusNull:
+        default:
+            return nil;
+    }
+}
+
 - (NSError *)validateResponseObject:(id)response {
     if ([response isKindOfClass:[NSDictionary class]]) {
         NSNumber *success = ((NSDictionary *)response)[@"success"];

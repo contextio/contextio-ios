@@ -10,6 +10,16 @@
 
 @interface TestUtil : NSObject
 
+#define AssertRequestPathTypeMethod(request, requestPath, type, requestMethod) \
+    do { \
+        CIORequest *_req = (request); \
+        if (![_req isKindOfClass:[type class]]) { \
+            XCTFail(@"%@ is wrong type", _req); \
+        } \
+        XCTAssertEqualObjects(_req.path, (requestPath)); \
+        XCTAssertEqualObjects(_req.method, (requestMethod)); \
+    } while (0)
+
 NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)parseRequestBody:(NSURLRequest *)request;
 + (nullable NSString *)OAuthSignature:(NSString *)oAuthHeader;

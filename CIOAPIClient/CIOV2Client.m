@@ -31,6 +31,26 @@ NSString *const CIOV2APIBaseURLString = @"https://api.context.io/2.0/";
     return self;
 }
 
+#pragma mark - Account
+
+- (CIODictionaryRequest *)getAccount {
+    return [self dictionaryRequestForPath:self.accountPath method:@"GET" params:nil];
+}
+
+- (CIODictionaryRequest *)updateAccountWithFirstName:(NSString *)firstName lastName:(NSString *)lastName {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (firstName) {
+        params[@"first_name"] = firstName;
+    }
+    if (lastName ) {
+        params[@"last_name"] = lastName;
+    }
+    return [self dictionaryRequestForPath:self.accountPath method:@"PUT" params:params];
+}
+
+- (CIODictionaryRequest *)deleteAccount {
+    return [self dictionaryRequestForPath:self.accountPath method:@"DELETE" params:nil];
+}
 
 #pragma mark Contacts
 

@@ -36,6 +36,12 @@
 		FA58A3811B5ECBCC00A04A4A /* CIOAPIClientHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = FAD8615A1B44C83C002A4407 /* CIOAPIClientHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA58A3821B5ECBCF00A04A4A /* CIORequest.h in Headers */ = {isa = PBXBuildFile; fileRef = FA9FD7EA1B5052F500143F09 /* CIORequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA58A3831B5ECBD100A04A4A /* CIOAPISession.h in Headers */ = {isa = PBXBuildFile; fileRef = FADC96711B55768700A2CC66 /* CIOAPISession.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FA5B54731B684217003439AE /* CIOLiteClient.h in Headers */ = {isa = PBXBuildFile; fileRef = FA5B54711B684217003439AE /* CIOLiteClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FA5B54741B684217003439AE /* CIOLiteClient.h in Headers */ = {isa = PBXBuildFile; fileRef = FA5B54711B684217003439AE /* CIOLiteClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FA5B54751B684217003439AE /* CIOLiteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5B54721B684217003439AE /* CIOLiteClient.m */; };
+		FA5B54761B684217003439AE /* CIOLiteClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5B54721B684217003439AE /* CIOLiteClient.m */; };
+		FA5B54781B68474A003439AE /* CIOLiteClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5B54771B68474A003439AE /* CIOLiteClientTests.m */; };
+		FA5B54791B68474A003439AE /* CIOLiteClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5B54771B68474A003439AE /* CIOLiteClientTests.m */; };
 		FA624E641B62BBE700EEA2B7 /* CIOV2ClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA624E631B62BBE700EEA2B7 /* CIOV2ClientTests.m */; };
 		FA624E651B62BBE700EEA2B7 /* CIOV2ClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA624E631B62BBE700EEA2B7 /* CIOV2ClientTests.m */; };
 		FA624E681B62C91900EEA2B7 /* CIOContactsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = FA624E661B62C91900EEA2B7 /* CIOContactsRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -112,6 +118,9 @@
 		FA58A3621B5EBFE100A04A4A /* CIOAPIClient Mac Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CIOAPIClient Mac Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA58A3731B5EC04D00A04A4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = CIOAPIClient/Info.plist; sourceTree = SOURCE_ROOT; };
 		FA58A37D1B5EC88F00A04A4A /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		FA5B54711B684217003439AE /* CIOLiteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOLiteClient.h; sourceTree = "<group>"; };
+		FA5B54721B684217003439AE /* CIOLiteClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOLiteClient.m; sourceTree = "<group>"; };
+		FA5B54771B68474A003439AE /* CIOLiteClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOLiteClientTests.m; sourceTree = "<group>"; };
 		FA624E631B62BBE700EEA2B7 /* CIOV2ClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOV2ClientTests.m; sourceTree = "<group>"; };
 		FA624E661B62C91900EEA2B7 /* CIOContactsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOContactsRequest.h; sourceTree = "<group>"; };
 		FA624E671B62C91900EEA2B7 /* CIOContactsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOContactsRequest.m; sourceTree = "<group>"; };
@@ -234,10 +243,12 @@
 			isa = PBXGroup;
 			children = (
 				FA8FFC051B630AD100B41F6E /* CIOAPIClient.h */,
+				FAD8615A1B44C83C002A4407 /* CIOAPIClientHeader.h */,
 				FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */,
+				FA5B54711B684217003439AE /* CIOLiteClient.h */,
+				FA5B54721B684217003439AE /* CIOLiteClient.m */,
 				FABE9A4E1B68368600A4AE66 /* CIOV2Client.h */,
 				FABE9A4F1B68368600A4AE66 /* CIOV2Client.m */,
-				FAD8615A1B44C83C002A4407 /* CIOAPIClientHeader.h */,
 				FADC96711B55768700A2CC66 /* CIOAPISession.h */,
 				FADC96721B55768700A2CC66 /* CIOAPISession.m */,
 				FA624E661B62C91900EEA2B7 /* CIOContactsRequest.h */,
@@ -264,6 +275,7 @@
 			children = (
 				FA1A50F21B5468870061DFC3 /* AuthorizationRequestTests.m */,
 				FA624E631B62BBE700EEA2B7 /* CIOV2ClientTests.m */,
+				FA5B54771B68474A003439AE /* CIOLiteClientTests.m */,
 				FADC96741B55928400A2CC66 /* CIOAPISessionTests.m */,
 				FAD6720B1B62AB7F00809B84 /* CIOMessagesRequestTests.m */,
 				FA80B4501B5D7A8800101BC4 /* CIORequestTests.m */,
@@ -291,6 +303,7 @@
 				FA58A37E1B5ECBBB00A04A4A /* CIOAPIClientHeader.h in Headers */,
 				FAD9AF531B62F1B600F88660 /* CIOMessageFlags.h in Headers */,
 				FAD672041B61A9F200809B84 /* CIOMessageRequests.h in Headers */,
+				FA5B54731B684217003439AE /* CIOLiteClient.h in Headers */,
 				FA624E6E1B62D3C700EEA2B7 /* CIOSearchRequest.h in Headers */,
 				FA58A37F1B5ECBBE00A04A4A /* CIORequest.h in Headers */,
 			);
@@ -309,6 +322,7 @@
 				FA58A3821B5ECBCF00A04A4A /* CIORequest.h in Headers */,
 				FAD9AF541B62F1B600F88660 /* CIOMessageFlags.h in Headers */,
 				FAD672051B61A9F200809B84 /* CIOMessageRequests.h in Headers */,
+				FA5B54741B684217003439AE /* CIOLiteClient.h in Headers */,
 				FA624E6F1B62D3C700EEA2B7 /* CIOSearchRequest.h in Headers */,
 				FA58A3831B5ECBD100A04A4A /* CIOAPISession.h in Headers */,
 			);
@@ -536,6 +550,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FABE9A521B68368600A4AE66 /* CIOV2Client.m in Sources */,
+				FA5B54751B684217003439AE /* CIOLiteClient.m in Sources */,
 				FA58A34D1B5EBECB00A04A4A /* CIOAPISession.m in Sources */,
 				FA1067DF1B6317620004A2C8 /* CIOSourceRequests.m in Sources */,
 				FAD9AF551B62F1B600F88660 /* CIOMessageFlags.m in Sources */,
@@ -554,6 +569,7 @@
 			files = (
 				FA58A34F1B5EBED100A04A4A /* AuthorizationRequestTests.m in Sources */,
 				FA58A3521B5EBED100A04A4A /* CIORequestTests.m in Sources */,
+				FA5B54781B68474A003439AE /* CIOLiteClientTests.m in Sources */,
 				FA58A3511B5EBED100A04A4A /* CIOAPISessionTests.m in Sources */,
 				FA58A34E1B5EBED100A04A4A /* OAuthSigningTests.m in Sources */,
 				FA58A3501B5EBED100A04A4A /* TestUtil.m in Sources */,
@@ -567,6 +583,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FABE9A531B68368600A4AE66 /* CIOV2Client.m in Sources */,
+				FA5B54761B684217003439AE /* CIOLiteClient.m in Sources */,
 				FA58A3761B5EC0B300A04A4A /* CIOAPISession.m in Sources */,
 				FA1067E01B6317620004A2C8 /* CIOSourceRequests.m in Sources */,
 				FAD9AF561B62F1B600F88660 /* CIOMessageFlags.m in Sources */,
@@ -585,6 +602,7 @@
 			files = (
 				FA58A37B1B5EC0B900A04A4A /* CIORequestTests.m in Sources */,
 				FA58A3771B5EC0B900A04A4A /* OAuthSigningTests.m in Sources */,
+				FA5B54791B68474A003439AE /* CIOLiteClientTests.m in Sources */,
 				FA58A3791B5EC0B900A04A4A /* TestUtil.m in Sources */,
 				FA58A3781B5EC0B900A04A4A /* AuthorizationRequestTests.m in Sources */,
 				FA58A37A1B5EC0B900A04A4A /* CIOAPISessionTests.m in Sources */,

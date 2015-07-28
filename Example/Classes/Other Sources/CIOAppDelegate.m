@@ -10,9 +10,9 @@
 #import <CIOAPIClient/CIOAPIClient.h>
 #import "CIOContactsViewController.h"
 
-//#error Please enter your Context.IO API credentials below and comment out this line.
-static NSString * const kContextIOConsumerKey = @"kcjtxbdq";
-static NSString * const kContextIOConsumerSecret = @"WHkt47kB7KjP4hPG";
+#error Please enter your Context.IO API credentials below and comment out this line.
+static NSString * const kContextIOConsumerKey = @"";
+static NSString * const kContextIOConsumerSecret = @"";
 
 @implementation CIOAppDelegate
 

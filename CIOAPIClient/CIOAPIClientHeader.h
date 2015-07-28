@@ -55,6 +55,8 @@ extern NSString *const CIOAPISessionURLResponseErrorKey;
 
 @property (readonly, nonatomic) NSString *accountPath;
 
+- (NSString *)keychainPrefix;
+
 #pragma mark - Creating and Initializing API Clients
 
 
@@ -135,32 +137,6 @@ extern NSString *const CIOAPISessionURLResponseErrorKey;
  Clears the credentials stored in the keychain.
  */
 - (void)clearCredentials;
-
-#pragma mark - Working With Accounts
-
-/**
- *   Retrieves the current account's details.
- *
- */
-- (CIODictionaryRequest *)getAccount;
-
-/**
- *  Modify the current account's info.
- *
- *  @param firstName new first name, optional
- *  @param lastName  new last name, optional
- *
- *  @return request to modify the account
- */
-- (CIODictionaryRequest *)updateAccountWithFirstName:(nullable NSString *)firstName lastName:(nullable NSString *)lastName;
-
-
-/**
- *  Deletes the current account.
- *
- *
- */
-- (CIODictionaryRequest *)deleteAccount;
 
 #pragma mark - Executing Requests
 

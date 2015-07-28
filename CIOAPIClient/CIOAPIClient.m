@@ -82,6 +82,10 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return self;
 }
 
+- (NSString * __nonnull)keychainPrefix {
+    return kCIOKeyChainServicePrefix;
+}
+
 #pragma mark -
 
 - (CIODictionaryRequest *)beginAuthForProviderType:(CIOEmailProviderType)providerType
@@ -134,9 +138,13 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 }
 
 - (BOOL)completeLoginWithResponse:(NSDictionary *)responseObject saveCredentials:(BOOL)saveCredentials {
-    NSString *OAuthToken = [responseObject valueForKeyPath:@"account.access_token"];
-    NSString *OAuthTokenSecret = [responseObject valueForKeyPath:@"account.access_token_secret"];
-    NSString *accountID = [responseObject valueForKeyPath:@"account.id"];
+    NSDictionary *accountObject = responseObject[@"account"];
+    if (!accountObject) {
+        accountObject = responseObject[@"user"];
+    }
+    NSString *OAuthToken = accountObject[@"access_token"];
+    NSString *OAuthTokenSecret = accountObject[@"access_token_secret"];
+    NSString *accountID = accountObject[@"id"];
 
     if ((OAuthToken && ![OAuthToken isEqual:[NSNull null]]) &&
         (OAuthTokenSecret && ![OAuthTokenSecret isEqual:[NSNull null]]) &&
@@ -158,7 +166,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 - (void)loadCredentials {
 
-    NSString *serviceName = [NSString stringWithFormat:@"%@-%@", kCIOKeyChainServicePrefix, _OAuthConsumerKey];
+    NSString *serviceName = [NSString stringWithFormat:@"%@-%@", [self keychainPrefix], _OAuthConsumerKey];
 
     NSString *accountID = [SSKeychain passwordForService:serviceName account:kCIOAccountIDKeyChainKey];
     NSString *OAuthToken = [SSKeychain passwordForService:serviceName account:kCIOTokenKeyChainKey];
@@ -178,7 +186,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
     if (_accountID && _OAuthToken && _OAuthTokenSecret) {
 
-        NSString *serviceName = [NSString stringWithFormat:@"%@-%@", kCIOKeyChainServicePrefix, _OAuthConsumerKey];
+        NSString *serviceName = [NSString stringWithFormat:@"%@-%@", [self keychainPrefix], _OAuthConsumerKey];
         BOOL accountIDSaved =
             [SSKeychain setPassword:_accountID forService:serviceName account:kCIOAccountIDKeyChainKey];
         BOOL tokenSaved = [SSKeychain setPassword:_OAuthToken forService:serviceName account:kCIOTokenKeyChainKey];
@@ -196,7 +204,7 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     _isAuthorized = NO;
     _accountID = nil;
 
-    NSString *serviceName = [NSString stringWithFormat:@"%@-%@", kCIOKeyChainServicePrefix, _OAuthConsumerKey];
+    NSString *serviceName = [NSString stringWithFormat:@"%@-%@", [self keychainPrefix], _OAuthConsumerKey];
     [SSKeychain deletePasswordForService:serviceName account:kCIOAccountIDKeyChainKey];
     [SSKeychain deletePasswordForService:serviceName account:kCIOTokenKeyChainKey];
     [SSKeychain deletePasswordForService:serviceName account:kCIOTokenSecretKeyChainKey];
@@ -275,28 +283,6 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return [self arrayRequestForPath:[NSString pathWithComponents:finalPath]
                               method:@"GET"
                               params:nil];
-}
-
-
-#pragma mark - Account
-
-- (CIODictionaryRequest *)getAccount {
-    return [self dictionaryRequestForPath:self.accountPath method:@"GET" params:nil];
-}
-
-- (CIODictionaryRequest *)updateAccountWithFirstName:(NSString *)firstName lastName:(NSString *)lastName {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    if (firstName) {
-        params[@"first_name"] = firstName;
-    }
-    if (lastName ) {
-        params[@"last_name"] = lastName;
-    }
-    return [self dictionaryRequestForPath:self.accountPath method:@"PUT" params:params];
-}
-
-- (CIODictionaryRequest *)deleteAccount {
-    return [self dictionaryRequestForPath:self.accountPath method:@"DELETE" params:nil];
 }
 
 #pragma mark - Executing Requests

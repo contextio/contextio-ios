@@ -10,3 +10,4 @@
 #import "CIOAPISession.h"
 #import "CIOSourceRequests.h"
 #import "CIOV2Client.h"
+#import "CIOLiteClient.h"
