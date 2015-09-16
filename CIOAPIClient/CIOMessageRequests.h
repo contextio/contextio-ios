@@ -85,7 +85,6 @@
 
 @end
 
-
 /**
  File, contact and other information about a given email message
  @see https://context.io/docs/2.0/accounts/messages#id-get
@@ -101,6 +100,18 @@
  *  Set to `YES` to include thread size in the result.
  */
 @property (nonatomic) BOOL include_thread_size;
+
+@end
+
+/**
+ @see https://context.io/docs/lite/users/email_accounts/folders/messages
+ */
+@interface CIOLiteMessageRequest: CIOMessageRequestBase
+
+/**
+ If `/` isn't fancy enough as a hierarchy delimiter when specifying the folder you want to obtain, you're free to use what you want, just make sure you set this delimiter parameter to tell us what you're using.
+ */
+@property (nullable, strong, nonatomic) NSString *delimiter;
 
 @end
 
@@ -161,6 +172,36 @@
 @property (nonnull, nonatomic) CIOMessageFlags *flags;
 
 @end
+
+@interface CIOLiteFolderMessagesRequest : CIOArrayRequest
+
+/**
+ If `/` isn't fancy enough as a hierarchy delimiter when specifying the folder you want to obtain, you're free to use what you want, just make sure you set this delimiter parameter to tell us what you're using.
+ */
+@property (nullable, strong, nonatomic) NSString *delimiter;
+
+/**
+ *  Set to `YES` to include message bodies in the result.
+ */
+@property (nonatomic) BOOL include_body;
+
+/**
+ *  Used when `include_body` is set to get only body parts of a given MIME-type (for example `text/html`)
+ */
+@property (nullable, nonatomic) NSString *body_type;
+
+/**
+ *  Can be set to `0` (default), `1` or `raw`. If set to `1`, complete message headers, parsed into an array, are included in the results. If set to `raw`, the headers are also included but as a raw unparsed string.
+ */
+@property (nullable, nonatomic) NSString *include_headers;
+
+/**
+ *  Set to `YES` to include IMAP flags of messages in the result.
+ */
+@property (nonatomic) BOOL include_flags;
+
+@end
+
 
 @interface CIOFolderMessagesRequest : CIOArrayRequest
 

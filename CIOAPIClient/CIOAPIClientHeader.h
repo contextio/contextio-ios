@@ -102,6 +102,15 @@ extern NSString *const CIOAPISessionURLResponseErrorKey;
 
 - (CIOArrayRequest *)arrayGetRequestWithAccountComponents:(NSArray *)pathComponents;
 
+/**
+ Create a path from the current account ID an an array of path components.
+
+ @param components An array of components to be joined in to a path
+
+ @return A path string beginning with the current accountId
+ */
+- (NSString *)accountPath:(NSArray *)components;
+
 - (NSURLRequest *)requestForCIORequest:(CIORequest *)request;
 
 #pragma mark - Authenticating the API Client

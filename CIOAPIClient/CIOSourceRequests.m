@@ -26,7 +26,15 @@
 
 @end
 
+@implementation CIOAddMailboxRequest
+
+@end
+
 @implementation CIOSourceCreateRequest
+
+@end
+
+@implementation CIOMailboxModifyRequest
 
 @end
 

@@ -23,6 +23,12 @@
 @implementation CIOMessageRequest
 @end
 
+@implementation CIOLiteMessageRequest
+@end
+
+@implementation CIOLiteFolderMessagesRequest
+@end
+
 @implementation CIOMessageUpdateRequest
 
 - (instancetype)init {

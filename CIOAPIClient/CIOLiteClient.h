@@ -78,11 +78,106 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  List email accounts assigned to the current user
 
- @param status   Only return email accounts whose status is of a specific value. Use CIOAccountStatusNull for all accounts
- @param statusOK Set to @NO to get email accounts that are not working correctly. Set to @NO to get those that are, set to nil for all
+ @param status   Only return email accounts whose status is of a specific value. Use `CIOAccountStatusNull` for all accounts
+ @param statusOK Pass `@NO` to get email accounts that are not working correctly. Pass `@YES` to get those that are, and `nil` for all
  */
 - (CIOArrayRequest *)getEmailAccountsWithStatus:(CIOAccountStatus)status statusOK:(nullable NSNumber *)statusOK;
 
+/**
+ Add a new mailbox for the current user. Note: It is usually preferred to use
+ `-beginAuthForProviderType:callbackURLString:params:` to add a new mailbox to the account via connect tokens.
+
+ @see `CIOCreateSourceRequest` for futher optional parameters to this request.
+
+ @param email The primary email address used to receive emails in this account.
+ @param server Name or IP of the IMAP server, eg. `imap.gmail.com`
+ @param username The username used to authenticate an IMAP connection. On some servers, this is the same thing as the primary email address.
+ @param useSSL Set to `YES` if you want SSL encryption to be used when opening connections to the IMAP server. Any other value will be considered as "do not use SSL"
+ @param port Port number to connect to on the server. Keep in mind that most IMAP servers will have one port for standard connection and another one for encrypted connection (see `use-ssl` parameter)
+ @param type The email protocol to use for the account. Valid values are `IMAP` and `exchange`
+ */
+- (CIOAddMailboxRequest *)addMailboxWithEmail:(NSString *)email
+                                       server:(NSString *)server
+                                     username:(NSString *)username
+                                       useSSL:(BOOL)useSSL
+                                         port:(NSInteger)port
+                                         type:(NSString *)type;
+
+/**
+ Get parameters and status for an email account.
+ 
+ @param label   The label property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ */
+- (CIODictionaryRequest *)statusForEmailAccountWithLabel:(nullable NSString *)label;
+
+/**
+ Update settings for an email account.
+ 
+ @see `CIOMailboxModifyRequest` for optional parameters used to modify the account.
+
+ @param label   The label property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ */
+- (CIOMailboxModifyRequest *)modifyEmailAccountWithLabel:(nullable NSString *)label;
+
+/**
+ Delete an email email account with the given label.
+
+ @param label   The label property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ */
+- (CIODictionaryRequest *)deleteEmailAccountWithLabel:(nullable NSString *)label;
+
+#pragma mark - Email Account Folders
+
+/**
+ List folders in an email account
+
+ @param accountLabel     The label property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ @param includeNamesOnly Set to `YES` to return only folder names and no status information.
+ 
+ */
+- (CIOArrayRequest *)getFoldersForAccountWithLabel:(nullable NSString *)accountLabel includeNamesOnly:(BOOL)includeNamesOnly;
+
+/**
+ Returns information about a given folder
+
+ @param folderName   The full folder path using `/` as the path hierarchy delimiter.
+  @param accountLabel The label property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ @param delimiter If `/` isn't fancy enough as a hierarchy delimiter when specifying the folder you want to obtain, you're free to use what you want, just make sure you set this `delimiter` parameter to tell us what you're using. 
+ */
+- (CIODictionaryRequest *)getFolderNamed:(NSString *)folderName forAccountWithLabel:(nullable NSString *)accountLabel delimiter:(nullable NSString *)delimiter;
+
+/**
+Create a folder on an email account
+
+ @param folderName   The full folder path using `/` as the path hierarchy delimiter.
+ @param accountLabel The label property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ @param delimiter    If `/` isn't fancy enough as a hierarchy delimiter when specifying the folder you want to obtain, you're free to use what you want, just make sure you set this `delimiter` parameter to tell us what you're using.
+ */
+- (CIODictionaryRequest *)addFolderNamed:(NSString *)folderName forAccountWithLabel:(nullable NSString *)accountLabel delimiter:(nullable NSString *)delimiter;
+
+#pragma mark - Email Account Folder Messages
+
+/**
+ Listings of email messages for a user
+
+ @param folderPath   The full folder path using `/` as the path hierarchy delimiter.
+ @param accountLabel The `label` property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ */
+- (CIOLiteFolderMessagesRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
+                                                  accountLabel:(NSString *)accountLabel;
+
+/**
+ File, contact and other information about a given email message
+
+ @param messageID    Unique id of a message. This must be a email_message_id of an existing message in the thread. The < and > at the beginning and end of the Message-ID are part of the value and should be included if you're using an `email_message_id`.
+ @param folderPath   The full folder path using `/` as the path hierarchy delimiter.
+ @param accountLabel The `label` property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
+ */
+- (CIOLiteMessageRequest *)getMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(nullable NSString *)accountLabel;
+
+- (CIODictionaryRequest *)moveMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(nullable NSString *)accountLabel toFolder:(NSString *)newFolder delimiter:(nullable NSString *)delimiter;
+
+#pragma mark - Email Account Folder Message Attachments
 
 @end
 

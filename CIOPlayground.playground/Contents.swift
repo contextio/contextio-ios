@@ -62,6 +62,9 @@ let liteSession = CIOLiteClient(consumerKey: "", consumerSecret: "")
 if liteSession.valueForKey("OAuthConsumerKey") as? String == "" {
     assertionFailure("Please provide your consumer key and consumer secret.")
 }
+// Uncomment this line and let the playground execute to clear previous
+// credentials and authenticate with a new email account:
+//liteSession.clearCredentials()
 
 CIOAuthenticator(session: liteSession).withAuthentication{ session in
     session.getEmailAccounts().executeWithSuccess({ response in
@@ -86,14 +89,14 @@ CIOAuthenticator(session: liteSession).withAuthentication{ session in
 //
 //authenticator.withAuthentication() { session in
 //    session.getContacts().executeWithSuccess({ responseDict in
-//            println(responseDict)
+//            print(responseDict)
 //            let contactsArray = responseDict["matches"] as! [[NSObject: AnyObject]]
 //            let names = contactsArray.map { $0["name"] as! String }
-//            String(format: "Contacts: %@", ", ".join(names))
+////            String(format: "Contacts: %@", names.join)
 //        },
 //        failure: { error in
-//            println("\(error)")
+//            print("\(error)")
 //    })
 //}
-
+//
 

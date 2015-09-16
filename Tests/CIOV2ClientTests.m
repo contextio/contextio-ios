@@ -352,8 +352,8 @@
 
 - (void)testSourceFolders {
     CIOArrayRequest *req = [self.client getFoldersForSourceWithLabel:@"0"
-                                                      includeExtendedCounts:NO
-                                                                    noCache:NO];
+                                               includeExtendedCounts:NO
+                                                             noCache:NO];
     AssertRequestPathTypeMethod(req,
                                 @"accounts/anAccountId/sources/0/folders",
                                 CIOArrayRequest,
@@ -366,9 +366,9 @@
 
 - (void)testSourceFolderPath {
     CIODictionaryRequest *req = [self.client getFolderWithPath:@"Inbox/Stuff"
-                                              sourceLabel:@"0"
-                                    includeExtendedCounts:NO
-                                                    delim:nil];
+                                                   sourceLabel:@"0"
+                                         includeExtendedCounts:NO
+                                                         delim:nil];
     AssertRequestPathTypeMethod(req,
                                 @"accounts/anAccountId/sources/0/folders/Inbox/Stuff",
                                 CIODictionaryRequest,

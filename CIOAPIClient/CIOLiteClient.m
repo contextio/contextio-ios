@@ -81,4 +81,133 @@ NSString *const CIOLiteAPIBaseURLString = @"https://api.context.io/lite/";
                               params:params];
 }
 
+- (CIOAddMailboxRequest *)addMailboxWithEmail:(NSString *)email server:(NSString *)server username:(NSString *)username useSSL:(BOOL)useSSL port:(NSInteger)port type:(NSString *)type {
+    NSDictionary *params = @{
+                             @"email": email,
+                             @"server": server,
+                             @"username": username,
+                             @"use_ssl": @(useSSL),
+                             @"port": @(port),
+                             @"type": type};
+    return [CIOAddMailboxRequest requestWithPath:[self.accountPath stringByAppendingPathComponent:@"email_accounts"]
+
+                                            method:@"POST"
+                                        parameters:params
+                                            client:self];
+}
+
+- (CIODictionaryRequest *)statusForEmailAccountWithLabel:(NSString *)label {
+    if (label == nil) {
+        label = @"0";
+    }
+    NSString *path = [self accountPath:@[@"email_accounts", label]];
+    return [self dictionaryRequestForPath:path
+                                   method:@"GET"
+                                   params:nil];
+}
+
+- (CIOMailboxModifyRequest *)modifyEmailAccountWithLabel:(NSString *)label {
+    if (label == nil) {
+        label = @"0";
+    }
+    NSString *path = [self accountPath:@[@"email_accounts", label]];
+    return [CIOMailboxModifyRequest requestWithPath:path
+                                            method:@"POST"
+                                        parameters:nil
+                                            client:self];
+}
+
+- (CIODictionaryRequest *)deleteEmailAccountWithLabel:(NSString *)label {
+    NSString *path = [self accountPath:@[@"email_accounts", label ?: @"0"]];
+
+    return [self dictionaryRequestForPath:path
+                                   method:@"DELETE"
+                                   params:nil];
+}
+
+#pragma mark - Email Account Folders
+
+- (CIOArrayRequest *)getFoldersForAccountWithLabel:(NSString *)accountLabel includeNamesOnly:(BOOL)includeNamesOnly {
+    NSString *path = [self accountPath:@[@"email_accounts", accountLabel ?: @"0", @"folders"]];
+    NSDictionary *params = nil;
+    if (includeNamesOnly) {
+        params = @{@"include_names_only": @YES};
+    }
+    return [self arrayRequestForPath:path
+                              method:@"GET"
+                              params:params];
+}
+
+- (CIODictionaryRequest *)getFolderNamed:(NSString *)folderName forAccountWithLabel:(nullable NSString *)accountLabel delimiter:(nullable NSString *)delimiter {
+    NSString *path = [self accountPath:@[@"email_accounts",
+                                         accountLabel ?: @"0",
+                                         @"folders",
+                                         folderName]];
+    NSDictionary *params = nil;
+    if (delimiter) {
+        params = @{@"delimiter": delimiter};
+    }
+    return [self dictionaryRequestForPath:path method:@"GET" params:params];
+}
+
+- (CIODictionaryRequest *)addFolderNamed:(NSString *)folderName forAccountWithLabel:(NSString *)accountLabel delimiter:(NSString *)delimiter {
+    NSString *path = [self accountPath:@[@"email_accounts",
+                                         accountLabel ?: @"0",
+                                         @"folders",
+                                         folderName]];
+    NSDictionary *params = nil;
+    if (delimiter) {
+        params = @{@"delimiter": delimiter};
+    }
+    return [self dictionaryRequestForPath:path method:@"POST" params:params];
+}
+
+#pragma mark - Email Account Folder Messages
+
+- (CIOLiteFolderMessagesRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
+                                                  accountLabel:(NSString *)accountLabel {
+    NSString *path = [self accountPath:@[@"email_accounts",
+                                         accountLabel ?: @"0",
+                                         @"folders",
+                                         folderPath,
+                                         @"messages"
+                                         ]];
+    return [CIOLiteFolderMessagesRequest requestWithPath:path
+                                                  method:@"GET"
+                                              parameters:nil
+                                                  client:self];
+}
+
+- (CIOLiteMessageRequest *)getMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(NSString *)accountLabel {
+    NSString *path = [self accountPath:@[@"email_accounts",
+                                         accountLabel ?: @"0",
+                                         @"folders",
+                                         folderPath,
+                                         @"messages",
+                                         messageID
+                                         ]];
+    return [CIOLiteMessageRequest requestWithPath:path
+                                           method:@"GET"
+                                       parameters:nil
+                                           client:self];
+}
+
+- (CIODictionaryRequest *)moveMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(NSString *)accountLabel toFolder:(NSString *)newFolder delimiter:(NSString *)delimiter {
+    NSString *path = [self accountPath:@[@"email_accounts",
+                                         accountLabel ?: @"0",
+                                         @"folders",
+                                         folderPath,
+                                         @"messages",
+                                         messageID
+                                         ]];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:newFolder forKey:@"new_folder_id"];
+    if (delimiter) {
+        params[@"delimiter"] = delimiter;
+    }
+    return [CIODictionaryRequest requestWithPath:path
+                                          method:@"PUT"
+                                      parameters:params
+                                          client:self];
+}
+
 @end

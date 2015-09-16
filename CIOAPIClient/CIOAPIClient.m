@@ -278,9 +278,12 @@ static NSString *const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     return [CIOArrayRequest requestWithPath:path method:method parameters:params client:self];
 }
 
+- (NSString *)accountPath:(NSArray *)components {
+    return [NSString pathWithComponents:[@[self.accountPath] arrayByAddingObjectsFromArray:components]];
+}
+
 - (CIOArrayRequest *)arrayGetRequestWithAccountComponents:(NSArray *)pathComponents {
-    NSArray *finalPath = [@[self.accountPath] arrayByAddingObjectsFromArray:pathComponents];
-    return [self arrayRequestForPath:[NSString pathWithComponents:finalPath]
+    return [self arrayRequestForPath:[self accountPath:pathComponents]
                               method:@"GET"
                               params:nil];
 }

@@ -30,12 +30,39 @@
 @end
 
 
+@interface CIOAddMailboxRequest : CIODictionaryRequest
+
+/**
+ Password for authentication on the IMAP server. Ignored if any of the `provider_*` parameters are set.
+ */
+@property (nullable, nonatomic) NSString *password;
+
+/**
+ An OAuth2 refresh token obtained from the IMAP account provider to authenticate this email account.
+ */
+@property (nullable, nonatomic) NSString *provider_refresh_token;
+
+/**
+ The OAuth2 Client ID used to obtain the the refresh token for the above account. That consumer key and secret must be configured in your Context.IO account.
+
+ @see https://context.io/docs/lite/oauth_providers
+ */
+@property (nullable, nonatomic) NSString *provider_consumer_key;
+
+/**
+ If specified, we'll make a POST request to this URL if the connection status of the source changes.
+ */
+@property (nullable, nonatomic) NSString *status_callback_url;
+
+@end
+
+
 /**
  Request to create a new source in an existing Context.IO account.
  
  @see https://context.io/docs/2.0/accounts/sources
  */
-@interface CIOSourceCreateRequest : CIODictionaryRequest
+@interface CIOSourceCreateRequest : CIOAddMailboxRequest
 
 /**
  IP address of the end user requesting the account to be created
@@ -68,37 +95,14 @@
 @property (nonatomic) BOOL raw_file_list;
 
 /**
- Password for authentication on the IMAP server. Ignored if any of the `provider_*` parameters are set.
- */
-@property (nullable, nonatomic) NSString *password;
-
-/**
- An OAuth2 refresh token obtained from the IMAP account provider to authenticate this email account.
- */
-@property (nullable, nonatomic) NSString *provider_refresh_token;
-
-/**
- The OAuth2 Client ID used to obtain the the refresh token for the above account. That consumer key and secret must be configured in your Context.IO account.
- 
- @see https://context.io/docs/2.0/oauth_providers
- */
-@property (nullable, nonatomic) NSString *provider_consumer_key;
-
-/**
  If specified, we'll make a POST request to this URL when the initial sync is completed.
  */
 @property (nullable, nonatomic) NSString *callback_url;
 
-/**
- If specified, we'll make a POST request to this URL if the connection status of the source changes.
- */
-@property (nullable, nonatomic) NSString *status_callback_url;
-
 @end
 
 
-@interface CIOSourceModifyRequest: CIODictionaryRequest
-
+@interface CIOMailboxModifyRequest : CIODictionaryRequest
 
 /**
  If the status of the source is `TEMP_DISABLED` or `DISABLED`. You can do a POST/PUT with status set to `YES` to reset it.
@@ -109,15 +113,7 @@
  Set to `YES` to create an IMAP connection and reset the source status to to one reported by the IMAP backend. Don't combine this with other parameters.
  */
 @property (nonatomic) BOOL force_status_check;
-/**
- By default, we don't filter out messages flagged as deleted. Set this to `YES` to turn on this filtering.
- */
-@property (nonatomic) BOOL expunge_on_deleted_flag;
 
-/**
- By default, we filter out some folders like 'Deleted Items' and 'Drafts'. Set this parameter to `YES` to turn off this filtering and show every single folder.
- */
-@property (nonatomic) BOOL sync_all_folders;
 /**
  Password for authentication on the IMAP server. Ignored if any of the `provider_*` parameters are set.
  */
@@ -140,5 +136,19 @@
  */
 @property (nullable, nonatomic) NSString *status_callback_url;
 
+@end
+
+
+@interface CIOSourceModifyRequest: CIOMailboxModifyRequest
+
+/**
+ By default, we don't filter out messages flagged as deleted. Set this to `YES` to turn on this filtering.
+ */
+@property (nonatomic) BOOL expunge_on_deleted_flag;
+
+/**
+ By default, we filter out some folders like 'Deleted Items' and 'Drafts'. Set this parameter to `YES` to turn off this filtering and show every single folder.
+ */
+@property (nonatomic) BOOL sync_all_folders;
 
 @end
