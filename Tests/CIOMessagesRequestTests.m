@@ -20,7 +20,7 @@
     request.subject = @"puppies";
     XCTAssertEqualObjects(request.subject, @"puppies");
     request.file_size_min = @100;
-    XCTAssertEqual(request.file_size_min, @100);
+    XCTAssertEqualObjects(request.file_size_min, @100);
     XCTAssertEqualObjects(request.parameters[@"subject"], @"puppies");
     XCTAssertEqualObjects(request.parameters[@"file_size_min"], @100);
 }
