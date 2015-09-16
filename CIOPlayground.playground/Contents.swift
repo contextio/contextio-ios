@@ -26,7 +26,7 @@ final class CIOAuthenticator<Client: CIOAPIClient> {
                         s.completeLoginWithResponse(responseDict, saveCredentials: true)
                         block(s)
                     }, failure: { error in
-                        println("token fetch failure: \(error)")
+                        print("token fetch failure: \(error)")
                 })
             }
             s.beginAuthForProviderType(.Gmail, callbackURLString: "cio-api-auth://", params: nil)
@@ -34,18 +34,21 @@ final class CIOAuthenticator<Client: CIOAPIClient> {
                     let redirectURL = s.redirectURLFromResponse(responseDict)
 
                     let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 400, height: 600))
-                    let window = NSWindow(contentRect: webView.bounds, styleMask: NSTitledWindowMask | NSClosableWindowMask, backing: .Buffered, defer: false)
+                    let window = NSWindow(contentRect: webView.bounds,
+                        styleMask: NSTitledWindowMask | NSClosableWindowMask,
+                        backing: .Buffered,
+                        `defer`: false)
 
                     let request = NSURLRequest(URL: redirectURL)
                     webView.loadRequest(request)
                     webView.navigationDelegate = self.delegate
 
                     window.title = "Authenticate With Context.IO"
-                    window.contentView.addSubview(webView)
+                    window.contentView?.addSubview(webView)
                     window.makeKeyAndOrderFront(nil)
                     self.window = window
                     }, failure: { error in
-                        println(error)
+                        print(error)
                 })
         } else {
             block(session)
@@ -53,7 +56,23 @@ final class CIOAuthenticator<Client: CIOAPIClient> {
     }
 }
 
-XCPSetExecutionShouldContinueIndefinitely(continueIndefinitely: true)
+XCPSetExecutionShouldContinueIndefinitely(true)
+
+let liteSession = CIOLiteClient(consumerKey: "", consumerSecret: "")
+if liteSession.valueForKey("OAuthConsumerKey") as? String == "" {
+    assertionFailure("Please provide your consumer key and consumer secret.")
+}
+
+CIOAuthenticator(session: liteSession).withAuthentication{ session in
+    session.getEmailAccounts().executeWithSuccess({ response in
+        response
+        print(response)
+        }, failure: { (error) -> Void in
+            print(error)
+    })
+}
+
+// Uncomment the following to use Context.IO API V2 rather than lite:
 
 //let s = CIOV2Client(consumerKey: "", consumerSecret: "")
 //if s.valueForKey("OAuthConsumerKey") as? String == "" {
@@ -77,13 +96,4 @@ XCPSetExecutionShouldContinueIndefinitely(continueIndefinitely: true)
 //    })
 //}
 
-let liteSession = CIOLiteClient(consumerKey: "", consumerSecret: "")
 
-CIOAuthenticator(session: liteSession).withAuthentication() { session in
-    session.getEmailAccounts().executeWithSuccess({ (response) -> Void in
-        println(response)
-    }, failure: { (error) -> Void in
-        println(error)
-    })
-
-}

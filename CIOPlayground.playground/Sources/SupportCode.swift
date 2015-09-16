@@ -11,11 +11,10 @@ public final class WebViewDelegate: NSObject, WKNavigationDelegate {
     public func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
         let url = navigationAction.request.URL
         if url?.scheme == "cio-api-auth" {
-            if let components = NSURLComponents(URL: url!, resolvingAgainstBaseURL: false) {
-                for queryItem in components.queryItems as! [NSURLQueryItem] {
-                    if queryItem.name == "contextio_token" {
-                        println("token: \(queryItem.value())")
-                        tokenHandler?(queryItem.value()!)
+            if let queryItems = NSURLComponents(URL: url!, resolvingAgainstBaseURL: false)?.queryItems {
+                for queryItem in queryItems {
+                    if let value = queryItem.value where queryItem.name == "contextio_token" {
+                        tokenHandler?(value)
                         decisionHandler(.Cancel)
                         return
                     }
