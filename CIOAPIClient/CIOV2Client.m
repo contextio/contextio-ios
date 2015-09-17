@@ -487,7 +487,6 @@ NSString *const CIOV2APIBaseURLString = @"https://api.context.io/2.0/";
     return [self dictionaryRequestForPath:path
                                    method:@"POST"
                                    params:params];
-
 }
 
 - (CIODictionaryRequest *)setFoldersForThreadWithID:(NSString *)threadID folderNames:(NSArray *)folderNames symbolicFolderNames:(NSArray *)symbolicFolderNames {

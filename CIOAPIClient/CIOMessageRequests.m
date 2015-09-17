@@ -23,9 +23,6 @@
 @implementation CIOMessageRequest
 @end
 
-@implementation CIOLiteMessageRequest
-@end
-
 @implementation CIOLiteFolderMessagesRequest
 @end
 

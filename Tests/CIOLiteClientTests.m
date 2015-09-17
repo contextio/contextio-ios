@@ -29,6 +29,14 @@
     [self.client clearCredentials];
 }
 
+- (CIOLiteMessageRequest *)messageRequest {
+    return [self messageRequestForAccount:nil delimiter:nil];
+}
+
+- (CIOLiteMessageRequest *)messageRequestForAccount:(NSString *)account delimiter:(NSString *)delimiter {
+    return [self.client requestForMessageWithID:@"cilantro" inFolder:@"queso" accountLabel:account delimiter:delimiter];
+}
+
 #pragma mark User
 
 - (void)testGetUser {
@@ -138,7 +146,7 @@
 }
 
 - (void)testGetMessageWithID {
-    CIOLiteMessageRequest *request = [self.client getMessageWithID:@"cilantro" inFolder:@"queso" accountLabel:nil];
+    CIOLiteMessageRequest *request = [self.client requestForMessageWithID:@"cilantro" inFolder:@"queso" accountLabel:nil delimiter:nil];
     AssertRequestPathTypeMethod(request,
                                 @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro",
                                 CIOLiteMessageRequest,
@@ -146,12 +154,83 @@
 }
 
 - (void)testMoveMessage {
-    CIODictionaryRequest *request = [self.client moveMessageWithID:@"cilantro" inFolder:@"queso" accountLabel:nil toFolder:@"coriander" delimiter:nil];
+    CIODictionaryRequest *request = [[self messageRequest] moveToFolder:@"coriander"];
     AssertRequestPathTypeMethod(request,
                                 @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro",
                                 CIODictionaryRequest,
                                 @"PUT");
     XCTAssertEqualObjects(request.parameters[@"new_folder_id"], @"coriander");
+}
+
+#pragma mark - Email Account Folder Message Attachments
+
+- (void)testListAttachments {
+    CIOArrayRequest *request = [[self messageRequestForAccount:@"tacos" delimiter:@"+"] listAttachments];
+    AssertRequestPathTypeMethod(request,
+                                @"users/anAccountId/email_accounts/tacos/folders/queso/messages/cilantro/attachments",
+                                CIOArrayRequest,
+                                @"GET");
+    XCTAssertEqualObjects(request.parameters[@"delimiter"], @"+");
+}
+
+- (void)testDownloadAttachments {
+    CIORequest *request = [[self messageRequestForAccount:nil delimiter:@"\\"] downloadAttachmentWithID:@"1"];
+    AssertRequestPathTypeMethod(request,
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/attachments/1",
+                                CIORequest,
+                                @"GET");
+    XCTAssertEqualObjects(request.parameters[@"delimiter"], @"\\");
+}
+
+- (void)testMessageBody {
+    AssertRequestPathTypeMethod([[self messageRequest] getBodyOfType:nil],
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/body",
+                                CIOArrayRequest,
+                                @"GET");
+}
+
+- (void)testMessageFlags {
+    AssertRequestPathTypeMethod([[self messageRequest] getFlags],
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/flags",
+                                CIODictionaryRequest,
+                                @"GET");
+}
+
+- (void)testMessageHeaders {
+    AssertRequestPathTypeMethod([[self messageRequest] getHeaders],
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/headers",
+                                CIODictionaryRequest,
+                                @"GET");
+}
+
+- (void)testRawMessageHeaders {
+    CIORequest *request = [[self messageRequest] getRawHeaders];
+    AssertRequestPathTypeMethod(request,
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/headers",
+                                CIORequest,
+                                @"GET");
+    XCTAssertEqualObjects(request.parameters[@"raw"], @YES);
+}
+
+- (void)testRawMessage {
+    AssertRequestPathTypeMethod([[self messageRequest] getRawMessage],
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/raw",
+                                CIORequest,
+                                @"GET");
+}
+
+- (void)testMarkRead {
+    AssertRequestPathTypeMethod([[self messageRequest] markRead],
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/read",
+                                CIODictionaryRequest,
+                                @"POST");
+}
+
+- (void)testMarkUnread {
+    AssertRequestPathTypeMethod([[self messageRequest] markUnread],
+                                @"users/anAccountId/email_accounts/0/folders/queso/messages/cilantro/read",
+                                CIODictionaryRequest,
+                                @"DELETE");
 }
 
 

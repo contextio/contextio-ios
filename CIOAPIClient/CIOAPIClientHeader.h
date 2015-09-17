@@ -187,8 +187,7 @@ extern NSString *const CIOAPISessionURLResponseErrorKey;
  * saving attachments or raw message content.
  *
  *  @param request       request to execute
- *  @param fileURL       `URL` on disk to save the destination file to. An error will be returned if a file already
- * exists at this path.
+ *  @param fileURL       `URL` on disk to save the destination file to. An error will be returned if a file already exists at this path.
  *  @param successBlock  block to be called when the file download completes
  *  @param failureBlock  block to be called in the event of an error. No file will be written.
  *  @param progressBlock block to receive periodic progress updates during the file download

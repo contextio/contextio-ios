@@ -101,9 +101,7 @@ NSString *const CIOLiteAPIBaseURLString = @"https://api.context.io/lite/";
         label = @"0";
     }
     NSString *path = [self accountPath:@[@"email_accounts", label]];
-    return [self dictionaryRequestForPath:path
-                                   method:@"GET"
-                                   params:nil];
+    return [self dictionaryRequestForPath:path  method:@"GET" params:nil];
 }
 
 - (CIOMailboxModifyRequest *)modifyEmailAccountWithLabel:(NSString *)label {
@@ -120,9 +118,7 @@ NSString *const CIOLiteAPIBaseURLString = @"https://api.context.io/lite/";
 - (CIODictionaryRequest *)deleteEmailAccountWithLabel:(NSString *)label {
     NSString *path = [self accountPath:@[@"email_accounts", label ?: @"0"]];
 
-    return [self dictionaryRequestForPath:path
-                                   method:@"DELETE"
-                                   params:nil];
+    return [self dictionaryRequestForPath:path method:@"DELETE" params:nil];
 }
 
 #pragma mark - Email Account Folders
@@ -133,9 +129,7 @@ NSString *const CIOLiteAPIBaseURLString = @"https://api.context.io/lite/";
     if (includeNamesOnly) {
         params = @{@"include_names_only": @YES};
     }
-    return [self arrayRequestForPath:path
-                              method:@"GET"
-                              params:params];
+    return [self arrayRequestForPath:path method:@"GET" params:params];
 }
 
 - (CIODictionaryRequest *)getFolderNamed:(NSString *)folderName forAccountWithLabel:(nullable NSString *)accountLabel delimiter:(nullable NSString *)delimiter {
@@ -178,7 +172,7 @@ NSString *const CIOLiteAPIBaseURLString = @"https://api.context.io/lite/";
                                                   client:self];
 }
 
-- (CIOLiteMessageRequest *)getMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(NSString *)accountLabel {
+- (CIOLiteMessageRequest *)requestForMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(NSString *)accountLabel delimiter:(nullable NSString *)delimiter {
     NSString *path = [self accountPath:@[@"email_accounts",
                                          accountLabel ?: @"0",
                                          @"folders",
@@ -186,28 +180,12 @@ NSString *const CIOLiteAPIBaseURLString = @"https://api.context.io/lite/";
                                          @"messages",
                                          messageID
                                          ]];
-    return [CIOLiteMessageRequest requestWithPath:path
+    CIOLiteMessageRequest *request = [CIOLiteMessageRequest requestWithPath:path
                                            method:@"GET"
                                        parameters:nil
                                            client:self];
-}
-
-- (CIODictionaryRequest *)moveMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(NSString *)accountLabel toFolder:(NSString *)newFolder delimiter:(NSString *)delimiter {
-    NSString *path = [self accountPath:@[@"email_accounts",
-                                         accountLabel ?: @"0",
-                                         @"folders",
-                                         folderPath,
-                                         @"messages",
-                                         messageID
-                                         ]];
-    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:newFolder forKey:@"new_folder_id"];
-    if (delimiter) {
-        params[@"delimiter"] = delimiter;
-    }
-    return [CIODictionaryRequest requestWithPath:path
-                                          method:@"PUT"
-                                      parameters:params
-                                          client:self];
+    request.delimiter = delimiter;
+    return request;
 }
 
 @end

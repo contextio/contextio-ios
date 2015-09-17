@@ -7,6 +7,7 @@
 //
 
 #import "CIOAPIClient.h"
+#import "CIOLiteMessageRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -130,6 +131,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  List folders in an email account
+ 
+ @see https://context.io/docs/lite/users/email_accounts/folders
 
  @param accountLabel     The label property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
  @param includeNamesOnly Set to `YES` to return only folder names and no status information.
@@ -159,6 +162,8 @@ Create a folder on an email account
 
 /**
  Listings of email messages for a user
+ 
+ @see https://context.io/docs/lite/users/email_accounts/folders/messages
 
  @param folderPath   The full folder path using `/` as the path hierarchy delimiter.
  @param accountLabel The `label` property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
@@ -173,11 +178,7 @@ Create a folder on an email account
  @param folderPath   The full folder path using `/` as the path hierarchy delimiter.
  @param accountLabel The `label` property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
  */
-- (CIOLiteMessageRequest *)getMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(nullable NSString *)accountLabel;
-
-- (CIODictionaryRequest *)moveMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(nullable NSString *)accountLabel toFolder:(NSString *)newFolder delimiter:(nullable NSString *)delimiter;
-
-#pragma mark - Email Account Folder Message Attachments
+- (CIOLiteMessageRequest *)requestForMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(nullable NSString *)accountLabel delimiter:(nullable NSString *)delimiter;
 
 @end
 

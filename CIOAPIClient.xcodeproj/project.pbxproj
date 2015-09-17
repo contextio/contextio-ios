@@ -12,6 +12,10 @@
 		FA1067DE1B6317620004A2C8 /* CIOSourceRequests.h in Headers */ = {isa = PBXBuildFile; fileRef = FA1067DB1B6317620004A2C8 /* CIOSourceRequests.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA1067DF1B6317620004A2C8 /* CIOSourceRequests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1067DC1B6317620004A2C8 /* CIOSourceRequests.m */; };
 		FA1067E01B6317620004A2C8 /* CIOSourceRequests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1067DC1B6317620004A2C8 /* CIOSourceRequests.m */; };
+		FA51616E1BAB51D1003957D8 /* CIOLiteMessageRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA51616D1BAB51D1003957D8 /* CIOLiteMessageRequest.m */; settings = {ASSET_TAGS = (); }; };
+		FA51616F1BAB51D1003957D8 /* CIOLiteMessageRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA51616D1BAB51D1003957D8 /* CIOLiteMessageRequest.m */; settings = {ASSET_TAGS = (); }; };
+		FA5161711BAB55C0003957D8 /* CIOLiteMessageRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = FA5161701BAB51FA003957D8 /* CIOLiteMessageRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FA5161721BAB55C0003957D8 /* CIOLiteMessageRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = FA5161701BAB51FA003957D8 /* CIOLiteMessageRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA58A33B1B5EBEAD00A04A4A /* CIOAPIClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA58A3301B5EBEAD00A04A4A /* CIOAPIClient.framework */; };
 		FA58A34B1B5EBECB00A04A4A /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */; };
 		FA58A34C1B5EBECB00A04A4A /* CIORequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9FD7EB1B5052F500143F09 /* CIORequest.m */; };
@@ -112,6 +116,8 @@
 		FA269E1D1B548F3400CB7DB1 /* CIOAPIClient.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = CIOAPIClient.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FA2E564C1B4B004200AEF151 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Tests/Info.plist; sourceTree = SOURCE_ROOT; };
 		FA2E564E1B4B039000AEF151 /* OAuthSigningTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OAuthSigningTests.m; path = Tests/OAuthSigningTests.m; sourceTree = SOURCE_ROOT; };
+		FA51616D1BAB51D1003957D8 /* CIOLiteMessageRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOLiteMessageRequest.m; sourceTree = "<group>"; };
+		FA5161701BAB51FA003957D8 /* CIOLiteMessageRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CIOLiteMessageRequest.h; sourceTree = "<group>"; };
 		FA58A3301B5EBEAD00A04A4A /* CIOAPIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CIOAPIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA58A33A1B5EBEAD00A04A4A /* CIOAPIClient iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CIOAPIClient iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA58A3581B5EBFE100A04A4A /* CIOAPIClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CIOAPIClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -266,6 +272,8 @@
 				FA1067DB1B6317620004A2C8 /* CIOSourceRequests.h */,
 				FA1067DC1B6317620004A2C8 /* CIOSourceRequests.m */,
 				FA58A3731B5EC04D00A04A4A /* Info.plist */,
+				FA5161701BAB51FA003957D8 /* CIOLiteMessageRequest.h */,
+				FA51616D1BAB51D1003957D8 /* CIOLiteMessageRequest.m */,
 			);
 			path = CIOAPIClient;
 			sourceTree = "<group>";
@@ -303,6 +311,7 @@
 				FA58A37E1B5ECBBB00A04A4A /* CIOAPIClientHeader.h in Headers */,
 				FAD9AF531B62F1B600F88660 /* CIOMessageFlags.h in Headers */,
 				FAD672041B61A9F200809B84 /* CIOMessageRequests.h in Headers */,
+				FA5161711BAB55C0003957D8 /* CIOLiteMessageRequest.h in Headers */,
 				FA5B54731B684217003439AE /* CIOLiteClient.h in Headers */,
 				FA624E6E1B62D3C700EEA2B7 /* CIOSearchRequest.h in Headers */,
 				FA58A37F1B5ECBBE00A04A4A /* CIORequest.h in Headers */,
@@ -322,6 +331,7 @@
 				FA58A3821B5ECBCF00A04A4A /* CIORequest.h in Headers */,
 				FAD9AF541B62F1B600F88660 /* CIOMessageFlags.h in Headers */,
 				FAD672051B61A9F200809B84 /* CIOMessageRequests.h in Headers */,
+				FA5161721BAB55C0003957D8 /* CIOLiteMessageRequest.h in Headers */,
 				FA5B54741B684217003439AE /* CIOLiteClient.h in Headers */,
 				FA624E6F1B62D3C700EEA2B7 /* CIOSearchRequest.h in Headers */,
 				FA58A3831B5ECBD100A04A4A /* CIOAPISession.h in Headers */,
@@ -558,6 +568,7 @@
 				FA624E6A1B62C91900EEA2B7 /* CIOContactsRequest.m in Sources */,
 				FA58A34C1B5EBECB00A04A4A /* CIORequest.m in Sources */,
 				FAD672061B61A9F200809B84 /* CIOMessageRequests.m in Sources */,
+				FA51616E1BAB51D1003957D8 /* CIOLiteMessageRequest.m in Sources */,
 				FA624E701B62D3C700EEA2B7 /* CIOSearchRequest.m in Sources */,
 				FA624E761B62D50D00EEA2B7 /* CIOFilesRequest.m in Sources */,
 			);
@@ -591,6 +602,7 @@
 				FA624E6B1B62C91900EEA2B7 /* CIOContactsRequest.m in Sources */,
 				FA58A3751B5EC0B300A04A4A /* CIORequest.m in Sources */,
 				FAD672071B61A9F200809B84 /* CIOMessageRequests.m in Sources */,
+				FA51616F1BAB51D1003957D8 /* CIOLiteMessageRequest.m in Sources */,
 				FA624E711B62D3C700EEA2B7 /* CIOSearchRequest.m in Sources */,
 				FA624E771B62D50D00EEA2B7 /* CIOFilesRequest.m in Sources */,
 			);
