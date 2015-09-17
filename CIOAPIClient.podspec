@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CIOAPIClient"
-  s.version      = "0.9.1"
+  s.version      = "1.0"
   s.summary      = "API Client for Context.IO Email API"
   s.description  = "Build awesome things with email! We take the pain out of syncing email data with your app so you can focus on what makes your product great."
   s.homepage     = "https://github.com/contextio/contextio-ios"

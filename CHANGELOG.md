@@ -10,6 +10,7 @@
 * Massive increase in documentation
 * Playground is now part of the main `CIOAPIClient.xcworkspace`
 * Extensive test coverage
+* Support for Xcode 7, updated playground to Swift 2
 
 ## 0.9.1
 
