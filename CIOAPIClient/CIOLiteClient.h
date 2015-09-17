@@ -8,6 +8,7 @@
 
 #import "CIOAPIClient.h"
 #import "CIOLiteMessageRequest.h"
+#import "CIOLiteWebhookRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -179,6 +180,83 @@ Create a folder on an email account
  @param accountLabel The `label` property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
  */
 - (CIOLiteMessageRequest *)requestForMessageWithID:(NSString *)messageID inFolder:(NSString *)folderPath accountLabel:(nullable NSString *)accountLabel delimiter:(nullable NSString *)delimiter;
+
+#pragma mark - Webhooks
+
+/**
+ Listing of WebHook configured for the current user
+ 
+ @see https://context.io/docs/lite/users/webhooks
+ */
+- (CIOArrayRequest *)listWebhooks;
+
+/**
+ Create a new WebHook on the current user
+ 
+ See `CIOLiteWebhookRequest` for additional optional parameters that can be provided when creating a new WebHook.
+ 
+ @see https://context.io/docs/lite/users/webhooks#callbacks
+
+ @param callbackURL A valid URL Context.IO calls when a matching message is found.
+
+ The callback URL is called with an HTTP POST with message information in request body
+ @param failureURL  A valid URL Context.IO calls if the WebHooks fails and will no longer be active. That may happen if, for example, the server becomes unreachable or if it closes an IDLE connection and we can't re-establish it.
+
+ The callback URL is called with an HTTP POST with more information in request body
+ */
+- (CIOLiteWebhookRequest *)createWebhookWithCallbackURL:(NSString *)callbackURL failureURL:(NSString *)failureURL;
+
+/**
+ Get properties of a given WebHook
+
+ @param webhookID Unique id of the webhook instance.
+ */
+- (CIODictionaryRequest *)getWebhookInfoForID:(NSString *)webhookID;
+
+/**
+ Change properties of a given WebHook
+ 
+ The only property of a WebHook that can be changed is it's active property. If you want to change the filters or callback urls, delete it and create a new one.
+
+ Changing the `active` property can be useful in two cases:
+
+ <h3>Pause/resume WebHooks</h3>
+
+ If your application needs up-to-date information when users are logged in the best option is to keep a WebHook with no filters that can be activated (setting active to `YES`) when the user logs in and paused (setting active to `NO`) when the user logs out of your app.
+
+ <h3>Acting upon a failure notification</h3>
+
+ If a WebHook fails, your `failureURL` is called (see `createWebhookWithCallbackURL:failureURL`) and its failure property becomes true. Set the WebHook active parameter to `YES` to reset it.
+
+ @param webhookID Unique id of the webhook instance.
+ @param active    The `active` property of a WebHook allows you to pause (set to `NO`) or resume (set to `YES`) it
+ */
+- (CIODictionaryRequest *)setWebhookID:(NSString *)webhookID toActive:(BOOL)active;
+
+/**
+ Cancel a WebHook
+
+ @param webhookID Unique id of the webhook instance.
+ */
+- (CIODictionaryRequest *)cancelWebhookWithID:(NSString *)webhookID;
+
+#pragma mark - Discovery
+
+/**
+ Attempt to discover connection settings for a given email address
+
+ https://context.io/docs/lite/discovery
+
+ This is useful when you want to add an email account under your API key and you'd like to make the settings easier to fill by the user with pre-populated data.
+
+ This will also figure out if OAuth2 over IMAP is available.
+
+ @see https://developers.google.com/gmail/oauth_overview?csw=1
+
+ @param sourceType The type of source you want to discover settings for. Right now, the only supported source type is `IMAP`.
+ @param email      An email address you want to discover IMAP settings for. Make sure `source_type` is set to `IMAP`.
+ */
+- (CIODictionaryRequest *)getSettingsForSourceType:(NSString *)sourceType email:(NSString *)email;
 
 @end
 

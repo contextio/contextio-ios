@@ -188,4 +188,44 @@ NSString *const CIOLiteAPIBaseURLString = @"https://api.context.io/lite/";
     return request;
 }
 
+#pragma mark - Webhooks
+
+- (CIOArrayRequest *)listWebhooks {
+    return [self arrayGetRequestWithAccountComponents:@[@"webhooks"]];
+}
+
+- (CIOLiteWebhookRequest *)createWebhookWithCallbackURL:(NSString *)callbackURL failureURL:(NSString *)failureURL {
+    NSDictionary *params = @{@"callback_url": callbackURL,
+                             @"failure_notif_url": failureURL};
+    return [CIOLiteWebhookRequest requestWithPath:[self accountPath:@[@"webhooks"]]
+                                           method:@"POST"
+                                       parameters:params
+                                           client:self];
+}
+
+- (CIODictionaryRequest *)getWebhookInfoForID:(NSString *)webhookID {
+    NSString *path = [self accountPath:@[@"webhooks", webhookID]];
+    return [self dictionaryRequestForPath:path method:@"GET" params:nil];
+}
+
+- (CIODictionaryRequest *)setWebhookID:(NSString *)webhookID toActive:(BOOL)active {
+    NSString *path = [self accountPath:@[@"webhooks", webhookID]];
+    return [self dictionaryRequestForPath:path
+                                   method:@"POST"
+                                   params:@{@"active": @(active)}];
+}
+
+- (CIODictionaryRequest *)cancelWebhookWithID:(NSString *)webhookID {
+    NSString *path = [self accountPath:@[@"webhooks", webhookID]];
+    return [self dictionaryRequestForPath:path method:@"DELETE" params:nil];
+}
+
+#pragma mark - Discovery
+
+- (CIODictionaryRequest *)getSettingsForSourceType:(NSString *)sourceType email:(NSString *)email {
+    NSDictionary *params = @{@"source_type": sourceType,
+                             @"email": email};
+    return [self dictionaryRequestForPath:@"discovery" method:@"GET" params:params];
+}
+
 @end

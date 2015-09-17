@@ -162,7 +162,7 @@
     XCTAssertEqualObjects(request.parameters[@"new_folder_id"], @"coriander");
 }
 
-#pragma mark - Email Account Folder Message Attachments
+#pragma mark - Email Account Folder Message
 
 - (void)testListAttachments {
     CIOArrayRequest *request = [[self messageRequestForAccount:@"tacos" delimiter:@"+"] listAttachments];
@@ -233,5 +233,67 @@
                                 @"DELETE");
 }
 
+#pragma mark WebHooks
+
+- (void)testListWebhooks {
+    AssertRequestPathTypeMethod([self.client listWebhooks],
+                                @"users/anAccountId/webhooks",
+                                CIOArrayRequest,
+                                @"GET");
+}
+
+- (void)testCreateWebhook {
+    CIOLiteWebhookRequest *request = [self.client createWebhookWithCallbackURL:@"callback-url" failureURL:@"failure-url"];
+    AssertRequestPathTypeMethod(request,
+                                @"users/anAccountId/webhooks",
+                                CIOLiteWebhookRequest,
+                                @"POST");
+    request.filter_cc = @"joe@fake.com";
+    request.include_body = YES;
+    NSDictionary *params = @{@"callback_url": @"callback-url",
+                             @"failure_notif_url": @"failure-url",
+                             @"filter_cc": @"joe@fake.com",
+                             @"include_body": @YES};
+    for (NSString *key in params) {
+        XCTAssertEqualObjects(request.parameters[key], params[key]);
+    }
+}
+
+- (void)testWebHookInfo {
+    AssertRequestPathTypeMethod([self.client getWebhookInfoForID:@"webhook-id"],
+                                @"users/anAccountId/webhooks/webhook-id",
+                                CIODictionaryRequest,
+                                @"GET");
+}
+
+- (void)testActivateWebhook {
+    CIODictionaryRequest *request = [self.client setWebhookID:@"webhook-id" toActive:NO];
+    AssertRequestPathTypeMethod(request,
+                                @"users/anAccountId/webhooks/webhook-id",
+                                CIODictionaryRequest,
+                                @"POST");
+    XCTAssertEqualObjects(request.parameters[@"active"], @NO);
+}
+
+- (void)testCancelWebhook {
+    AssertRequestPathTypeMethod([self.client cancelWebhookWithID:@"webhook-id"],
+                                @"users/anAccountId/webhooks/webhook-id",
+                                CIODictionaryRequest,
+                                @"DELETE");
+
+}
+
+#pragma mark - Discovery
+
+- (void)testDiscovery {
+    CIODictionaryRequest *request = [self.client getSettingsForSourceType:@"IMAP"
+                                                                             email:@"test@gmail.com"];
+    AssertRequestPathTypeMethod(request,
+                                @"discovery",
+                                CIODictionaryRequest,
+                                @"GET");
+    XCTAssertEqualObjects(request.parameters[@"source_type"], @"IMAP");
+    XCTAssertEqualObjects(request.parameters[@"email"], @"test@gmail.com");
+}
 
 @end
