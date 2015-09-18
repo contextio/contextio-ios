@@ -170,7 +170,7 @@ Create a folder on an email account
  @param accountLabel The `label` property of the email account instance. You can use `"0"` or `nil` as an alias for the first email account of a user.
  */
 - (CIOLiteFolderMessagesRequest *)getMessagesForFolderWithPath:(NSString *)folderPath
-                                                  accountLabel:(NSString *)accountLabel;
+                                                  accountLabel:(nullable NSString *)accountLabel;
 
 /**
  File, contact and other information about a given email message

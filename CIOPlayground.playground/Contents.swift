@@ -47,7 +47,8 @@ final class CIOAuthenticator<Client: CIOAPIClient> {
                     window.contentView?.addSubview(webView)
                     window.makeKeyAndOrderFront(nil)
                     self.window = window
-                    }, failure: { error in
+                    },
+                    failure: { error in
                         print(error)
                 })
         } else {
@@ -67,11 +68,18 @@ if liteSession.valueForKey("OAuthConsumerKey") as? String == "" {
 //liteSession.clearCredentials()
 
 CIOAuthenticator(session: liteSession).withAuthentication{ session in
-    session.getEmailAccounts().executeWithSuccess({ response in
-        response
+//    session.getFoldersForAccountWithLabel(nil, includeNamesOnly: false).executeWithSuccess({ response in
+//        response
+//        print(response)
+//        }, failure: { error in
+//            print(error)
+//        }
+//        )
+    session.getMessagesForFolderWithPath("\\All", accountLabel: nil).executeWithSuccess({ response in
         print(response)
-        }, failure: { (error) -> Void in
-            print(error)
+        },
+        failure: { error in
+            print("Error: \(error)")
     })
 }
 

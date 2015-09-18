@@ -17,7 +17,7 @@ To use `CIOAPIClient` in your project:
 * Add the following to your `Podfile`:<br>
 
 ```ruby
-pod 'CIOAPIClient', '~> 0.9'
+pod 'CIOAPIClient', '~> 1.0'
 ```
 
 * Run `pod install` to install `CIOAPIClient` and its dependencies, then make sure to open the `.xcworkspace` file instead of `.xcodeproj` if you weren't using it already
@@ -36,7 +36,7 @@ To run the example application, you will need to insert your Context.IO consumer
 
 ## Exploring the API in a Playground
 
-There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swift 1.2) included in the main library `xcworkspace`. Playgrounds with library dependencies are slightly finicky with Xcode 6.4, follow these steps to get it working:
+There is an Xcode Playground (requires Xcode 7) included in the main library `xcworkspace`. Playgrounds with library dependencies are slightly finicky, follow these steps to get it working:
 
 * `git clone https://github.com/contextio/contextio-ios.git`
 * `cd contextio-ios`
@@ -47,20 +47,18 @@ There is a pre-configured Xcode Playground (currently targeting Xcode 6.4 + Swif
 * Select `CIOPlayground.playground` from the `CIOAPIClient` project in the Project navigator left sidebar
 * Add your consumer key and consumer secret to the line
 ```swift
-let s = CIOV2Client(consumerKey: "", consumerSecret: "")
+let let liteSession = CIOLiteClient(consumerKey: "", consumerSecret: "")
 ```
-* You may need to increase the Playground execution time from the default of 30 seconds by adjusting the value in the bottom right corner of the window
 * At this point the playground will execute and an authentication WebView will appear in the bottom left corner of your screen
 * Authorize an email account using the Context.IO auth flow in the WebView
-    - The first time the code executes after authentication it may fail. Edit the playground to try again.
-* Add any code you wish to try to the `authenticator.withAuthentication() { session in` block in the playground
+    - The first time the code executes after authentication it may fail. Choose `Execute Playground` from the `Editor` menu to run it again.
+* Add any code you wish to try to the `authenticator.withAuthentication{ session in` block in the playground
 * Subsequent launches may ask your permission to access Keychain, this is because the library saves your Context.IO authorization credentials to the local mac keychain.
 
 ## Example Usage
 
 Use `CIOV2Client` to construct and execute signed [`NSURLRequests`][nsurl] against the [Context.IO 2.0 API](https://context.io/docs/2.0).
 Use `CIOLiteClient` for the [Context.IO Lite API](https://context.io/docs/lite).
-
 
 [nsurl]: https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSURLRequest_Class/index.html
 
@@ -73,12 +71,21 @@ CIOV2Client *session = [[CIOV2Client alloc] initWithConsumerKey:@"your-consumer-
                                                  consumerSecret:@"your-consumer-secret"];
 ```
 
+Or use `CIOLiteClient` in the same way for the Lite API:
+
+```swift
+let liteSession = CIOLiteClient(consumerKey: "your-consumer-key",
+                                consumerSecret: "your-consumer-secret")
+```
+
 ### Authentication
 
 `CIO*Client` uses [Connect Tokens][ct] to authorize individual user's email accounts. Please see the example application for an overview of the authentication process. Feel free to re-use or subclass [`CIOAuthViewController`][cioauth] in your own project - it takes care of the details of authentication and should work out of the box for most purposes.
 
 [cioauth]: https://github.com/contextio/contextio-ios/blob/master/Example/Classes/Controllers/CIOAuthViewController.m
 [ct]: https://context.io/docs/2.0/connect_tokens
+
+## Context.IO 2.0 API Examples
 
 ### [Retrieve Messages](https://context.io/docs/2.0/accounts/messages)
 
