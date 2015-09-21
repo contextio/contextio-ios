@@ -1,11 +1,14 @@
+
 target 'CIOAPIClient iOS' do
     platform :ios, '7.0'
-    podspec
+    pod 'TDOAuth', git: "git@github.com:Pretz/TDOAuth.git"
+    pod 'SSKeychain', '~> 1'
 end
 
 target 'CIOAPIClient Mac' do
     platform :osx, '10.9'
-    podspec
+    pod 'TDOAuth', git: "git@github.com:Pretz/TDOAuth.git"
+    pod 'SSKeychain', '~> 1'
 end
 
 xcodeproj 'CIOAPIClient', 'Test' => :debug

@@ -58,7 +58,7 @@ let let liteSession = CIOLiteClient(consumerKey: "", consumerSecret: "")
 ## Example Usage
 
 Use `CIOV2Client` to construct and execute signed [`NSURLRequests`][nsurl] against the [Context.IO 2.0 API](https://context.io/docs/2.0).
-Use `CIOLiteClient` for the [Context.IO Lite API](https://context.io/docs/lite).
+Use `CIOLiteClient` for the [Context.IO Lite API](https://context.io/docs/lite). The following examples use Swift for the Lite API and Objective-C for the 2.0 API for illustration, both languages work fine for both APIs.
 
 [nsurl]: https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSURLRequest_Class/index.html
 
@@ -84,6 +84,63 @@ let liteSession = CIOLiteClient(consumerKey: "your-consumer-key",
 
 [cioauth]: https://github.com/contextio/contextio-ios/blob/master/Example/Classes/Controllers/CIOAuthViewController.m
 [ct]: https://context.io/docs/2.0/connect_tokens
+
+## Context.IO Lite API Examples
+
+### [List Folders For an Account](https://context.io/docs/lite/users/email_accounts/folders)
+
+```swift
+session.getFoldersForAccountWithLabel(nil, includeNamesOnly: false)
+    .executeWithSuccess({ folders in
+        print(folders)
+    },
+    failure: { error in
+        print(error)
+})
+```
+
+### [Retrieve Messages In a Folder](https://context.io/docs/lite/users/email_accounts/folders/messages)
+
+
+```swift
+session.getMessagesForFolderWithPath("INBOX", accountLabel: nil)
+    .executeWithSuccess({ messages in
+        print(messages)
+    },
+    failure: { error in
+        print("Error: \(error)")
+})
+```
+
+### [Retrieve a Single Message By ID](https://context.io/docs/lite/users/email_accounts/folders/messages#id-get)
+
+Fetch detailed attributes of a single message based on its `message_id` property
+
+```swift
+let request = session.requestForMessageWithID(
+    "<CAPEPyeZhF_P6Hvn-MTYNkzaiL0EBym1G+oir31tR_DzP6KB3Mw@mail.gmail.com>",
+    inFolder: "INBOX", accountLabel: nil, delimiter: nil)
+request.include_body = true
+request.include_flags = true
+request.executeWithSuccess({ message in
+        print(message)
+    }, failure: { error in
+        print(error)
+})
+```
+
+### [Retrieve Headers for a Message](https://context.io/docs/lite/users/email_accounts/folders/messages/headers)
+
+```swift
+let request = session.requestForMessageWithID(
+    "<CAPEPyeZhF_P6Hvn-MTYNkzaiL0EBym1G+oir31tR_DzP6KB3Mw@mail.gmail.com>",
+    inFolder: "INBOX", accountLabel: nil, delimiter: nil)
+request.getHeaders().executeWithSuccess({ headers in
+        print(headers)
+    }, failure: { error in
+        print(error)
+})
+```
 
 ## Context.IO 2.0 API Examples
 
