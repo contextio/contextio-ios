@@ -8,6 +8,7 @@
 
 #import "CIOAppDelegate.h"
 #import <CIOAPIClient/CIOAPIClient.h>
+#import <CIOAPIClient/TDOAuth.h>
 #import "CIOContactsViewController.h"
 
 #error Please enter your Context.IO API credentials below and comment out this line.

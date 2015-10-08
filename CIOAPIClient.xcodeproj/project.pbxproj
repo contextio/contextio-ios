@@ -64,6 +64,14 @@
 		FA624E751B62D50D00EEA2B7 /* CIOFilesRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = FA624E721B62D50D00EEA2B7 /* CIOFilesRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA624E761B62D50D00EEA2B7 /* CIOFilesRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA624E731B62D50D00EEA2B7 /* CIOFilesRequest.m */; };
 		FA624E771B62D50D00EEA2B7 /* CIOFilesRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA624E731B62D50D00EEA2B7 /* CIOFilesRequest.m */; };
+		FA6FFAD11BC61B76002CD061 /* OMGUserAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = FA6FFACC1BC61B76002CD061 /* OMGUserAgent.h */; settings = {ASSET_TAGS = (); }; };
+		FA6FFAD21BC61B76002CD061 /* OMGUserAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = FA6FFACC1BC61B76002CD061 /* OMGUserAgent.h */; settings = {ASSET_TAGS = (); }; };
+		FA6FFAD31BC61B76002CD061 /* OMGUserAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6FFACD1BC61B76002CD061 /* OMGUserAgent.m */; settings = {ASSET_TAGS = (); }; };
+		FA6FFAD41BC61B76002CD061 /* OMGUserAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6FFACD1BC61B76002CD061 /* OMGUserAgent.m */; settings = {ASSET_TAGS = (); }; };
+		FA6FFAD51BC61B76002CD061 /* TDOAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = FA6FFACF1BC61B76002CD061 /* TDOAuth.h */; settings = {ASSET_TAGS = (); }; };
+		FA6FFAD61BC61B76002CD061 /* TDOAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = FA6FFACF1BC61B76002CD061 /* TDOAuth.h */; settings = {ASSET_TAGS = (); }; };
+		FA6FFAD71BC61B76002CD061 /* TDOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6FFAD01BC61B76002CD061 /* TDOAuth.m */; settings = {ASSET_TAGS = (); }; };
+		FA6FFAD81BC61B76002CD061 /* TDOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6FFAD01BC61B76002CD061 /* TDOAuth.m */; settings = {ASSET_TAGS = (); }; };
 		FA8FFC061B630AD100B41F6E /* CIOAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = FA8FFC051B630AD100B41F6E /* CIOAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA8FFC071B630AD100B41F6E /* CIOAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = FA8FFC051B630AD100B41F6E /* CIOAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FABE9A501B68368600A4AE66 /* CIOV2Client.h in Headers */ = {isa = PBXBuildFile; fileRef = FABE9A4E1B68368600A4AE66 /* CIOV2Client.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -140,6 +148,10 @@
 		FA624E6D1B62D3C700EEA2B7 /* CIOSearchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOSearchRequest.m; sourceTree = "<group>"; };
 		FA624E721B62D50D00EEA2B7 /* CIOFilesRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOFilesRequest.h; sourceTree = "<group>"; };
 		FA624E731B62D50D00EEA2B7 /* CIOFilesRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOFilesRequest.m; sourceTree = "<group>"; };
+		FA6FFACC1BC61B76002CD061 /* OMGUserAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OMGUserAgent.h; sourceTree = "<group>"; };
+		FA6FFACD1BC61B76002CD061 /* OMGUserAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OMGUserAgent.m; sourceTree = "<group>"; };
+		FA6FFACF1BC61B76002CD061 /* TDOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDOAuth.h; sourceTree = "<group>"; };
+		FA6FFAD01BC61B76002CD061 /* TDOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDOAuth.m; sourceTree = "<group>"; };
 		FA80B4501B5D7A8800101BC4 /* CIORequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CIORequestTests.m; path = Tests/CIORequestTests.m; sourceTree = SOURCE_ROOT; };
 		FA8FFC051B630AD100B41F6E /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
 		FA9FD7EA1B5052F500143F09 /* CIORequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CIORequest.h; path = CIOAPIClient/CIORequest.h; sourceTree = SOURCE_ROOT; };
@@ -223,6 +235,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FA6FFACA1BC61B76002CD061 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				FA6FFACB1BC61B76002CD061 /* OMGHTTPURLRQ */,
+				FA6FFACE1BC61B76002CD061 /* TDOAuth */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		FA6FFACB1BC61B76002CD061 /* OMGHTTPURLRQ */ = {
+			isa = PBXGroup;
+			children = (
+				FA6FFACC1BC61B76002CD061 /* OMGUserAgent.h */,
+				FA6FFACD1BC61B76002CD061 /* OMGUserAgent.m */,
+			);
+			path = OMGHTTPURLRQ;
+			sourceTree = "<group>";
+		};
+		FA6FFACE1BC61B76002CD061 /* TDOAuth */ = {
+			isa = PBXGroup;
+			children = (
+				FA6FFACF1BC61B76002CD061 /* TDOAuth.h */,
+				FA6FFAD01BC61B76002CD061 /* TDOAuth.m */,
+			);
+			path = TDOAuth;
+			sourceTree = "<group>";
+		};
 		FAD861171B44C75B002A4407 = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +293,7 @@
 		FAD861221B44C75B002A4407 /* CIOAPIClient */ = {
 			isa = PBXGroup;
 			children = (
+				FA6FFACA1BC61B76002CD061 /* Vendor */,
 				FA8FFC051B630AD100B41F6E /* CIOAPIClient.h */,
 				FAD8615A1B44C83C002A4407 /* CIOAPIClientHeader.h */,
 				FAD8615B1B44C83C002A4407 /* CIOAPIClient.m */,
@@ -314,9 +354,11 @@
 				FA8FFC061B630AD100B41F6E /* CIOAPIClient.h in Headers */,
 				FA1067DD1B6317620004A2C8 /* CIOSourceRequests.h in Headers */,
 				FA624E681B62C91900EEA2B7 /* CIOContactsRequest.h in Headers */,
+				FA6FFAD11BC61B76002CD061 /* OMGUserAgent.h in Headers */,
 				FA624E741B62D50D00EEA2B7 /* CIOFilesRequest.h in Headers */,
 				FABE9A501B68368600A4AE66 /* CIOV2Client.h in Headers */,
 				FA5161751BAB5BF6003957D8 /* CIOLiteWebhookRequest.h in Headers */,
+				FA6FFAD51BC61B76002CD061 /* TDOAuth.h in Headers */,
 				FA58A37E1B5ECBBB00A04A4A /* CIOAPIClientHeader.h in Headers */,
 				FAD9AF531B62F1B600F88660 /* CIOMessageFlags.h in Headers */,
 				FAD672041B61A9F200809B84 /* CIOMessageRequests.h in Headers */,
@@ -335,9 +377,11 @@
 				FA8FFC071B630AD100B41F6E /* CIOAPIClient.h in Headers */,
 				FA1067DE1B6317620004A2C8 /* CIOSourceRequests.h in Headers */,
 				FA624E691B62C91900EEA2B7 /* CIOContactsRequest.h in Headers */,
+				FA6FFAD21BC61B76002CD061 /* OMGUserAgent.h in Headers */,
 				FA624E751B62D50D00EEA2B7 /* CIOFilesRequest.h in Headers */,
 				FABE9A511B68368600A4AE66 /* CIOV2Client.h in Headers */,
 				FA5161761BAB5BF6003957D8 /* CIOLiteWebhookRequest.h in Headers */,
+				FA6FFAD61BC61B76002CD061 /* TDOAuth.h in Headers */,
 				FA58A3821B5ECBCF00A04A4A /* CIORequest.h in Headers */,
 				FAD9AF541B62F1B600F88660 /* CIOMessageFlags.h in Headers */,
 				FAD672051B61A9F200809B84 /* CIOMessageRequests.h in Headers */,
@@ -569,6 +613,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA6FFAD31BC61B76002CD061 /* OMGUserAgent.m in Sources */,
 				FABE9A521B68368600A4AE66 /* CIOV2Client.m in Sources */,
 				FA5B54751B684217003439AE /* CIOLiteClient.m in Sources */,
 				FA58A34D1B5EBECB00A04A4A /* CIOAPISession.m in Sources */,
@@ -581,6 +626,7 @@
 				FAD672061B61A9F200809B84 /* CIOMessageRequests.m in Sources */,
 				FA51616E1BAB51D1003957D8 /* CIOLiteMessageRequest.m in Sources */,
 				FA624E701B62D3C700EEA2B7 /* CIOSearchRequest.m in Sources */,
+				FA6FFAD71BC61B76002CD061 /* TDOAuth.m in Sources */,
 				FA624E761B62D50D00EEA2B7 /* CIOFilesRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -604,6 +650,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA6FFAD41BC61B76002CD061 /* OMGUserAgent.m in Sources */,
 				FABE9A531B68368600A4AE66 /* CIOV2Client.m in Sources */,
 				FA5B54761B684217003439AE /* CIOLiteClient.m in Sources */,
 				FA58A3761B5EC0B300A04A4A /* CIOAPISession.m in Sources */,
@@ -616,6 +663,7 @@
 				FAD672071B61A9F200809B84 /* CIOMessageRequests.m in Sources */,
 				FA51616F1BAB51D1003957D8 /* CIOLiteMessageRequest.m in Sources */,
 				FA624E711B62D3C700EEA2B7 /* CIOSearchRequest.m in Sources */,
+				FA6FFAD81BC61B76002CD061 /* TDOAuth.m in Sources */,
 				FA624E771B62D50D00EEA2B7 /* CIOFilesRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -690,6 +738,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TDOAUTH_USE_STATIC_VALUES_FOR_AUTOMATIC_TESTING=1",
+				);
 				INFOPLIST_FILE = CIOAPIClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -810,6 +863,11 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TDOAUTH_USE_STATIC_VALUES_FOR_AUTOMATIC_TESTING=1",
+				);
 				INFOPLIST_FILE = CIOAPIClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";

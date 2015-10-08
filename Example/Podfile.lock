@@ -1,11 +1,7 @@
 PODS:
   - CIOAPIClient (1.0):
     - SSKeychain (~> 1)
-    - TDOAuth (~> 1.1)
-  - OMGHTTPURLRQ/UserAgent (3.0.0)
   - SSKeychain (1.2.3)
-  - TDOAuth (1.1.0):
-    - OMGHTTPURLRQ/UserAgent
 
 DEPENDENCIES:
   - CIOAPIClient (from `..`)
@@ -15,9 +11,7 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
-  CIOAPIClient: 631dd85782c950470b639e0f2e90ae0fd49f46ae
-  OMGHTTPURLRQ: 45cd892e5643206a5a359307621df7678625ebec
+  CIOAPIClient: ef79574ee75578b166740544290877f23f53899c
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
-  TDOAuth: efb25d45d5062b9cfb41c14c54f74c7b6c7a1abc
 
 COCOAPODS: 0.38.2

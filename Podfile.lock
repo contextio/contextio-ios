@@ -1,25 +1,10 @@
 PODS:
-  - OMGHTTPURLRQ/UserAgent (3.0.0)
   - SSKeychain (1.2.3)
-  - TDOAuth (1.1.0):
-    - OMGHTTPURLRQ/UserAgent
 
 DEPENDENCIES:
   - SSKeychain (~> 1)
-  - TDOAuth (from `git@github.com:Pretz/TDOAuth.git`)
-
-EXTERNAL SOURCES:
-  TDOAuth:
-    :git: git@github.com:Pretz/TDOAuth.git
-
-CHECKOUT OPTIONS:
-  TDOAuth:
-    :commit: 019aa2b98252eccc9b0dafeba8fa229e923790d8
-    :git: git@github.com:Pretz/TDOAuth.git
 
 SPEC CHECKSUMS:
-  OMGHTTPURLRQ: 45cd892e5643206a5a359307621df7678625ebec
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
-  TDOAuth: efb25d45d5062b9cfb41c14c54f74c7b6c7a1abc
 
 COCOAPODS: 0.38.2

@@ -9,7 +9,7 @@
 #import "CIOAPIClientHeader.h"
 
 #import <SSKeychain/SSKeychain.h>
-#import <TDOAuth/TDOAuth.h>
+#import "TDOAuth.h"
 #import "CIOAPISession.h"
 
 // Keychain keys

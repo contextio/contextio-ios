@@ -8,15 +8,14 @@ Pod::Spec.new do |s|
   s.author       = { 'Context.IO' => 'support@context.io' }
   s.social_media_url = "https://twitter.com/contextio"
   s.source       = { :git => "https://github.com/contextio/contextio-ios.git", :tag => s.version }
-  s.source_files = 'CIOAPIClient/*.{h,m}'
   s.requires_arc = true
+
+  s.source_files = 'CIOAPIClient/**/*.{h,m}'
+  s.private_header_files = 'CIOAPIClient/Vendor/**/*.h'
 
   s.ios.deployment_target = '7.0'
   s.osx.deployment_target = '10.9'
 
-  s.source_files = 'CIOAPIClient/*.{h,m}'
-
   s.ios.frameworks = 'Security'
   s.dependency 'SSKeychain', '~> 1'
-  s.dependency 'TDOAuth', '~> 1.1'
 end
